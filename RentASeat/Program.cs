@@ -1,7 +1,17 @@
+using Microsoft.EntityFrameworkCore;
+using RentASeat.Data;
+
 var builder = WebApplication.CreateBuilder(args);
+
+// Output connection string to verify it's loading correctly
+Console.WriteLine("Connection String: " + builder.Configuration.GetConnectionString("DefaultConnection"));
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+// DbContext hizmetini ekleyin
+builder.Services.AddDbContext<RentASeatContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 var app = builder.Build();
 
