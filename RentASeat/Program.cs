@@ -31,6 +31,21 @@ app.UseRouting();
 app.UseAuthorization();
 
 app.MapControllerRoute(
+    name: "Customer",
+    pattern: "{area:exists}/{controller=Customer}/{action=Index}/{id?}"
+    );
+
+app.MapControllerRoute(
+    name: "Manager",
+    pattern: "{area:exists}/{controller=Manager}/{action=Index}/{id?}"
+    );
+
+app.MapControllerRoute(
+    name: "Admin",
+    pattern: "{area:exists}/{controller=Admin}/{action=Index}/{id?}"
+    );
+
+app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
