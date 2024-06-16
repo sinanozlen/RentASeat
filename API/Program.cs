@@ -22,6 +22,19 @@ builder.Services.AddDbContext<RenASeatContext>();
 // Add brand services
 builder.Services.AddScoped<IBrandService, BrandManager>();
 builder.Services.AddScoped<IBrandDal, EfBrandDal>();
+//Car Ýçin Gerekli olan 
+builder.Services.AddScoped<ICarService, CarManager>();
+builder.Services.AddScoped<ICarDal, EfCarDal>();
+
+//Feature Ýçin Gerekli olan 
+builder.Services.AddScoped<IFeatureService, FeaatureManager>();
+builder.Services.AddScoped<IFeatureDal, EfFeatureDal>();
+//Location Ýçin Gerekli olan 
+builder.Services.AddScoped<ILocationService, LocationManager>();
+builder.Services.AddScoped<ILocationDal, EfLocationDal>();
+//Pricing Ýçin Gerekli olan 
+builder.Services.AddScoped<IPricingService, PricingManager>();
+builder.Services.AddScoped<IPricingDal, EfPricingDal>();
 
 // Add user service
 builder.Services.AddSingleton<UserService>();
