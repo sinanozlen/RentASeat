@@ -1,5 +1,6 @@
 ﻿using BusinessLayer.Abstract;
 using DataAccessLayer.Abstract;
+using DtoLayer.CarDtos;
 using EntitityLayer.Entities;
 using System;
 using System.Collections.Generic;
@@ -32,6 +33,12 @@ namespace BusinessLayer.Concrete
         public Car TGetbyID(int ID)
         {
             var values =_carDal.GetbyID(ID);
+            return values;
+        }
+
+        public List<ResultCarWithBrandDto> TGetCarsWithBrand()
+        {
+           var values= _carDal.GetCarsWithBrand();
             return values;
         }
 

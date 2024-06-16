@@ -22,6 +22,9 @@ builder.Services.AddDbContext<RenASeatContext>();
 //Brand Ýçin Gerekli olan 
 builder.Services.AddScoped<IBrandService, BrandManager>();
 builder.Services.AddScoped<IBrandDal, EfBrandDal>();
+//Car Ýçin Gerekli olan 
+builder.Services.AddScoped<ICarService, CarManager>();
+builder.Services.AddScoped<ICarDal, EfCarDal>();
 
 var app = builder.Build();
 
