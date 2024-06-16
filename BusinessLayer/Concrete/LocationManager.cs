@@ -1,4 +1,5 @@
 ﻿using BusinessLayer.Abstract;
+using DataAccessLayer.Abstract;
 using EntitityLayer.Entities;
 using System;
 using System.Collections.Generic;
@@ -8,40 +9,41 @@ using System.Threading.Tasks;
 
 namespace BusinessLayer.Concrete
 {
-    internal class LocationManager : ILocationService
+    public class LocationManager : ILocationService
     {
-        private readonly ILocationService _locationService;
+        private readonly ILocationDal _locationDal;
 
-        public LocationManager(ILocationService locationService)
+        public LocationManager(ILocationDal locationDal)
         {
-            _locationService = locationService;
+            _locationDal = locationDal;
         }
+
 
         public void TAdd(Location entity)
         {
-            _locationService.TAdd(entity);
+            _locationDal.Add(entity);
         }
 
         public void TDelete(Location entity)
         {
-            _locationService.TDelete(entity);
+            _locationDal.Delete(entity);
         }
 
         public Location TGetbyID(int ID)
         {
-           var values= _locationService.TGetbyID(ID);
+           var values= _locationDal.GetbyID(ID);
             return values;
         }
 
         public List<Location> TGetListAll()
         {
-          var values= _locationService.TGetListAll();
+          var values= _locationDal.GetListAll();
             return values;
         }
 
         public void TUpdate(Location entity)
         {
-           _locationService.TUpdate(entity);
+            _locationDal.Update(entity);
         }
     }
 }
