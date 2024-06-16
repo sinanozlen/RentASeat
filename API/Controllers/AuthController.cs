@@ -22,7 +22,7 @@ namespace YourNamespace.Controllers
         }
 
         [HttpGet("users")]
-        [Authorize(Roles = Roles.Admin)] // Sadece Admin rolüne sahip kullanıcılar erişebilir
+       // [Authorize(Roles = Roles.Admin)] // Sadece Admin rolüne sahip kullanıcılar erişebilir
         public IActionResult GetUsers()
         {
             var users = _userService.GetAllUsers();
