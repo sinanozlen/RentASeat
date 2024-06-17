@@ -1,7 +1,10 @@
 var builder = WebApplication.CreateBuilder(args);
-
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+//HttpClient Kullanýmý için gerekli olan servis eklemesi
+builder.Services.AddHttpClient();
+// Add services to the container.
+
 
 var app = builder.Build();
 
@@ -23,5 +26,13 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllerRoute(
+      name: "areas",
+      pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
+    );
+});
 
 app.Run();

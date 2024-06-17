@@ -9,7 +9,6 @@ namespace API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = Roles.Admin + "," + Roles.Manager)]
     public class BrandsController : ControllerBase
     {
         private readonly IBrandService _brandService;
@@ -36,7 +35,6 @@ namespace API.Controllers
         }
 
         [HttpDelete("{id}")]
-        [Authorize(Roles = Roles.Admin)]
         public IActionResult DeleteBrand(int id)
         {
             var brand = _brandService.TGetbyID(id);
@@ -48,7 +46,6 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = Roles.Admin)]
         public IActionResult CreateBrand(CreateBrandDto createBrandDto)
         {
             Brand brand = new Brand
@@ -60,7 +57,7 @@ namespace API.Controllers
         }
 
         [HttpPut]
-        [Authorize(Roles = Roles.Admin)]
+
         public IActionResult UpdateBrand(UpdateBrandDto updateBrandDto)
         {
             var brand = _brandService.TGetbyID(updateBrandDto.brandID);
