@@ -1,7 +1,6 @@
 ﻿using BusinessLayer.Abstract;
 using DtoLayer.FeatureDtos;
 using EntitityLayer.Entities;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -16,45 +15,56 @@ namespace API.Controllers
         {
             _featureService = featureService;
         }
+
         [HttpGet]
         public IActionResult FeatureList()
         {
             var features = _featureService.TGetListAll();
             return Ok(features);
         }
+
         [HttpGet("{id}")]
         public IActionResult GetFeature(int id)
         {
             var feature = _featureService.TGetbyID(id);
+            if (feature == null)
+                return NotFound("Özellik bulunamadı");
             return Ok(feature);
         }
+
         [HttpDelete("{id}")]
         public IActionResult DeleteFeature(int id)
         {
-            var values = _featureService.TGetbyID(id);
-            _featureService.TDelete(values);
-            return Ok("Özellik Silme işlemi Başarı ile Gerçekleşti");
+            var feature = _featureService.TGetbyID(id);
+            if (feature == null)
+                return NotFound("Özellik bulunamadı");
+
+            _featureService.TDelete(feature);
+            return Ok("Özellik silme işlemi başarı ile gerçekleşti");
         }
+
         [HttpPost]
         public IActionResult CreateFeature(CreateFeatureDto createFeatureDto)
         {
-            Feature feature = new Feature()
+            var feature = new Feature
             {
-                Name = createFeatureDto.Name,
+                Name = createFeatureDto.Name
             };
+
             _featureService.TAdd(feature);
-            return Ok("Özellik Ekleme işlemi Başarı ile Gerçekleşti");
+            return Ok("Özellik ekleme işlemi başarı ile gerçekleşti");
         }
+
         [HttpPut]
         public IActionResult UpdateFeature(UpdateFeatureDto updateFeatureDto)
         {
-            Feature feature = new Feature()
-            {
-                FeatureID = updateFeatureDto.FeatureID,
-                Name = updateFeatureDto.Name,
-            };
+            var feature = _featureService.TGetbyID(updateFeatureDto.FeatureID);
+            if (feature == null)
+                return NotFound("Özellik bulunamadı");
+
+            feature.Name = updateFeatureDto.Name;
             _featureService.TUpdate(feature);
-            return Ok("Özellik Güncelleme işlemi Başarı ile Gerçekleşti");
+            return Ok("Özellik güncelleme işlemi başarı ile gerçekleşti");
         }
     }
 }

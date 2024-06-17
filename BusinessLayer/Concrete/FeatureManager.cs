@@ -10,11 +10,11 @@ using System.Threading.Tasks;
 
 namespace BusinessLayer.Concrete
 {
-    public class FeaatureManager : IFeatureService
+    public class FeatureManager : IFeatureService
     {
         private readonly IFeatureDal _featureDal;
 
-        public FeaatureManager(IFeatureDal featureDal)
+        public FeatureManager(IFeatureDal featureDal)
         {
             _featureDal = featureDal;
         }

@@ -4,7 +4,6 @@ using DataAccessLayer.Abstract;
 using DataAccessLayer.Concrete;
 using DataAccessLayer.EntityFramework;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using YourNamespace.Helpers;
@@ -22,17 +21,20 @@ builder.Services.AddDbContext<RenASeatContext>();
 // Add brand services
 builder.Services.AddScoped<IBrandService, BrandManager>();
 builder.Services.AddScoped<IBrandDal, EfBrandDal>();
-//Car Ýçin Gerekli olan 
+
+// Car için gerekli olan
 builder.Services.AddScoped<ICarService, CarManager>();
 builder.Services.AddScoped<ICarDal, EfCarDal>();
 
-//Feature Ýçin Gerekli olan 
-builder.Services.AddScoped<IFeatureService, FeaatureManager>();
+// Feature için gerekli olan
+builder.Services.AddScoped<IFeatureService, FeatureManager>();
 builder.Services.AddScoped<IFeatureDal, EfFeatureDal>();
-//Location Ýçin Gerekli olan 
+
+// Location için gerekli olan
 builder.Services.AddScoped<ILocationService, LocationManager>();
 builder.Services.AddScoped<ILocationDal, EfLocationDal>();
-//Pricing Ýçin Gerekli olan 
+
+// Pricing için gerekli olan
 builder.Services.AddScoped<IPricingService, PricingManager>();
 builder.Services.AddScoped<IPricingDal, EfPricingDal>();
 
@@ -56,6 +58,16 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", builder =>
+    {
+        builder.AllowAnyOrigin()
+               .AllowAnyMethod()
+               .AllowAnyHeader();
+    });
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -69,6 +81,8 @@ app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseCors("AllowAll");
 
 app.MapControllers();
 
