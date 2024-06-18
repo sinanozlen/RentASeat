@@ -3,17 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34714.143
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "API", "API\API.csproj", "{DB403CD3-5C01-4764-96AE-8D0EB1954F3F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "API", "API\API.csproj", "{DB403CD3-5C01-4764-96AE-8D0EB1954F3F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebUI", "WebUI\WebUI.csproj", "{40C42D5C-5D36-4F59-BCB9-EF1C29C8848C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebUI", "WebUI\WebUI.csproj", "{40C42D5C-5D36-4F59-BCB9-EF1C29C8848C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EntitityLayer", "EntitityLayer\EntitityLayer.csproj", "{E57DDBC3-5FFB-4268-8CAC-36BBEC903D06}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EntitityLayer", "EntitityLayer\EntitityLayer.csproj", "{E57DDBC3-5FFB-4268-8CAC-36BBEC903D06}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAccessLayer", "DataAccessLayer\DataAccessLayer.csproj", "{52E67839-C4C7-46B3-89B3-45933F9A3150}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataAccessLayer", "DataAccessLayer\DataAccessLayer.csproj", "{52E67839-C4C7-46B3-89B3-45933F9A3150}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinessLayer", "BusinessLayer\BusinessLayer.csproj", "{EF0F7E36-6A93-4D79-AE99-34B75FB6E157}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BusinessLayer", "BusinessLayer\BusinessLayer.csproj", "{EF0F7E36-6A93-4D79-AE99-34B75FB6E157}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DtoLayer", "DtoLayer\DtoLayer.csproj", "{930B2C8F-34C6-49EE-A3C0-E60EB3666B93}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DtoLayer", "DtoLayer\DtoLayer.csproj", "{930B2C8F-34C6-49EE-A3C0-E60EB3666B93}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
