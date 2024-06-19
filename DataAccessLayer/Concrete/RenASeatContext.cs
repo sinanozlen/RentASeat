@@ -15,6 +15,8 @@ namespace DataAccessLayer.Concrete
             optionsBuilder.UseSqlServer("Server=carbookdb.cpmew0w400zv.eu-north-1.rds.amazonaws.com,1433;Database=RentASeat;User Id=admin;Password=330457Fg;TrustServerCertificate=true;");
         }
         public DbSet<Car> Cars { get; set; }
+        
+        public DbSet<About> Abouts { get; set; }
         public DbSet<Brand> Brands { get; set; }
         public DbSet<CarFeature> CarFeatures { get; set; }
         public DbSet<Feature> Features { get; set; }
