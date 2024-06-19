@@ -22,6 +22,7 @@ namespace DataAccessLayer.Concrete
         public DbSet<CarPricing> CarPricings { get; set; }
         public DbSet<Pricing> Pricings { get; set; }
         public DbSet<Location> Locations { get; set; }
+        public DbSet<Service> Services { get; set; }
 
 
 
