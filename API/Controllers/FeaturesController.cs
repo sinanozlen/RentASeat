@@ -1,6 +1,7 @@
 ﻿using BusinessLayer.Abstract;
 using DtoLayer.FeatureDtos;
 using EntitityLayer.Entities;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -35,36 +36,33 @@ namespace API.Controllers
         [HttpDelete("{id}")]
         public IActionResult DeleteFeature(int id)
         {
-            var feature = _featureService.TGetbyID(id);
-            if (feature == null)
-                return NotFound("Özellik bulunamadı");
-
-            _featureService.TDelete(feature);
-            return Ok("Özellik silme işlemi başarı ile gerçekleşti");
+            var values = _featureService.TGetbyID(id);
+            _featureService.TDelete(values);
+            return Ok("Özellik Silme işlemi Başarı ile Gerçekleşti");
         }
 
         [HttpPost]
         public IActionResult CreateFeature(CreateFeatureDto createFeatureDto)
         {
-            var feature = new Feature
+            Feature feature = new Feature()
             {
-                Name = createFeatureDto.Name
+                Name = createFeatureDto.Name,
             };
 
             _featureService.TAdd(feature);
-            return Ok("Özellik ekleme işlemi başarı ile gerçekleşti");
+            return Ok("Özellik Ekleme işlemi Başarı ile Gerçekleşti");
         }
 
         [HttpPut]
         public IActionResult UpdateFeature(UpdateFeatureDto updateFeatureDto)
         {
-            var feature = _featureService.TGetbyID(updateFeatureDto.FeatureID);
-            if (feature == null)
-                return NotFound("Özellik bulunamadı");
-
-            feature.Name = updateFeatureDto.Name;
+            Feature feature = new Feature()
+            {
+                FeatureID = updateFeatureDto.FeatureID,
+                Name = updateFeatureDto.Name,
+            };
             _featureService.TUpdate(feature);
-            return Ok("Özellik güncelleme işlemi başarı ile gerçekleşti");
+            return Ok("Özellik Güncelleme işlemi Başarı ile Gerçekleşti");
         }
     }
 }
