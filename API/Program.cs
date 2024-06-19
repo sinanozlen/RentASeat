@@ -26,8 +26,12 @@ builder.Services.AddScoped<ICarService, CarManager>();
 builder.Services.AddScoped<ICarDal, EfCarDal>();
 
 //Feature Ýçin Gerekli olan 
-builder.Services.AddScoped<IFeatureService, FeaatureManager>();
+builder.Services.AddScoped<IFeatureService, FeatureManager>();
 builder.Services.AddScoped<IFeatureDal, EfFeatureDal>();
+
+//Service Ýçin Gerekli olan 
+builder.Services.AddScoped<IServiceService, ServiceManager>();
+builder.Services.AddScoped<IServiceDal, EfServiceDal>();
 //Location Ýçin Gerekli olan 
 builder.Services.AddScoped<ILocationService, LocationManager>();
 builder.Services.AddScoped<ILocationDal, EfLocationDal>();
