@@ -25,6 +25,7 @@ namespace WebUI.Controllers
         public PartialViewResult ScriptPartial() {
             return PartialView();
         }
+       
 
     }
 }
