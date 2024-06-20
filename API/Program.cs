@@ -29,6 +29,10 @@ builder.Services.AddScoped<ICarDal, EfCarDal>();
 builder.Services.AddScoped<IAboutService, AboutManager>();
 builder.Services.AddScoped<IAboutDal, EfAboutDal>();
 
+//Pricing
+builder.Services.AddScoped<IPricingService, PricingManager>();
+builder.Services.AddScoped<IPricingDal, EfPricingDal>();
+
 //Feature Ýçin Gerekli olan 
 builder.Services.AddScoped<IFeatureService, FeatureManager>();
 builder.Services.AddScoped<IFeatureDal, EfFeatureDal>();
