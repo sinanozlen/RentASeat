@@ -50,6 +50,8 @@ namespace API.Controllers
                 Fuel = createCarDto.Fuel,
                 Seat = createCarDto.Seat,
                 Transmission = createCarDto.Transmission,
+                
+                
             };
             _carservice.TAdd(car);
             return Ok("Araba Ekleme işlemi Başarı ile Gerçekleşti");
@@ -79,5 +81,12 @@ namespace API.Controllers
             var cars = _carservice.TGetCarsWithBrand();
             return Ok(cars);
         }
+
+        [HttpGet("Get5CarsWithBrand")]
+        public IActionResult Get5CarsWithBrand()
+        {
+            var values = _carservice.TGet5CarsWithBrandsDtos();
+            return Ok(values);
+                }
     }
 }

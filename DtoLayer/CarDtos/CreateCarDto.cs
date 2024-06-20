@@ -17,5 +17,6 @@ namespace DtoLayer.CarDtos
         public byte Luggage { get; set; }
         public string Fuel { get; set; }
         public string BigImageUrl { get; set; }
+        }
     }
-}
+

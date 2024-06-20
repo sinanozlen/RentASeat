@@ -1,4 +1,5 @@
-﻿using DtoLayer.CarDtos;
+﻿using CarBook.Dto.CarDtos;
+using DtoLayer.CarDtos;
 using EntitityLayer.Entities;
 using System;
 using System.Collections.Generic;
@@ -11,5 +12,8 @@ namespace DataAccessLayer.Abstract
     public interface ICarDal:IGenericDal<Car>
     {
         List<ResultCarWithBrandDto> GetCarsWithBrand();
+
+        List<Result5CarsWithBrandsDto> Get5CarsWithBrandsDtos();
+
     }
 }

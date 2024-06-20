@@ -1,4 +1,5 @@
 ﻿using BusinessLayer.Abstract;
+using CarBook.Dto.CarDtos;
 using DataAccessLayer.Abstract;
 using DtoLayer.CarDtos;
 using EntitityLayer.Entities;
@@ -28,6 +29,12 @@ namespace BusinessLayer.Concrete
         public void TDelete(Car entity)
         {
             _carDal.Delete(entity);
+        }
+
+        public List<Result5CarsWithBrandsDto> TGet5CarsWithBrandsDtos()
+        {
+            var values = _carDal.Get5CarsWithBrandsDtos();
+            return values;
         }
 
         public Car TGetbyID(int ID)

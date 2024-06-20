@@ -1,4 +1,5 @@
-﻿using DataAccessLayer.Abstract;
+﻿using CarBook.Dto.CarDtos;
+using DataAccessLayer.Abstract;
 using DataAccessLayer.Concrete;
 using DataAccessLayer.Repositories;
 using DtoLayer.CarDtos;
@@ -17,6 +18,38 @@ namespace DataAccessLayer.EntityFramework
 
         public EfCarDal(RenASeatContext renASeatContext) : base(renASeatContext)
         {
+        }
+
+        public List<Result5CarsWithBrandsDto> Get5CarsWithBrandsDtos()
+        {
+            using var context = new RenASeatContext();
+            var values = context.Cars.Include(x => x.Brand).OrderBy(y => y.CarID).Take(5).Select(z => new Result5CarsWithBrandsDto
+            {
+                CarID = z.CarID,
+                BrandID = z.BrandID,
+                BigImageUrl = z.BigImageUrl,
+                BrandName = z.Brand.Name,
+                CoverImageUrl = z.CoverImageUrl,
+                Fuel = z.Fuel,
+                Km = z.Km,
+                Luggage = z.Luggage,
+                Model = z.Model,
+                Seat = z.Seat,
+                Transmission = z.Transmission,
+                //Amount = z.Amount
+                
+
+                
+
+
+            }).ToList();
+                
+            return values;
+
+            
+                
+                
+
         }
 
         public List<ResultCarWithBrandDto> GetCarsWithBrand()

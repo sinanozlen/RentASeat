@@ -1,4 +1,5 @@
-﻿using DtoLayer.CarDtos;
+﻿using CarBook.Dto.CarDtos;
+using DtoLayer.CarDtos;
 using EntitityLayer.Entities;
 using System;
 using System.Collections.Generic;
@@ -11,5 +12,6 @@ namespace BusinessLayer.Abstract
     public interface ICarService:IGenericService<Car>
     {
         List<ResultCarWithBrandDto> TGetCarsWithBrand();
+        List<Result5CarsWithBrandsDto> TGet5CarsWithBrandsDtos();
     }
 }

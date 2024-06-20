@@ -14,6 +14,12 @@ namespace DataAccessLayer.Concrete
         {
             optionsBuilder.UseSqlServer("Server=carbookdb.cpmew0w400zv.eu-north-1.rds.amazonaws.com,1433;Database=RentASeat;User Id=admin;Password=330457Fg;TrustServerCertificate=true;");
         }
+
+        internal object Include(Func<object, object> value)
+        {
+            throw new NotImplementedException();
+        }
+
         public DbSet<Car> Cars { get; set; }
         
         public DbSet<About> Abouts { get; set; }
