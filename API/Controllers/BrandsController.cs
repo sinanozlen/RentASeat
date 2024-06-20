@@ -30,7 +30,7 @@ namespace API.Controllers
         {
             var brand = _brandService.TGetbyID(id);
             if (brand == null)
-                return NotFound("Brand not found");
+                return NotFound("Marka bulunmadı");
             return Ok(brand);
         }
 
@@ -39,10 +39,10 @@ namespace API.Controllers
         {
             var brand = _brandService.TGetbyID(id);
             if (brand == null)
-                return NotFound("Brand not found");
+                return NotFound("Marka bulunmadı");
 
             _brandService.TDelete(brand);
-            return Ok("Brand deleted successfully");
+            return Ok("Marka Silme İşlemi Başarı ile Gerçekleştirildi");
         }
 
         [HttpPost]
@@ -53,7 +53,7 @@ namespace API.Controllers
                 Name = createBrandDto.name
             };
             _brandService.TAdd(brand);
-            return Ok("Brand created successfully");
+            return Ok("Marka Oluşturma İşlemi Başarı ile Gerçekleştirildi");
         }
 
         [HttpPut]
@@ -62,11 +62,11 @@ namespace API.Controllers
         {
             var brand = _brandService.TGetbyID(updateBrandDto.brandID);
             if (brand == null)
-                return NotFound("Brand not found");
+                return NotFound("Marka bulunmadı");
 
             brand.Name = updateBrandDto.name;
             _brandService.TUpdate(brand);
-            return Ok("Brand updated successfully");
+            return Ok("Marka Güncelleme İşlemi Başarı ile Gerçekleştirildi");
         }
     }
 }

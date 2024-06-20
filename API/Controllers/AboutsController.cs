@@ -29,7 +29,7 @@ namespace API.Controllers
 		{
 			var brand = _aboutService.TGetbyID(id);
 			if (brand == null)
-				return NotFound("About not found");
+				return NotFound("Hakkımızda alanı Bulunamadı");
 			return Ok(brand);
 		}
 
@@ -38,10 +38,10 @@ namespace API.Controllers
 		{
 			var brand = _aboutService.TGetbyID(id);
 			if (brand == null)
-				return NotFound("About not found");
+				return NotFound("Hakkımızda alanı Bulunamadı");
 
 			_aboutService.TDelete(brand);
-			return Ok("About deleted successfully");
+			return Ok("Hakkımızda alanı başarı ile Silindi");
 		}
 
 		[HttpPost]
@@ -54,7 +54,7 @@ namespace API.Controllers
 				Title = createAboutDto.Title
 			};
 			_aboutService.TAdd(about);
-			return Ok("About created successfully");
+			return Ok("Hakkımızda Alanı Başarı ile oluşturuldu");
 		}
 
 		[HttpPut]
@@ -63,7 +63,7 @@ namespace API.Controllers
 		{
 			var about = _aboutService.TGetbyID(updateAboutDto.AboutId);
 			if (about == null)
-				return NotFound("About not found");
+				return NotFound("Hakkımızda alanı Bulunamadı");
 
 
 
@@ -76,7 +76,7 @@ namespace API.Controllers
 
 
 			_aboutService.TUpdate(about);
-			return Ok("About updated successfully");
+			return Ok("Hakkımızda Alanı Başarı ile Güncellendi");
 		}
 	}
 

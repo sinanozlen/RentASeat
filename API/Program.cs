@@ -36,6 +36,18 @@ builder.Services.AddScoped<IFeatureDal, EfFeatureDal>();
 //Service Ýçin Gerekli olan 
 builder.Services.AddScoped<IServiceService, ServiceManager>();
 builder.Services.AddScoped<IServiceDal, EfServiceDal>();
+//Banner Ýçin Gerekli olan 
+builder.Services.AddScoped<IBannerService, BannerManager>();
+builder.Services.AddScoped<IBannerDal, EfBannerDal>();
+//Testimonial Ýçin Gerekli olan 
+builder.Services.AddScoped<ITestimonialService, TestimonialManager>();
+builder.Services.AddScoped<ITestimonialDal, EfTestimonialDal>();
+//Contact Ýçin Gerekli olan 
+builder.Services.AddScoped<IContactService, ContactManager>();
+builder.Services.AddScoped<IContactDal, EfContactDal>();
+//FooterAddress Ýçin Gerekli olan 
+builder.Services.AddScoped<IFooterAddressService, FooterAddressManager>();
+builder.Services.AddScoped<IFooterAddressDal, EfFooterAddressDal>();
 //Location Ýçin Gerekli olan 
 builder.Services.AddScoped<ILocationService, LocationManager>();
 builder.Services.AddScoped<ILocationDal, EfLocationDal>();

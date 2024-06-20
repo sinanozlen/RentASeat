@@ -25,6 +25,10 @@ namespace DataAccessLayer.Concrete
         public DbSet<Pricing> Pricings { get; set; }
         public DbSet<Location> Locations { get; set; }
         public DbSet<Service> Services { get; set; }
+        public DbSet<Testimonial> Testimonials { get; set; }
+        public DbSet<Banner> Banners { get; set; }
+        public DbSet<Contact> Contacts { get; set; }
+        public DbSet<FooterAddress> FooterAddresses { get; set; }
 
 
 
