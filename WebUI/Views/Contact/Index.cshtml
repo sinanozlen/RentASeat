@@ -8,7 +8,7 @@
     <div class="container">
         <div class="row d-flex mb-5 contact-info">
 
-            @await Html.PartialAsync("/Views/About/FooterAddressPartial.cshtml")
+            @await Component.InvokeAsync("_FooterAddressComponentPartial")
 
             <div class="col-md-8 block-9 mb-md-5">
                 <form class="bg-light p-5 contact-form" method="post">
@@ -38,4 +38,3 @@
         </div>
     </div>
 </section>
-

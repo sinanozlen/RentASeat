@@ -6,8 +6,6 @@ using Newtonsoft.Json;
 namespace WebUI.Controllers
 {
     public class DefaultController : Controller
-
-        
     {
 
         private readonly IHttpClientFactory _httpClientFactory;

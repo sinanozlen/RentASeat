@@ -9,24 +9,5 @@ namespace WebUI.Controllers
             return View();
         }
 
-        public PartialViewResult HeaderPartial()
-        {
-            return PartialView();
-        }
-        public PartialViewResult NavBarPartial() {
-            return PartialView();
-        }
-        public PartialViewResult MainCoverPartial() {
-            return PartialView();
-        }
-        public PartialViewResult FooterPartial() {
-            return PartialView();
-        }
-        public PartialViewResult ScriptPartial() {
-            return PartialView();
-        }
-
-       
-
     }
 }

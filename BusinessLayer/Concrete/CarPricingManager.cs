@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace BusinessLayer.Concrete
 {
-    internal class CarPricingManager : ICarPricingService
+    public class CarPricingManager : ICarPricingService
     {
         private readonly ICarPricingDal _carPricingDal;
 

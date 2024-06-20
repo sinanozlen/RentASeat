@@ -8,11 +8,11 @@ namespace API.Controllers
 {
 	[Route("api/[controller]")]
 	[ApiController]
-	public class FooterAdressesController : ControllerBase
+	public class FooterAddressesController : ControllerBase
 	{
 		private readonly IFooterAddressService _footerAddressService;
 
-		public FooterAdressesController(IFooterAddressService footerAddressService)
+		public FooterAddressesController(IFooterAddressService footerAddressService)
 		{
 			_footerAddressService = footerAddressService;
 		}

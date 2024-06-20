@@ -3,10 +3,6 @@
     Layout = "~/Views/UILayout/Index.cshtml";
 }
 
-@await Html.PartialAsync("/Views/About/AboutUsPartial.cshtml")
-@await Html.PartialAsync("/Views/About/BecomeADriverPartial.cshtml")
-@* @await Html.PartialAsync("/Views/About/TestimonialPartial.csthtml") *@
-
-
-
-
+@await Component.InvokeAsync("_AboutUsComponentPartial")
+@await Component.InvokeAsync("_BecomeADriverComponentPartial")
+@await Component.InvokeAsync("_TestimonialComponantPartial")
