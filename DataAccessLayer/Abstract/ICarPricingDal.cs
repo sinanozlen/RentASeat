@@ -1,4 +1,5 @@
-﻿using EntitityLayer.Entities;
+﻿using DtoLayer.CarPricingDtos;
+using EntitityLayer.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,5 +10,6 @@ namespace DataAccessLayer.Abstract
 {
     public interface ICarPricingDal:IGenericDal<CarPricing>
     {
+        List<ResultCarPricingWithCarDto> GetCarPricingWithCars();
     }
 }

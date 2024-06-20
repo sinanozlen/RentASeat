@@ -1,4 +1,5 @@
-﻿using EntitityLayer.Entities;
+﻿using DtoLayer.CarPricingDtos;
+using EntitityLayer.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,5 +10,6 @@ namespace BusinessLayer.Abstract
 {
     public interface ICarPricingService:IGenericService<CarPricing>
     {
+        List<ResultCarPricingWithCarDto> TGetCarPricingWithCars();
     }
 }
