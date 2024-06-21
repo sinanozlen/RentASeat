@@ -20,5 +20,11 @@ namespace API.Controllers
             var carPricings = _carPricingService.TGetCarPricingWithCars();
             return Ok(carPricings);
         }
+        [HttpGet("CarPricingListWithModel")]
+        public IActionResult CarPricingListWithModel()
+        {
+            var carPricings = _carPricingService.TGetCarPricingListWithModel();
+            return Ok(carPricings);
+        }
     }
 }

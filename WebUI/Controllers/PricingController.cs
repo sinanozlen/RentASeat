@@ -2,7 +2,6 @@
 using System.Net.Http;
 using System.Threading.Tasks;
 using DtoLayer.CarPricingDtos;
-using DtoLayer.ServiceDtos; // Adjust namespaces based on your DTOs
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
@@ -20,14 +19,14 @@ namespace WebUI.Controllers
         public async Task<IActionResult> Index()
         {
             var client = _httpClientFactory.CreateClient();
-            var responseMessage = await client.GetAsync("https://localhost:7250/api/Pricing"); // Adjust endpoint URL as needed
+            var responseMessage = await client.GetAsync("https://localhost:7250/api/CarPricings/CarPricingListWithModel");
             if (responseMessage.IsSuccessStatusCode)
             {
                 var jsonData = await responseMessage.Content.ReadAsStringAsync();
-                var pricings = JsonConvert.DeserializeObject<List<ResultCarPricingWithCarDto>>(jsonData);
+                var pricings = JsonConvert.DeserializeObject<List<ResultCarPricingListWithModelDto>>(jsonData);
                 return View(pricings);
             }
-            // Handle unsuccessful API call here
+            
             return View();
         }
     }

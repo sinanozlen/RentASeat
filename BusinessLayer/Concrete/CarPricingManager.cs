@@ -35,6 +35,12 @@ namespace BusinessLayer.Concrete
             return values;
         }
 
+        public List<ResultCarPricingListWithModelDto> TGetCarPricingListWithModel()
+        {
+            var values=_carPricingDal.GetCarPricingListWithModel();
+            return values;
+        }
+
         public List<ResultCarPricingWithCarDto> TGetCarPricingWithCars()
         {
             var values=_carPricingDal.GetCarPricingWithCars();

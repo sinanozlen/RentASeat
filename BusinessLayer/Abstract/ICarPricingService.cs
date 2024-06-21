@@ -11,5 +11,6 @@ namespace BusinessLayer.Abstract
     public interface ICarPricingService:IGenericService<CarPricing>
     {
         List<ResultCarPricingWithCarDto> TGetCarPricingWithCars();
+        List<ResultCarPricingListWithModelDto> TGetCarPricingListWithModel();
     }
 }

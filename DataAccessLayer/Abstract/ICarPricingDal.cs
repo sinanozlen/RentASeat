@@ -11,5 +11,6 @@ namespace DataAccessLayer.Abstract
     public interface ICarPricingDal:IGenericDal<CarPricing>
     {
         List<ResultCarPricingWithCarDto> GetCarPricingWithCars();
+        List<ResultCarPricingListWithModelDto> GetCarPricingListWithModel();
     }
 }
