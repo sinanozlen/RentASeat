@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CarBook.Dto.CarDtos
+namespace DtoLayer.CarDtos
 {
     public class Result5CarsWithBrandsDto
     {
@@ -16,7 +16,7 @@ namespace CarBook.Dto.CarDtos
         public int Km { get; set; }
         public string Transmission { get; set; }
         public byte Seat { get; set; }
-        public byte Luggage { get; set; }
+        public int Luggage { get; set; }
         public string Fuel { get; set; }
         public string BigImageUrl { get; set; }
         public string Amount { get; set; }

@@ -1,5 +1,4 @@
-﻿using CarBook.Dto.CarDtos;
-using DataAccessLayer.Abstract;
+﻿using DataAccessLayer.Abstract;
 using DataAccessLayer.Concrete;
 using DataAccessLayer.Repositories;
 using DtoLayer.CarDtos;
@@ -23,7 +22,7 @@ namespace DataAccessLayer.EntityFramework
         public List<Result5CarsWithBrandsDto> Get5CarsWithBrandsDtos()
         {
             using var context = new RenASeatContext();
-            var values = context.Cars.Include(x => x.Brand).OrderBy(y => y.CarID).Take(5).Select(z => new Result5CarsWithBrandsDto
+            var values = context.Cars.Include(x => x.Brand).Include(k=>k.CarPricings).OrderBy(y => y.CarID).Take(5).Select(z => new Result5CarsWithBrandsDto
             {
                 CarID = z.CarID,
                 BrandID = z.BrandID,
@@ -36,20 +35,10 @@ namespace DataAccessLayer.EntityFramework
                 Model = z.Model,
                 Seat = z.Seat,
                 Transmission = z.Transmission,
-                //Amount = z.Amount
-                
-
-                
-
-
+               Amount = z.CarPricings.FirstOrDefault().Amount.ToString()
             }).ToList();
                 
             return values;
-
-            
-                
-                
-
         }
 
         public List<ResultCarWithBrandDto> GetCarsWithBrand()
