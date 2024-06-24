@@ -15,3 +15,71 @@
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false"></script>
 <script src="~/carbook-master/js/google-map.js"></script>
 <script src="~/carbook-master/js/main.js"></script>
+
+<!-- Flatpickr CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+<!-- Flatpickr JavaScript -->
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script>
+    $(function () {
+        $('#differentDropOff').change(function () {
+            var dropOffLocation = $('#dropOffLocation');
+            if (this.checked) {
+                dropOffLocation.show();
+            } else {
+                dropOffLocation.hide();
+            }
+        });
+    });
+</script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Alış Tarihi (book_pick_dates) için ayarlar
+        var pickDatePicker = flatpickr('#book_pick_dates', {
+            enableTime: false,
+            dateFormat: "d-m-Y",
+            minDate: "today",
+            onChange: function (selectedDates, dateStr, instance) {
+                // Alış tarihi seçildiğinde iade tarihin minDate özelliğini güncelle
+                if (dateStr !== "") {
+                    returnDatePicker.set("minDate", dateStr);
+                    document.getElementById('book_off_dates').disabled = false;
+                } else {
+                    document.getElementById('book_off_dates').disabled = true;
+                    returnDatePicker.clear();
+                }
+            }
+        });
+
+        // İade Tarihi (book_off_dates) için ayarlar
+        var returnDatePicker = flatpickr('#book_off_dates', {
+            enableTime: false,
+            dateFormat: "d-m-Y",
+            onOpen: function (selectedDates, dateStr, instance) {
+                if (pickDatePicker.selectedDates.length === 0) {
+                    // Alınmak istenen tarih seçilmemişse iade tarihi seçiciyi devre dışı bırak
+                    instance.close();
+                }
+            }
+        });
+
+        // Saat seçicileri başlatma
+        flatpickr('#time_picks', {
+            enableTime: true,
+            noCalendar: true,
+            dateFormat: "H:i",
+            time_24hr: true
+        });
+
+        flatpickr('#time_offs', {
+            enableTime: true,
+            noCalendar: true,
+            dateFormat: "H:i",
+            time_24hr: true
+        });
+    });
+</script>
+
+

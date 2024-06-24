@@ -4,6 +4,7 @@ using DataAccessLayer.Concrete;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccessLayer.Migrations
 {
     [DbContext(typeof(RenASeatContext))]
-    partial class RenASeatContextModelSnapshot : ModelSnapshot
+    [Migration("20240624120441_add_relationship_RentACar_CarPricing")]
+    partial class add_relationship_RentACar_CarPricing
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -365,12 +368,17 @@ namespace DataAccessLayer.Migrations
                     b.Property<int>("CarID")
                         .HasColumnType("int");
 
+                    b.Property<int>("CarPricingID")
+                        .HasColumnType("int");
+
                     b.Property<int>("LocationID")
                         .HasColumnType("int");
 
                     b.HasKey("RentACarId");
 
                     b.HasIndex("CarID");
+
+                    b.HasIndex("CarPricingID");
 
                     b.HasIndex("LocationID");
 
@@ -551,6 +559,12 @@ namespace DataAccessLayer.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("EntitityLayer.Entities.CarPricing", "CarPricing")
+                        .WithMany()
+                        .HasForeignKey("CarPricingID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("EntitityLayer.Entities.Location", "Location")
                         .WithMany("RentACars")
                         .HasForeignKey("LocationID")
@@ -558,6 +572,8 @@ namespace DataAccessLayer.Migrations
                         .IsRequired();
 
                     b.Navigation("Car");
+
+                    b.Navigation("CarPricing");
 
                     b.Navigation("Location");
                 });

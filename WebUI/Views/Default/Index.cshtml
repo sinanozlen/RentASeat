@@ -2,7 +2,7 @@
 @{
     ViewData["Title"] = "Index";
     Layout = null;
-} 
+}
 
 
 <style>
@@ -25,33 +25,46 @@
     <section class="ftco-section ftco-no-pt bg-light">
         <div class="container">
             <div class="row no-gutters">
-                <div class="col-md-12	featured-top">
+                <div class="col-md-12 featured-top">
                     <div class="row no-gutters">
                         <div class="col-md-4 d-flex align-items-center">
-                            <form method="post" class="request-form ftco-animate bg-primary">
-                                <h2>Şimdi Aracınızı Kiralayın</h2>
-                                <div class="form-group">
-                                    <label for="" class="label">Alınacak Lokasyon</label>
-                                    @Html.DropDownListFor(x => x.LocationID, (List<SelectListItem>)ViewBag.v, new { @class = "form-control", @id = "drop" })
+                            <!-- Form içeriği -->
+                            <form method="post" class="request-form ftco-animate bg-primary p-4">
+                                <h2 class="text-white">Şimdi Aracınızı Kiralayın</h2>
+
+                                <!-- Nerede Alacaksınız dropdown listesi -->
+                                <div class="form-group mb-3">
+                                    <label for="drop-pickup" class="label text-white">Nerede Alacaksınız</label>
+                                    @Html.DropDownListFor(x => x.LocationID, (List<SelectListItem>)ViewBag.v, new { @class = "form-select", @id = "drop-pickup" })
                                 </div>
 
-                                <div class="d-flex">
-                                    <div class="form-group mr-2">
-                                        <label for="" class="label">Alış Tarihi</label>
-                                        <input type="text" class="form-control" name="book_pick_date" id="book_pick_date" placeholder="Tarih Seçiniz">
-                                    </div>
-                                    <div class="form-group ml-2">
-                                        <label for="" class="label">İade Tarihi</label>
-                                        <input type="text" class="form-control" name="book_off_date" id="book_off_date" placeholder="Tarih Seçiniz">
-                                    </div>
+                                <div class="form-group mb-3 form-check">
+                                    <input type="checkbox" class="form-check-input" id="differentDropOff" name="differentDropOff">
+                                    <label for="differentDropOff" class="form-check-label text-white">Farklı yerde bırakmak istiyorum</label>
                                 </div>
-                                <div class="form-group">
-                                    <label for="" class="label">Alış Saati</label>
-                                    <input type="text" class="form-control" name="time_pick" id="time_pick" placeholder="Saat Seçiniz">
+                                <div class="form-group mb-3" id="dropOffLocation" style="display: none;">
+                                    <label for="drop-dropoff" class="label text-white">Nereye Bırakacaksınız</label>
+                                    @Html.DropDownListFor(x => x.LocationID, (List<SelectListItem>)ViewBag.v, new { @class = "form-select", @id = "drop-dropoff" })
                                 </div>
-                                <div class="form-group">
-                                    <label for="" class="label">İade Saati</label>
-                                    <input type="text" class="form-control" name="time_off" id="time_pick" placeholder="Saat Seçiniz">
+
+                                <div class="form-group mb-3">
+                                    <label for="book_pick_date" class="label text-white">Alınmak İstenen Tarih</label>
+                                    <input type="text" class="form-control flatpickr-input" id="book_pick_dates" name="book_pick_date" placeholder="Tarih Seçiniz">
+                                </div>
+
+                                <div class="form-group mb-3">
+                                    <label for="book_off_date" class="label text-white">İade Tarihi</label>
+                                    <input type="text" class="form-control flatpickr-input" id="book_off_dates" name="book_off_date" placeholder="Tarih Seçiniz" disabled>
+                                </div>
+
+                                <div class="form-group mb-3">
+                                    <label for="time_pick" class="label text-white">Alış Saati</label>
+                                    <input type="text" class="form-control flatpickr-input" id="time_picks" name="time_pick" placeholder="Saat Seçiniz">
+                                </div>
+
+                                <div class="form-group mb-3">
+                                    <label for="time_off" class="label text-white">İade Saati</label>
+                                    <input type="text" class="form-control flatpickr-input" id="time_offs" name="time_off" placeholder="Saat Seçiniz">
                                 </div>
                                 <div class="form-group">
                                     <button class="btn btn-secondary py-3 px-4">Uygun Araçları Listele</button>
@@ -59,7 +72,7 @@
                             </form>
                         </div>
                         <div class="col-md-8 d-flex align-items-center">
-                            <div class="services-wrap rounded-right w-100">
+                            <div class="services-wrap rounded-right w-100 bg-white p-4">
                                 <h3 class="heading-section mb-4">Araç Kiralamanın En Basit Yolu</h3>
                                 <div class="row d-flex mb-4">
                                     <div class="col-md-4 d-flex align-self-stretch ftco-animate">
@@ -93,6 +106,7 @@
                     </div>
                 </div>
             </div>
+        </div>
     </section>
 
     @await Component.InvokeAsync("_DefaultLast5CarsWithBrandsComponentPartial")

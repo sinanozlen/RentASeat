@@ -61,6 +61,9 @@ builder.Services.AddScoped<IPricingDal, EfPricingDal>();
 //CarPricing Ýçin Gerekli olan 
 builder.Services.AddScoped<ICarPricingService, CarPricingManager>();
 builder.Services.AddScoped<ICarPricingDal, EfCarPricingDal>();
+//RentACar Ýçin Gerekli olan 
+builder.Services.AddScoped<IRentACarDal, EfRentACarDal>();
+builder.Services.AddScoped<IRentACarService, RentACarManager>();
 
 // Car için gerekli olan
 builder.Services.AddScoped<ICarService, CarManager>();
