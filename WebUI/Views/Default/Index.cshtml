@@ -29,10 +29,15 @@
                     <div class="row no-gutters">
                         <div class="col-md-4 d-flex align-items-center">
                             <!-- Form içeriği -->
+
                             <form method="post" class="request-form ftco-animate bg-primary p-4">
                                 <h2 class="text-white">Şimdi Aracınızı Kiralayın</h2>
 
                                 <!-- Nerede Alacaksınız dropdown listesi -->
+
+                              
+
+                             
                                 <div class="form-group mb-3">
                                     <label for="drop-pickup" class="label text-white">Nerede Alacaksınız</label>
                                     @Html.DropDownListFor(x => x.LocationID, (List<SelectListItem>)ViewBag.v, new { @class = "form-select", @id = "drop-pickup" })
@@ -70,6 +75,7 @@
                                     <button class="btn btn-secondary py-3 px-4">Uygun Araçları Listele</button>
                                 </div>
                             </form>
+                            </span>
                         </div>
                         <div class="col-md-8 d-flex align-items-center">
                             <div class="services-wrap rounded-right w-100 bg-white p-4">
