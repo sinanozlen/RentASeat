@@ -4,11 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DtoLayer.LocationDtos
+namespace DtoLayer.SocialMediaDtos
 {
-    public class UpdatePricingDtpo
+    public class CreateSocialMediaDto
     {
-        public int LocationID { get; set; }
         public string Name { get; set; }
+        public string Url { get; set; }
+        public string Icon { get; set; }
     }
 }

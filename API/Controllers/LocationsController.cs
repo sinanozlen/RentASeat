@@ -47,7 +47,7 @@ namespace API.Controllers
             return Ok("Konum Ekleme işlemi Başarı ile Gerçekleşti");
         }
         [HttpPut]
-        public IActionResult UpdateLocation(UpdateLocationDto updateLocationDto)
+        public IActionResult UpdateLocation(UpdatePricingDtpo updateLocationDto)
         {
             Location location = new Location()
             {

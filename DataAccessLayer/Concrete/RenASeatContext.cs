@@ -37,6 +37,8 @@ namespace DataAccessLayer.Concrete
         public DbSet<FooterAddress> FooterAddresses { get; set; }
         public DbSet<RentACar> RentACars { get; set; }
         public DbSet<RentACar> Reservations { get; set; }
+        public DbSet<SocialMedia> SocialMedias { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

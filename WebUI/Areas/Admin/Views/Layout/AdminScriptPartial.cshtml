@@ -8,23 +8,7 @@
 <script src="~/Admin/vertical/assets/js/waves.js"></script>
 <script src="~/Admin/vertical/assets/js/simplebar.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-    function deleteCarConfirm(carID) {
-        var result = confirm("Bu aracı silmek istediğinize emin misiniz?");
-        if (result) {
-            window.location.href = "/AdminCar/RemoveCar/" + carID;
-        }
-    }
-</script>
 
-<script>
-    function deleteFeatureConfirm(featureID) {
-        var result = confirm("Bu özelliği silmek istediğinize emin misiniz?");
-        if (result) {
-            window.location.href = "/AdminFeature/RemoveFeature/" + featureID;
-        }
-    }
-</script>
 <script>
     function deleteBrandConfirm(brandID) {
         var result = confirm("Bu Markayı silmek istediğinize emin misiniz?");
@@ -57,10 +41,10 @@
         var result = confirm("Bu Bilgiyi silmek istediğinize emin misiniz?");
         if (result) {
             $.ajax({
-                url: "/Admin/AdminBanner/RemoveBanner/" + bannerID,
+                url: "/Admin/Banner/RemoveBanner/" + bannerID,
                 type: 'DELETE',
                 success: function () {
-                    window.location.href = "/Admin/AdminBanner/Index";
+                    window.location.href = "/Admin/Banner/Index";
                 },
                 error: function (err) {
                     alert('Error: ' + err.responseText);
@@ -75,10 +59,10 @@
         var result = confirm("Hakkımda kısmını silmek istediğinize emin misiniz?");
         if (result) {
             $.ajax({
-                url: "/Admin/AdminAbout/RemoveAbout/" + aboutID,
+                url: "/Admin/About/RemoveAbout/" + aboutID,
                 type: 'DELETE',
                 success: function () {
-                    window.location.href = "/Admin/AdminAbout/Index";
+                    window.location.href = "/Admin/About/Index";
                 },
                 error: function (err) {
                     alert('Error: ' + err.responseText);
@@ -88,69 +72,17 @@
     }
 
 </script>
-<script>
-    function deleteAuthorConfirm(authorID) {
-        var result = confirm("Yazar bilgisini silmek istediğinize emin misiniz?");
-        if (result) {
-            $.ajax({
-                url: "/Admin/AdminAuthor/RemoveAuthor/" + authorID,
-                type: 'DELETE',
-                success: function () {
-                    window.location.href = "/Admin/AdminAuthor/Index";
-                },
-                error: function (err) {
-                    alert('Error: ' + err.responseText);
-                }
-            });
-        }
-    }
 
-</script>
-<script>
-    function deleteCategoryConfirm(authorID) {
-        var result = confirm("Bu kategoriyi silmek istediğinize emin misiniz?");
-        if (result) {
-            $.ajax({
-                url: "/Admin/AdminCategory/RemoveCategory/" + authorID,
-                type: 'DELETE',
-                success: function () {
-                    window.location.href = "/Admin/AdminCategory/Index";
-                },
-                error: function (err) {
-                    alert('Error: ' + err.responseText);
-                }
-            });
-        }
-    }
-</script>
-
-<script>
-    function deleteBlogConfirm(blogID) {
-        var result = confirm("Bu blogu silmek istediğinize emin misiniz?");
-        if (result) {
-            $.ajax({
-                url: "/Admin/AdminBlog/RemoveBlog/" + blogID,
-                type: 'DELETE',
-                success: function () {
-                    window.location.href = "/Admin/AdminBlog/Index";
-                },
-                error: function (err) {
-                    alert('Error: ' + err.responseText);
-                }
-            });
-        }
-    }
-</script>
 
 <script>
     function deletePricingConfirm(pricingID) {
         var result = confirm("Bu ödeme türünü silmek istediğinize emin misiniz?");
         if (result) {
             $.ajax({
-                url: "/Admin/AdminPricing/RemovePricing/" + pricingID,
+                url: "/Admin/Pricing/RemovePricing/" + pricingID,
                 type: 'DELETE',
                 success: function () {
-                    window.location.href = "/Admin/AdminPricing/Index";
+                    window.location.href = "/Admin/Pricing/Index";
                 },
                 error: function (err) {
                     alert('Error: ' + err.responseText);
@@ -164,10 +96,10 @@
         var result = confirm("Bu Footer adresi silmek istediğinize emin misiniz?");
         if (result) {
             $.ajax({
-                url: "/Admin/AdminFooterAddress/RemoveFooterAddress/" + footerAddressID,
+                url: "/Admin/FooterAddress/RemoveFooterAddress/" + footerAddressID,
                 type: 'DELETE',
                 success: function () {
-                    window.location.href = "/Admin/AdminFooterAddress/Index";
+                    window.location.href = "/Admin/FooterAddress/Index";
                 },
                 error: function (err) {
                     alert('Error: ' + err.responseText);
@@ -181,10 +113,10 @@
         var result = confirm("Bu Footer adresi silmek istediğinize emin misiniz?");
         if (result) {
             $.ajax({
-                url: "/Admin/AdminLocation/RemoveLocation/" + LocationID,
+                url: "/Admin/Location/RemoveLocation/" + LocationID,
                 type: 'DELETE',
                 success: function () {
-                    window.location.href = "/Admin/AdminLocation/Index";
+                    window.location.href = "/Admin/Location/Index";
                 },
                 error: function (err) {
                     alert('Error: ' + err.responseText);
@@ -198,10 +130,10 @@
         var result = confirm("Bu hizmeti silmek istediğinize emin misiniz?");
         if (result) {
             $.ajax({
-                url: "/Admin/AdminService/RemoveService/" + serviceID,
+                url: "/Admin/Service/RemoveService/" + serviceID,
                 type: 'DELETE',
                 success: function () {
-                    window.location.href = "/Admin/AdminService/Index";
+                    window.location.href = "/Admin/Service/Index";
                 },
                 error: function (err) {
                     alert('Error: ' + err.responseText);
@@ -218,7 +150,7 @@
                 url: "/Admin/AdminSocialMedia/RemoveSocialMedia/" + socialMediaID,
                 type: 'DELETE',
                 success: function () {
-                    window.location.href = "/Admin/AdminSocialMedia/Index";
+                    window.location.href = "/Admin/SocialMedia/Index";
                 },
                 error: function (err) {
                     alert('Error: ' + err.responseText);
@@ -232,10 +164,10 @@
         var result = confirm("Bu referansı silmek istediğinize emin misiniz?");
         if (result) {
             $.ajax({
-                url: "/Admin/AdminTestimonial/RemoveTestimonial/" + testimonialID,
+                url: "/Admin/Testimonial/RemoveTestimonial/" + testimonialID,
                 type: 'DELETE',
                 success: function () {
-                    window.location.href = "/Admin/AdminTestimonial/Index";
+                    window.location.href = "/Admin/Testimonial/Index";
                 },
                 error: function (err) {
                     alert('Error: ' + err.responseText);
@@ -244,6 +176,42 @@
         }
     }
 </script>
+<script>
+    function deleteContactConfirm(contactID) {
+        var result = confirm("Bu mesajı silmek istediğinize emin misiniz?");
+        if (result) {
+            $.ajax({
+                url: "/Admin/Contact/RemoveContact/" + contactID,
+                type: 'DELETE',
+                success: function () {
+                    window.location.href = "/Admin/Contact/Index";
+                },
+                error: function (err) {
+                    alert('Error: ' + err.responseText);
+                }
+            });
+        }
+    }
+    </script>
+<script>
+    function deleteFeatureConfirm(featureID) {
+        var result = confirm("Bu mesajı silmek istediğinize emin misiniz?");
+        if (result) {
+            $.ajax({
+                url: "/Admin/Feature/RemoveFeature/" + featureID,
+                type: 'DELETE',
+                success: function () {
+                    window.location.href = "/Admin/Feature/Index";
+                },
+                error: function (err) {
+                    alert('Error: ' + err.responseText);
+                }
+            });
+        }
+    }
+</script>
+
+   
 
 
 
