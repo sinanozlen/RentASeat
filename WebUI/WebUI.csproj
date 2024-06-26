@@ -44,8 +44,4 @@
     <ProjectReference Include="..\DtoLayer\DtoLayer.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Views\Shared\Components\_CarDetailCarDescriptionByCarIdComponentPartial\" />
-  </ItemGroup>
-
 </Project>
