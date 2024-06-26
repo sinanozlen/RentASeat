@@ -1,5 +1,6 @@
 ﻿using BusinessLayer.Abstract;
 using DataAccessLayer.Abstract;
+using DtoLayer.CarFeatureDtos;
 using EntitityLayer.Entities;
 using System;
 using System.Collections.Generic;
@@ -23,6 +24,21 @@ namespace BusinessLayer.Concrete
             _carFeatureDal.Add(entity);
         }
 
+        public void TChangeCarFeatureAvailableToFalse(int id)
+        {
+            _carFeatureDal.ChangeCarFeatureAvailableToFalse(id);
+        }
+
+        public void TChangeCarFeatureAvailableToTrue(int id)
+        {
+            _carFeatureDal.ChangeCarFeatureAvailableToTrue(id);
+        }
+
+        public void TCreateCarFeatureByCar(CarFeature carFeature)
+        {
+            _carFeatureDal.CreateCarFeatureByCar(carFeature);
+        }
+
         public void TDelete(CarFeature entity)
         {
             _carFeatureDal.Delete(entity);
@@ -31,6 +47,12 @@ namespace BusinessLayer.Concrete
         public CarFeature TGetbyID(int ID)
         {
             var values =_carFeatureDal.GetbyID(ID);
+            return values;
+        }
+
+        public Task<List<ResultCarFeatureByCarIdDto>> TGetCarFeaturesByCarID(int carID)
+        {
+            var values= _carFeatureDal.GetCarFeaturesByCarID(carID);
             return values;
         }
 

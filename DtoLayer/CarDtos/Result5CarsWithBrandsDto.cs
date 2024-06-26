@@ -20,5 +20,6 @@ namespace DtoLayer.CarDtos
         public string Fuel { get; set; }
         public string BigImageUrl { get; set; }
         public string Amount { get; set; }
+        
     }
 }

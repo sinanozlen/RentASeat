@@ -1,4 +1,5 @@
-﻿using EntitityLayer.Entities;
+﻿using DtoLayer.CarFeatureDtos;
+using EntitityLayer.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,5 +10,9 @@ namespace BusinessLayer.Abstract
 {
     public interface ICarFeatureService:IGenericService<CarFeature>
     {
+        Task<List<ResultCarFeatureByCarIdDto>> TGetCarFeaturesByCarID(int carID);
+        void TChangeCarFeatureAvailableToFalse(int id);
+        void TChangeCarFeatureAvailableToTrue(int id);
+        void TCreateCarFeatureByCar(CarFeature carFeature);
     }
 }
