@@ -15,6 +15,5 @@ namespace EntitityLayer.Entities
         public Car Car { get; set; }
         public bool Available { get; set; }
         
-        
     }
 }

@@ -44,7 +44,7 @@ namespace DataAccessLayer.Migrations
 
                     b.HasKey("AboutId");
 
-                    b.ToTable("Abouts");
+                    b.ToTable("Abouts", (string)null);
                 });
 
             modelBuilder.Entity("EntitityLayer.Entities.Banner", b =>
@@ -73,7 +73,7 @@ namespace DataAccessLayer.Migrations
 
                     b.HasKey("BannerID");
 
-                    b.ToTable("Banners");
+                    b.ToTable("Banners", (string)null);
                 });
 
             modelBuilder.Entity("EntitityLayer.Entities.Brand", b =>
@@ -90,7 +90,7 @@ namespace DataAccessLayer.Migrations
 
                     b.HasKey("BrandID");
 
-                    b.ToTable("Brands");
+                    b.ToTable("Brands", (string)null);
                 });
 
             modelBuilder.Entity("EntitityLayer.Entities.Car", b =>
@@ -137,7 +137,7 @@ namespace DataAccessLayer.Migrations
 
                     b.HasIndex("BrandID");
 
-                    b.ToTable("Cars");
+                    b.ToTable("Cars", (string)null);
                 });
 
             modelBuilder.Entity("EntitityLayer.Entities.CarDescription", b =>
@@ -159,7 +159,7 @@ namespace DataAccessLayer.Migrations
 
                     b.HasIndex("CarID");
 
-                    b.ToTable("CarDescriptions");
+                    b.ToTable("CarDescriptions", (string)null);
                 });
 
             modelBuilder.Entity("EntitityLayer.Entities.CarFeature", b =>
@@ -185,7 +185,7 @@ namespace DataAccessLayer.Migrations
 
                     b.HasIndex("FeatureID");
 
-                    b.ToTable("CarFeatures");
+                    b.ToTable("CarFeatures", (string)null);
                 });
 
             modelBuilder.Entity("EntitityLayer.Entities.CarPricing", b =>
@@ -211,7 +211,7 @@ namespace DataAccessLayer.Migrations
 
                     b.HasIndex("PricingID");
 
-                    b.ToTable("CarPricings");
+                    b.ToTable("CarPricings", (string)null);
                 });
 
             modelBuilder.Entity("EntitityLayer.Entities.Contact", b =>
@@ -243,7 +243,7 @@ namespace DataAccessLayer.Migrations
 
                     b.HasKey("ContactID");
 
-                    b.ToTable("Contacts");
+                    b.ToTable("Contacts", (string)null);
                 });
 
             modelBuilder.Entity("EntitityLayer.Entities.Customer", b =>
@@ -268,7 +268,7 @@ namespace DataAccessLayer.Migrations
 
                     b.HasKey("CustomerID");
 
-                    b.ToTable("Customer");
+                    b.ToTable("Customer", (string)null);
                 });
 
             modelBuilder.Entity("EntitityLayer.Entities.Feature", b =>
@@ -285,7 +285,7 @@ namespace DataAccessLayer.Migrations
 
                     b.HasKey("FeatureID");
 
-                    b.ToTable("Features");
+                    b.ToTable("Features", (string)null);
                 });
 
             modelBuilder.Entity("EntitityLayer.Entities.FooterAddress", b =>
@@ -314,7 +314,7 @@ namespace DataAccessLayer.Migrations
 
                     b.HasKey("FooterAddressID");
 
-                    b.ToTable("FooterAddresses");
+                    b.ToTable("FooterAddresses", (string)null);
                 });
 
             modelBuilder.Entity("EntitityLayer.Entities.Location", b =>
@@ -331,7 +331,7 @@ namespace DataAccessLayer.Migrations
 
                     b.HasKey("LocationID");
 
-                    b.ToTable("Locations");
+                    b.ToTable("Locations", (string)null);
                 });
 
             modelBuilder.Entity("EntitityLayer.Entities.Pricing", b =>
@@ -348,7 +348,7 @@ namespace DataAccessLayer.Migrations
 
                     b.HasKey("PricingID");
 
-                    b.ToTable("Pricings");
+                    b.ToTable("Pricings", (string)null);
                 });
 
             modelBuilder.Entity("EntitityLayer.Entities.RentACar", b =>
@@ -374,7 +374,7 @@ namespace DataAccessLayer.Migrations
 
                     b.HasIndex("LocationID");
 
-                    b.ToTable("RentACar");
+                    b.ToTable("RentACars", (string)null);
                 });
 
             modelBuilder.Entity("EntitityLayer.Entities.RentACarProcess", b =>
@@ -426,64 +426,7 @@ namespace DataAccessLayer.Migrations
 
                     b.HasIndex("CustomerID");
 
-                    b.ToTable("RentACarProcess");
-                });
-
-            modelBuilder.Entity("EntitityLayer.Entities.Reservation", b =>
-                {
-                    b.Property<int>("ReservationID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ReservationID"));
-
-                    b.Property<int>("Age")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CarID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("DriverLicenseYear")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("DropOffLocationID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Phone")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("PickUpLocationID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Surname")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("ReservationID");
-
-                    b.HasIndex("CarID");
-
-                    b.HasIndex("DropOffLocationID");
-
-                    b.HasIndex("PickUpLocationID");
-
-                    b.ToTable("Reservation");
+                    b.ToTable("RentACarProcess", (string)null);
                 });
 
             modelBuilder.Entity("EntitityLayer.Entities.Service", b =>
@@ -508,32 +451,7 @@ namespace DataAccessLayer.Migrations
 
                     b.HasKey("ServiceID");
 
-                    b.ToTable("Services");
-                });
-
-            modelBuilder.Entity("EntitityLayer.Entities.SocialMedia", b =>
-                {
-                    b.Property<int>("SocialMediaID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("SocialMediaID"));
-
-                    b.Property<string>("Icon")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Url")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("SocialMediaID");
-
-                    b.ToTable("SocialMedias");
+                    b.ToTable("Services", (string)null);
                 });
 
             modelBuilder.Entity("EntitityLayer.Entities.Testimonial", b =>
@@ -562,7 +480,7 @@ namespace DataAccessLayer.Migrations
 
                     b.HasKey("TestimonialID");
 
-                    b.ToTable("Testimonials");
+                    b.ToTable("Testimonials", (string)null);
                 });
 
             modelBuilder.Entity("EntitityLayer.Entities.Car", b =>
@@ -663,29 +581,6 @@ namespace DataAccessLayer.Migrations
                     b.Navigation("Customer");
                 });
 
-            modelBuilder.Entity("EntitityLayer.Entities.Reservation", b =>
-                {
-                    b.HasOne("EntitityLayer.Entities.Car", "Car")
-                        .WithMany()
-                        .HasForeignKey("CarID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("EntitityLayer.Entities.Location", "DropOffLocation")
-                        .WithMany("DropOffReservation")
-                        .HasForeignKey("DropOffLocationID");
-
-                    b.HasOne("EntitityLayer.Entities.Location", "PickUpLocation")
-                        .WithMany("PickUpReservation")
-                        .HasForeignKey("PickUpLocationID");
-
-                    b.Navigation("Car");
-
-                    b.Navigation("DropOffLocation");
-
-                    b.Navigation("PickUpLocation");
-                });
-
             modelBuilder.Entity("EntitityLayer.Entities.Brand", b =>
                 {
                     b.Navigation("Cars");
@@ -716,10 +611,6 @@ namespace DataAccessLayer.Migrations
 
             modelBuilder.Entity("EntitityLayer.Entities.Location", b =>
                 {
-                    b.Navigation("DropOffReservation");
-
-                    b.Navigation("PickUpReservation");
-
                     b.Navigation("RentACars");
                 });
 
