@@ -15,11 +15,23 @@ namespace API.Controllers
         {
             _carFeatureService = carFeatureService;
         }
-        [HttpGet("CarFeatureListByCarId")]
-        public async Task<IActionResult> CarFeatureListByCarId(int carID)
+        [HttpGet]
+        public async Task<IActionResult> GetCarFeaturesByCarId(int carId)
         {
-            var result = await _carFeatureService.TGetCarFeaturesByCarID(carID);
-            return Ok(result);
+            try
+            {
+                var result = await _carFeatureService.TGetCarFeaturesByCarID(carId);
+                if (result == null || !result.Any())
+                {
+                    return NotFound("Araç özellikleri bulunamadı");
+                }
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+
+                return StatusCode(500, "Bir hata oluştu");
+            }
         }
         [HttpGet("CarFeatureChangeAvailableToFalse")]
         public IActionResult CarFeatureChangeAvailableToFalse(int id)
