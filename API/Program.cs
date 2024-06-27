@@ -40,6 +40,11 @@ builder.Services.AddScoped<IFeatureDal, EfFeatureDal>();
 //Service Ýçin Gerekli olan 
 builder.Services.AddScoped<IServiceService, ServiceManager>();
 builder.Services.AddScoped<IServiceDal, EfServiceDal>();
+
+//Social Mediya Gerekli olan 
+builder.Services.AddScoped<ISocialMediaService, SocialMediaManager>();
+builder.Services.AddScoped<ISocialMediaDal, EfSocialMediaDal>();
+
 //Banner Ýçin Gerekli olan 
 builder.Services.AddScoped<IBannerService, BannerManager>();
 builder.Services.AddScoped<IBannerDal, EfBannerDal>();
