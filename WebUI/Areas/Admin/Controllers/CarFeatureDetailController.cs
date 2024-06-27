@@ -21,7 +21,7 @@ namespace WebUI.Areas.Admin.Controllers
         public async Task<IActionResult> Index(int id)
         {
             var client = _httpClientFactory.CreateClient();
-            var responseMessage = await client.GetAsync("https://localhost:7250/api/CarFeatures?id=" + id);
+            var responseMessage = await client.GetAsync("https://localhost:7250/api/CarFeatures/CarFeatureListByCarId?carID" + id);
             if (responseMessage.IsSuccessStatusCode)
             {
                 var jsonData = await responseMessage.Content.ReadAsStringAsync();
@@ -50,7 +50,7 @@ namespace WebUI.Areas.Admin.Controllers
                     await client.GetAsync("https://localhost:7250/api/CarFeatures/CarFeatureChangeAvailableToFalse?id=" + item.CarFeatureID);
                 }
             }
-            return RedirectToAction("Index", "AdminCar");
+            return RedirectToAction("Index", "Car");
         }
 
         [Route("CreateFeatureByCarId")]

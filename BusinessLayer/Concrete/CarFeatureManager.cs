@@ -34,9 +34,9 @@ namespace BusinessLayer.Concrete
             _carFeatureDal.ChangeCarFeatureAvailableToTrue(id);
         }
 
-        public void TCreateCarFeatureByCar(CarFeature carFeature)
+        public void TCreateCarFeatureByCar(CreateCarFeatureDto createCarFeatureDto)
         {
-            _carFeatureDal.CreateCarFeatureByCar(carFeature);
+            _carFeatureDal.CreateCarFeatureByCar(createCarFeatureDto);
         }
 
         public void TDelete(CarFeature entity)

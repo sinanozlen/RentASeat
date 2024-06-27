@@ -13,6 +13,6 @@ namespace DataAccessLayer.Abstract
         Task< List<ResultCarFeatureByCarIdDto>> GetCarFeaturesByCarID(int carID);
         void ChangeCarFeatureAvailableToFalse(int id);
         void ChangeCarFeatureAvailableToTrue(int id);
-        void CreateCarFeatureByCar(CarFeature carFeature);
+        void CreateCarFeatureByCar(CreateCarFeatureDto createCarFeatureDto);
     }
 }

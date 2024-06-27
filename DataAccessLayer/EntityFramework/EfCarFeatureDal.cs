@@ -22,11 +22,11 @@ namespace DataAccessLayer.EntityFramework
 
         public async Task< List<ResultCarFeatureByCarIdDto>> GetCarFeaturesByCarID(int carID)
         {
-            var values= _context.CarFeatures.Where(x => x.CarID == carID).ToList();
+            var values= _context.CarFeatures.Include(y=>y.Feature).Where(x => x.CarID == carID).ToList();
             return values.Select(x=> new ResultCarFeatureByCarIdDto
             {
                 CarFeatureID = x.CarFeatureID,
-                
+                FeatureName=x.Feature.Name,
                 FeatureID = x.FeatureID,
                 Available = x.Available
             }).ToList();
@@ -45,11 +45,19 @@ namespace DataAccessLayer.EntityFramework
             _context.SaveChanges();
         }
 
-        public void CreateCarFeatureByCar(CarFeature carFeature)
+        public void CreateCarFeatureByCar(CreateCarFeatureDto createCarFeatureDto)
         {
-            _context.CarFeatures.Add(carFeature);
+            var newCarFeature = new CarFeature
+            {
+                Available = false,
+                CarID = createCarFeatureDto.CarID,
+                FeatureID = createCarFeatureDto.FeatureID
+            };
+          
+            _context.CarFeatures.Add(newCarFeature);
             _context.SaveChanges();
         }
+
 
     }
 }

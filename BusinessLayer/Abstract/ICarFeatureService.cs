@@ -13,6 +13,6 @@ namespace BusinessLayer.Abstract
         Task<List<ResultCarFeatureByCarIdDto>> TGetCarFeaturesByCarID(int carID);
         void TChangeCarFeatureAvailableToFalse(int id);
         void TChangeCarFeatureAvailableToTrue(int id);
-        void TCreateCarFeatureByCar(CarFeature carFeature);
+        void TCreateCarFeatureByCar(CreateCarFeatureDto createCarFeatureDto);
     }
 }

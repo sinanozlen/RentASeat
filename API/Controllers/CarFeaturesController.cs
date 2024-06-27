@@ -1,4 +1,5 @@
 ﻿using BusinessLayer.Abstract;
+using DtoLayer.CarFeatureDtos;
 using EntitityLayer.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -14,7 +15,7 @@ namespace API.Controllers
         {
             _carFeatureService = carFeatureService;
         }
-        [HttpGet("getcarfeaturesbycarid")]
+        [HttpGet("CarFeatureListByCarId")]
         public async Task<IActionResult> CarFeatureListByCarId(int carID)
         {
             var result = await _carFeatureService.TGetCarFeaturesByCarID(carID);
@@ -33,9 +34,9 @@ namespace API.Controllers
             return Ok("Güncelleme Yapıldı");
         }
         [HttpPost]
-        public IActionResult CreateCarFeatureByCar(CarFeature carFeature)
+        public IActionResult CreateCarFeatureByCar(CreateCarFeatureDto createCarFeatureDto)
         {
-            _carFeatureService.TCreateCarFeatureByCar(carFeature);
+            _carFeatureService.TCreateCarFeatureByCar(createCarFeatureDto);
             return Ok("Ekleme Yapıldı");
         }
     }
