@@ -14,14 +14,14 @@
                     <div class="card-body">
                         <h4 class="card-title">Sosyal Medya Hesap Linkleri Yönetim</h4>
                         <p class="card-subtitle mb-4">
-                           Kullandığınız Sosyal Medya Hesaplarına Ait Bilgileri Yönetebileceğiniz Sayfadır
+                            Kullandığınız Sosyal Medya Hesaplarına Ait Bilgileri Yönetebileceğiniz Sayfadır
                         </p>
                         <div class="table-responsive">
                             <table class="table mb-0">
                                 <thead>
                                     <tr>
                                         <th>#</th>
-                                        <th>Başlık</th>                                        
+                                        <th>Başlık</th>
                                         <th>Sil</th>
                                         <th>Güncelle</th>
                                         <th>Aç</th>
@@ -36,17 +36,17 @@
                                             <td>@count</td>
 
 
-                                                <td>@item.Name</td>
-                                               
-                                         
-                                            
-@*                                              <td>
-                                                <button onclick="deleteSocialMediaConfirm('@item.SocialMediaID')" class="btn btn-outline-danger">Sil</button>
-                                            </td> *@
+                                            <td>@item.Name</td>
 
-@*                                             <td><a href="/Admin/SocialMedia/RemoveSocialMedia/@item.SocialMediaID" class="btn btn-outline-danger">Sil</a></td>
-                                            <td><a href="/Admin/SocialMedia/UpdateSocialMedia/@item.SocialMediaID" class="btn btn-outline-success">Güncelle</a></td>
-                                            <td><a href="/Admin/SocialMedia/UpdateSocialMedia/@item.SocialMediaID" class="btn btn-outline-dark">Aç</a></td> *@
+
+
+                                         <td>
+                                        <button onclick="deleteSocialMediaConfirm('@item.SocialMediaID')" class="btn btn-outline-danger">Sil</button>
+                                        </td> 
+
+                                      
+                                        <td><a href="/Admin/SocialMedia/UpdateSocialMedia/@item.SocialMediaID" class="btn btn-outline-success">Güncelle</a></td>
+                                        <td><a href="/Admin/SocialMedia/UpdateSocialMedia/@item.SocialMediaID" class="btn btn-outline-dark">Aç</a></td> 
                                         </tr>
                                     }
                                 </tbody>
@@ -61,4 +61,3 @@
 </div>
 
 >Index</h1>
-

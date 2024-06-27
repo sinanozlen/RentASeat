@@ -13,9 +13,9 @@ namespace DtoLayer.TestimonialDtos
         public string Comment { get; set; }
         public string ImageUrl { get; set; }
 
-        public static implicit operator int(CreateTestimonialDto v)
-        {
-            throw new NotImplementedException();
-        }
+        //public static implicit operator int(CreateTestimonialDto v)
+        //{
+        //    throw new NotImplementedException();
+        //}
     }
 }
