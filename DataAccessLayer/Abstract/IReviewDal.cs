@@ -1,4 +1,4 @@
-﻿using DtoLayer.CarDescriptionDtos;
+﻿using DtoLayer.ReviewDtos;
 using EntitityLayer.Entities;
 using System;
 using System.Collections.Generic;
@@ -8,8 +8,8 @@ using System.Threading.Tasks;
 
 namespace DataAccessLayer.Abstract
 {
-    public interface ICarDescriptionDal:IGenericDal<CarDescription>
+    public interface IReviewDal:IGenericDal<Review>
     {
-        ResultCarDescriptionByCarIdDto GetCarDescriptionWithCarID(int carID);
+        List<ResultReviewByCarIdDto> GetReviewsByCarId(int carId);
     }
 }

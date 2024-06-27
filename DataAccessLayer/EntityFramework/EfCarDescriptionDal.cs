@@ -1,6 +1,7 @@
 ﻿using DataAccessLayer.Abstract;
 using DataAccessLayer.Concrete;
 using DataAccessLayer.Repositories;
+using DtoLayer.CarDescriptionDtos;
 using EntitityLayer.Entities;
 using System;
 using System.Collections.Generic;
@@ -12,8 +13,25 @@ namespace DataAccessLayer.EntityFramework
 {
     public class EfCarDescriptionDal : GenericRepository<CarDescription>, ICarDescriptionDal
     {
+       
         public EfCarDescriptionDal(RenASeatContext renASeatContext) : base(renASeatContext)
         {
+        }
+
+
+
+        public ResultCarDescriptionByCarIdDto GetCarDescriptionWithCarID(int carID)
+        {
+            using var _renASeatContext = new RenASeatContext();
+            var values=_renASeatContext.CarDescriptions.FirstOrDefault(x => x.CarID == carID);
+            ResultCarDescriptionByCarIdDto result = new ResultCarDescriptionByCarIdDto
+            {
+                CarID = values.CarID,
+                Details = values.Details,
+                CarDescriptionID=values.CarDescriptionID
+            };
+            return result;
+
         }
     }
 }

@@ -24,10 +24,16 @@ builder.Services.AddScoped<IBrandDal, EfBrandDal>();
 //Car Ýçin Gerekli olan 
 builder.Services.AddScoped<ICarService, CarManager>();
 builder.Services.AddScoped<ICarDal, EfCarDal>();
+//CarDescription  Ýçin Gerekli olan 
+builder.Services.AddScoped<ICarDescriptionService, CarDescriptionManager>();
+builder.Services.AddScoped<ICarDescriptionDal, EfCarDescriptionDal>();
 
 //About
 builder.Services.AddScoped<IAboutService, AboutManager>();
 builder.Services.AddScoped<IAboutDal, EfAboutDal>();
+//Reviews
+builder.Services.AddScoped<IReviewService, ReviewManager>();
+builder.Services.AddScoped<IReviewDal, EfReviewDal>();
 
 //Pricing
 builder.Services.AddScoped<IPricingService, PricingManager>();

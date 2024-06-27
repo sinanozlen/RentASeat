@@ -1,4 +1,4 @@
-﻿using DtoLayer.CarDescriptionDtos;
+﻿using DtoLayer.ReviewDtos;
 using EntitityLayer.Entities;
 using System;
 using System.Collections.Generic;
@@ -8,8 +8,8 @@ using System.Threading.Tasks;
 
 namespace BusinessLayer.Abstract
 {
-    public interface ICarDescriptionService:IGenericService<CarDescription>
+    public interface IReviewService:IGenericService<Review>
     {
-        ResultCarDescriptionByCarIdDto TGetCarDescriptionWithCarID(int carID);
+        List<ResultReviewByCarIdDto> TGetReviewsByCarId(int carId);
     }
 }
