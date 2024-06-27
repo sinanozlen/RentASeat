@@ -147,7 +147,7 @@
         var result = confirm("Bu sosyal medya hesabını silmek istediğinize emin misiniz?");
         if (result) {
             $.ajax({
-                url: "/Admin/AdminSocialMedia/RemoveSocialMedia/" + socialMediaID,
+                url: "/Admin/SocialMedia/RemoveSocialMedia/" + socialMediaID,
                 type: 'DELETE',
                 success: function () {
                     window.location.href = "/Admin/SocialMedia/Index";

@@ -2,6 +2,7 @@
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Areas/Admin/Views/Layout/Index.cshtml";
+    int count = 0;
 }
 
 <div class="page-content">
@@ -34,15 +35,13 @@
                                             <td>@item.Name</td>
                                             <td>@item.Title</td>
                                             <td>@item.Comment</td>
-                                            <td>
-                                                <button onclick="deleteTestimonialConfirm('@item.TestimonialID')" class="btn btn-outline-danger">Sil</button>
-                                            </td>
-                                            <td><a href="/Admin/Testimonial/UpdateTestimonial/@item.TestimonialID" class="btn btn-outline-success">Güncelle</a></td>
+                                            <td><a href="/Admin/AdminTestimonial/RemoveTestimonial/@item.TestimonialID" class="btn btn-outline-danger">Sil</a></td>
+                                            <td><a href="/Admin/AdminTestimonial/UpdateTestimonial/@item.TestimonialID" class="btn btn-outline-success">Güncelle</a></td>
                                         </tr>
                                     }
                                 </tbody>
                             </table>
-                            <a href="/Admin/Testimonial/CreateTestimonial" class="btn btn-outline-primary">Yeni Referans Girişi</a>
+                            <a href="/Admin/AdminTestimonial/CreateTestimonial" class="btn btn-outline-primary">Yeni Referans Girişi</a>
                         </div>
                     </div>
                 </div>
