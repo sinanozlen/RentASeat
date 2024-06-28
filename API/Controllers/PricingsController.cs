@@ -3,6 +3,9 @@ using DtoLayer.PricingDtos;
 using EntitityLayer.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using System;
+using System.Linq;
 
 namespace API.Controllers
 {
@@ -11,49 +14,108 @@ namespace API.Controllers
     public class PricingsController : ControllerBase
     {
         private readonly IPricingService _pricingService;
-        public PricingsController(IPricingService pricingService)
+        private readonly ILogger<PricingsController> _logger;
+
+        public PricingsController(IPricingService pricingService, ILogger<PricingsController> logger)
         {
             _pricingService = pricingService;
+            _logger = logger;
         }
+
         [HttpGet]
         public IActionResult PricingList()
         {
-            var pricings = _pricingService.TGetListAll();
-            return Ok(pricings);
+            try
+            {
+                var pricings = _pricingService.TGetListAll();
+                return Ok(pricings);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Ödeme planları listesi getirilirken bir hata oluştu.");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Sunucu hatası");
+            }
         }
+
         [HttpGet("{id}")]
         public IActionResult GetPricing(int id)
         {
-            var pricing = _pricingService.TGetbyID(id);
-            return Ok(pricing);
+            try
+            {
+                var pricing = _pricingService.TGetbyID(id);
+                if (pricing == null)
+                {
+                    return NotFound("Ödeme planı bulunamadı");
+                }
+                return Ok(pricing);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"ID {id} olan ödeme planı getirilirken bir hata oluştu.");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Sunucu hatası");
+            }
         }
+
         [HttpDelete("{id}")]
         public IActionResult DeletePricing(int id)
         {
-            var values = _pricingService.TGetbyID(id);
-            _pricingService.TDelete(values);
-            return Ok("Ödeme Planı Silme işlemi Başarı ile Gerçekleşti");
+            try
+            {
+                var pricing = _pricingService.TGetbyID(id);
+                if (pricing == null)
+                {
+                    return NotFound("Ödeme planı bulunamadı");
+                }
+
+                _pricingService.TDelete(pricing);
+                return Ok("Ödeme planı silme işlemi başarı ile gerçekleştirildi");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"ID {id} olan ödeme planı silinirken bir hata oluştu.");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Sunucu hatası");
+            }
         }
+
         [HttpPost]
         public IActionResult CreatePricing(CreatePricingDto createPricingDto)
         {
-            Pricing pricing = new Pricing()
+            try
             {
-               Name = createPricingDto.Name,
-            };
-            _pricingService.TAdd(pricing);
-            return Ok("Ödeme Planı Ekleme işlemi Başarı ile Gerçekleşti");
+                var pricing = new Pricing()
+                {
+                    Name = createPricingDto.Name
+                };
+
+                _pricingService.TAdd(pricing);
+                return Ok("Ödeme planı ekleme işlemi başarı ile gerçekleştirildi");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Ödeme planı eklenirken bir hata oluştu.");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Sunucu hatası");
+            }
         }
+
         [HttpPut]
         public IActionResult UpdatePricing(UpdatePricingDto updatePricingDto)
         {
-            Pricing pricing = new Pricing()
+            try
             {
-                PricingID = updatePricingDto.PricingID,
-                Name = updatePricingDto.Name,
-            };
-            _pricingService.TUpdate(pricing);
-            return Ok("Ödeme Planı Güncelleme işlemi Başarı ile Gerçekleşti");
+                var pricing = new Pricing()
+                {
+                    PricingID = updatePricingDto.PricingID,
+                    Name = updatePricingDto.Name
+                };
+
+                _pricingService.TUpdate(pricing);
+                return Ok("Ödeme planı güncelleme işlemi başarı ile gerçekleştirildi");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"ID {updatePricingDto.PricingID} olan ödeme planı güncellenirken bir hata oluştu.");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Sunucu hatası");
+            }
         }
     }
 }

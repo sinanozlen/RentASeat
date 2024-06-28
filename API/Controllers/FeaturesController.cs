@@ -3,6 +3,9 @@ using DtoLayer.FeatureDtos;
 using EntitityLayer.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using System;
+using System.Linq;
 
 namespace API.Controllers
 {
@@ -11,58 +14,108 @@ namespace API.Controllers
     public class FeaturesController : ControllerBase
     {
         private readonly IFeatureService _featureService;
+        private readonly ILogger<FeaturesController> _logger;
 
-        public FeaturesController(IFeatureService featureService)
+        public FeaturesController(IFeatureService featureService, ILogger<FeaturesController> logger)
         {
             _featureService = featureService;
+            _logger = logger;
         }
 
         [HttpGet]
         public IActionResult FeatureList()
         {
-            var features = _featureService.TGetListAll();
-            return Ok(features);
+            try
+            {
+                var features = _featureService.TGetListAll();
+                return Ok(features);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Özellikler getirilirken bir hata oluştu.");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Sunucu hatası");
+            }
         }
 
         [HttpGet("{id}")]
         public IActionResult GetFeature(int id)
         {
-            var feature = _featureService.TGetbyID(id);
-            if (feature == null)
-                return NotFound("Özellik bulunamadı");
-            return Ok(feature);
+            try
+            {
+                var feature = _featureService.TGetbyID(id);
+                if (feature == null)
+                {
+                    return NotFound("Özellik bulunamadı");
+                }
+                return Ok(feature);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"ID {id} olan özellik getirilirken bir hata oluştu.");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Sunucu hatası");
+            }
         }
 
         [HttpDelete("{id}")]
         public IActionResult DeleteFeature(int id)
         {
-            var values = _featureService.TGetbyID(id);
-            _featureService.TDelete(values);
-            return Ok("Özellik Silme işlemi Başarı ile Gerçekleşti");
+            try
+            {
+                var feature = _featureService.TGetbyID(id);
+                if (feature == null)
+                {
+                    return NotFound("Özellik bulunamadı");
+                }
+
+                _featureService.TDelete(feature);
+                return Ok("Özellik silme işlemi başarı ile gerçekleştirildi");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"ID {id} olan özellik silinirken bir hata oluştu.");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Sunucu hatası");
+            }
         }
 
         [HttpPost]
         public IActionResult CreateFeature(CreateFeatureDto createFeatureDto)
         {
-            Feature feature = new Feature()
+            try
             {
-                Name = createFeatureDto.Name,
-            };
+                Feature feature = new Feature
+                {
+                    Name = createFeatureDto.Name,
+                };
 
-            _featureService.TAdd(feature);
-            return Ok("Özellik Ekleme işlemi Başarı ile Gerçekleşti");
+                _featureService.TAdd(feature);
+                return Ok("Özellik ekleme işlemi başarı ile gerçekleştirildi");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Özellik eklenirken bir hata oluştu.");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Sunucu hatası");
+            }
         }
 
         [HttpPut]
         public IActionResult UpdateFeature(UpdateFeatureDto updateFeatureDto)
         {
-            Feature feature = new Feature()
+            try
             {
-                FeatureID = updateFeatureDto.FeatureID,
-                Name = updateFeatureDto.Name,
-            };
-            _featureService.TUpdate(feature);
-            return Ok("Özellik Güncelleme işlemi Başarı ile Gerçekleşti");
+                Feature feature = new Feature
+                {
+                    FeatureID = updateFeatureDto.FeatureID,
+                    Name = updateFeatureDto.Name,
+                };
+
+                _featureService.TUpdate(feature);
+                return Ok("Özellik güncelleme işlemi başarı ile gerçekleştirildi");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"ID {updateFeatureDto.FeatureID} olan özellik güncellenirken bir hata oluştu.");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Sunucu hatası");
+            }
         }
     }
 }

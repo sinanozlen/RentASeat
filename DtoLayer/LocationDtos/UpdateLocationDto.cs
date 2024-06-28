@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DtoLayer.LocationDtos
 {
-    public class UpdatePricingDtpo
+    public class UpdateLocationDto
     {
         public int LocationID { get; set; }
         public string Name { get; set; }

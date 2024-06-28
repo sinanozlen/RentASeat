@@ -8,208 +8,320 @@
 <script src="~/Admin/vertical/assets/js/waves.js"></script>
 <script src="~/Admin/vertical/assets/js/simplebar.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- SweetAlert CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
+<!-- SweetAlert JS -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 
 <script>
     function deleteBrandConfirm(brandID) {
-        var result = confirm("Bu Markayı silmek istediğinize emin misiniz?");
-        if (result) {
-            fetch("/Admin/Brand/RemoveBrand/" + brandID, {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                // body: JSON.stringify({ brandID: brandID }) // Bu satırı gerektirebilir
-            }).then(response => {
-                // İsteğin sonucunu kontrol et
-                if (response.ok) {
-                    // Başarılı ise, sayfayı yeniden yükle veya yönlendirme yapabilirsiniz
-                    window.location.reload();
-                } else {
-                    // Başarısızsa hata mesajı göster
-                    alert('Silme işlemi başarısız oldu.');
-                }
-            }).catch(error => {
-                console.error('Silme işlemi sırasında hata oluştu:', error);
-            });
-        }
+        Swal.fire({
+            title: 'Bu Markayı silmek istediğinize emin misiniz?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Evet, sil!',
+            cancelButtonText: 'Hayır, iptal et!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                fetch("/Admin/Brand/RemoveBrand/" + brandID, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                }).then(response => {
+                    if (response.ok) {
+                        Swal.fire('Silindi!', 'Marka başarıyla silindi.', 'success').then(() => {
+                            window.location.reload();
+                        });
+                    } else {
+                        Swal.fire('Hata!', 'Silme işlemi başarısız oldu.', 'error');
+                    }
+                }).catch(error => {
+                    Swal.fire('Hata!', 'Silme işlemi sırasında hata oluştu.', 'error');
+                });
+            }
+        });
     }
 
-</script>
-
-<script>
     function deleteBannerConfirm(bannerID) {
-        var result = confirm("Bu Bilgiyi silmek istediğinize emin misiniz?");
-        if (result) {
-            $.ajax({
-                url: "/Admin/Banner/RemoveBanner/" + bannerID,
-                type: 'DELETE',
-                success: function () {
-                    window.location.href = "/Admin/Banner/Index";
-                },
-                error: function (err) {
-                    alert('Error: ' + err.responseText);
-                }
-            });
-        }
+        Swal.fire({
+            title: 'Bu Bilgiyi silmek istediğinize emin misiniz?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Evet, sil!',
+            cancelButtonText: 'Hayır, iptal et!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: "/Admin/Banner/RemoveBanner/" + bannerID,
+                    type: 'DELETE',
+                    success: function () {
+                        Swal.fire('Silindi!', 'Bilgi başarıyla silindi.', 'success').then(() => {
+                            window.location.href = "/Admin/Banner/Index";
+                        });
+                    },
+                    error: function (err) {
+                        Swal.fire('Hata!', 'Silme işlemi başarısız oldu.', 'error');
+                    }
+                });
+            }
+        });
     }
 
-</script>
-<script>
     function deleteAboutConfirm(aboutID) {
-        var result = confirm("Hakkımda kısmını silmek istediğinize emin misiniz?");
-        if (result) {
-            $.ajax({
-                url: "/Admin/About/RemoveAbout/" + aboutID,
-                type: 'DELETE',
-                success: function () {
-                    window.location.href = "/Admin/About/Index";
-                },
-                error: function (err) {
-                    alert('Error: ' + err.responseText);
-                }
-            });
-        }
+        Swal.fire({
+            title: 'Hakkımda kısmını silmek istediğinize emin misiniz?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Evet, sil!',
+            cancelButtonText: 'Hayır, iptal et!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: "/Admin/About/RemoveAbout/" + aboutID,
+                    type: 'DELETE',
+                    success: function () {
+                        Swal.fire('Silindi!', 'Hakkımda kısmı başarıyla silindi.', 'success').then(() => {
+                            window.location.href = "/Admin/About/Index";
+                        });
+                    },
+                    error: function (err) {
+                        Swal.fire('Hata!', 'Silme işlemi başarısız oldu.', 'error');
+                    }
+                });
+            }
+        });
     }
 
-</script>
-
-
-<script>
     function deletePricingConfirm(pricingID) {
-        var result = confirm("Bu ödeme türünü silmek istediğinize emin misiniz?");
-        if (result) {
-            $.ajax({
-                url: "/Admin/Pricing/RemovePricing/" + pricingID,
-                type: 'DELETE',
-                success: function () {
-                    window.location.href = "/Admin/Pricing/Index";
-                },
-                error: function (err) {
-                    alert('Error: ' + err.responseText);
-                }
-            });
-        }
+        Swal.fire({
+            title: 'Bu ödeme türünü silmek istediğinize emin misiniz?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Evet, sil!',
+            cancelButtonText: 'Hayır, iptal et!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: "/Admin/Pricing/RemovePricing/" + pricingID,
+                    type: 'DELETE',
+                    success: function () {
+                        Swal.fire('Silindi!', 'Ödeme türü başarıyla silindi.', 'success').then(() => {
+                            window.location.href = "/Admin/Pricing/Index";
+                        });
+                    },
+                    error: function (err) {
+                        Swal.fire('Hata!', 'Silme işlemi başarısız oldu.', 'error');
+                    }
+                });
+            }
+        });
     }
-</script>
-<script>
+
     function deleteFooterAddressConfirm(footerAddressID) {
-        var result = confirm("Bu Footer adresi silmek istediğinize emin misiniz?");
-        if (result) {
-            $.ajax({
-                url: "/Admin/FooterAddress/RemoveFooterAddress/" + footerAddressID,
-                type: 'DELETE',
-                success: function () {
-                    window.location.href = "/Admin/FooterAddress/Index";
-                },
-                error: function (err) {
-                    alert('Error: ' + err.responseText);
-                }
-            });
-        }
+        Swal.fire({
+            title: 'Bu Footer adresi silmek istediğinize emin misiniz?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Evet, sil!',
+            cancelButtonText: 'Hayır, iptal et!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: "/Admin/FooterAddress/RemoveFooterAddress/" + footerAddressID,
+                    type: 'DELETE',
+                    success: function () {
+                        Swal.fire('Silindi!', 'Footer adresi başarıyla silindi.', 'success').then(() => {
+                            window.location.href = "/Admin/FooterAddress/Index";
+                        });
+                    },
+                    error: function (err) {
+                        Swal.fire('Hata!', 'Silme işlemi başarısız oldu.', 'error');
+                    }
+                });
+            }
+        });
     }
-</script>
-<script>
+
     function deleteLocationConfirm(LocationID) {
-        var result = confirm("Bu Footer adresi silmek istediğinize emin misiniz?");
-        if (result) {
-            $.ajax({
-                url: "/Admin/Location/RemoveLocation/" + LocationID,
-                type: 'DELETE',
-                success: function () {
-                    window.location.href = "/Admin/Location/Index";
-                },
-                error: function (err) {
-                    alert('Error: ' + err.responseText);
-                }
-            });
-        }
+        Swal.fire({
+            title: 'Bu Footer adresi silmek istediğinize emin misiniz?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Evet, sil!',
+            cancelButtonText: 'Hayır, iptal et!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: "/Admin/Location/RemoveLocation/" + LocationID,
+                    type: 'DELETE',
+                    success: function () {
+                        Swal.fire('Silindi!', 'Footer adresi başarıyla silindi.', 'success').then(() => {
+                            window.location.href = "/Admin/Location/Index";
+                        });
+                    },
+                    error: function (err) {
+                        Swal.fire('Hata!', 'Silme işlemi başarısız oldu.', 'error');
+                    }
+                });
+            }
+        });
     }
-</script>
-<script>
+
     function deleteServiceConfirm(serviceID) {
-        var result = confirm("Bu hizmeti silmek istediğinize emin misiniz?");
-        if (result) {
-            $.ajax({
-                url: "/Admin/Service/RemoveService/" + serviceID,
-                type: 'DELETE',
-                success: function () {
-                    window.location.href = "/Admin/Service/Index";
-                },
-                error: function (err) {
-                    alert('Error: ' + err.responseText);
-                }
-            });
-        }
+        Swal.fire({
+            title: 'Bu hizmeti silmek istediğinize emin misiniz?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Evet, sil!',
+            cancelButtonText: 'Hayır, iptal et!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: "/Admin/Service/RemoveService/" + serviceID,
+                    type: 'DELETE',
+                    success: function () {
+                        Swal.fire('Silindi!', 'Hizmet başarıyla silindi.', 'success').then(() => {
+                            window.location.href = "/Admin/Service/Index";
+                        });
+                    },
+                    error: function (err) {
+                        Swal.fire('Hata!', 'Silme işlemi başarısız oldu.', 'error');
+                    }
+                });
+            }
+        });
     }
-</script>
-<script>
+
     function deleteSocialMediaConfirm(socialMediaID) {
-        var result = confirm("Bu sosyal medya hesabını silmek istediğinize emin misiniz?");
-        if (result) {
-            $.ajax({
-                url: "/Admin/SocialMedia/RemoveSocialMedia/" + socialMediaID,
-                type: 'DELETE',
-                success: function () {
-                    window.location.href = "/Admin/SocialMedia/Index";
-                },
-                error: function (err) {
-                    alert('Error: ' + err.responseText);
-                }
-            });
-        }
+        Swal.fire({
+            title: 'Bu sosyal medya hesabını silmek istediğinize emin misiniz?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Evet, sil!',
+            cancelButtonText: 'Hayır, iptal et!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: "/Admin/SocialMedia/RemoveSocialMedia/" + socialMediaID,
+                    type: 'DELETE',
+                    success: function () {
+                        Swal.fire('Silindi!', 'Sosyal medya hesabı başarıyla silindi.', 'success').then(() => {
+                            window.location.href = "/Admin/SocialMedia/Index";
+                        });
+                    },
+                    error: function (err) {
+                        Swal.fire('Hata!', 'Silme işlemi başarısız oldu.', 'error');
+                    }
+                });
+            }
+        });
     }
-</script>
-<script>
+
     function deleteTestimonialConfirm(testimonialID) {
-        var result = confirm("Bu referansı silmek istediğinize emin misiniz?");
-        if (result) {
-            $.ajax({
-                url: "/Admin/Testimonial/RemoveTestimonial/" + testimonialID,
-                type: 'DELETE',
-                success: function () {
-                    window.location.href = "/Admin/Testimonial/Index";
-                },
-                error: function (err) {
-                    alert('Error: ' + err.responseText);
-                }
-            });
-        }
+        Swal.fire({
+            title: 'Bu referansı silmek istediğinize emin misiniz?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Evet, sil!',
+            cancelButtonText: 'Hayır, iptal et!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: "/Admin/Testimonial/RemoveTestimonial/" + testimonialID,
+                    type: 'DELETE',
+                    success: function () {
+                        Swal.fire('Silindi!', 'Referans başarıyla silindi.', 'success').then(() => {
+                            window.location.href = "/Admin/Testimonial/Index";
+                        });
+                    },
+                    error: function (err) {
+                        Swal.fire('Hata!', 'Silme işlemi başarısız oldu.', 'error');
+                    }
+                });
+            }
+        });
     }
-</script>
-<script>
+
     function deleteContactConfirm(contactID) {
-        var result = confirm("Bu mesajı silmek istediğinize emin misiniz?");
-        if (result) {
-            $.ajax({
-                url: "/Admin/Contact/RemoveContact/" + contactID,
-                type: 'DELETE',
-                success: function () {
-                    window.location.href = "/Admin/Contact/Index";
-                },
-                error: function (err) {
-                    alert('Error: ' + err.responseText);
-                }
-            });
-        }
+        Swal.fire({
+            title: 'Bu mesajı silmek istediğinize emin misiniz?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Evet, sil!',
+            cancelButtonText: 'Hayır, iptal et!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: "/Admin/Contact/RemoveContact/" + contactID,
+                    type: 'DELETE',
+                    success: function () {
+                        Swal.fire('Silindi!', 'Mesaj başarıyla silindi.', 'success').then(() => {
+                            window.location.href = "/Admin/Contact/Index";
+                        });
+                    },
+                    error: function (err) {
+                        Swal.fire('Hata!', 'Silme işlemi başarısız oldu.', 'error');
+                    }
+                });
+            }
+        });
     }
-    </script>
-<script>
+
     function deleteFeatureConfirm(featureID) {
-        var result = confirm("Bu mesajı silmek istediğinize emin misiniz?");
-        if (result) {
-            $.ajax({
-                url: "/Admin/Feature/RemoveFeature/" + featureID,
-                type: 'DELETE',
-                success: function () {
-                    window.location.href = "/Admin/Feature/Index";
-                },
-                error: function (err) {
-                    alert('Error: ' + err.responseText);
-                }
-            });
-        }
+        Swal.fire({
+            title: 'Bu özelliği silmek istediğinize emin misiniz?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Evet, sil!',
+            cancelButtonText: 'Hayır, iptal et!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: "/Admin/Feature/RemoveFeature/" + featureID,
+                    type: 'DELETE',
+                    success: function () {
+                        Swal.fire('Silindi!', 'Özellik başarıyla silindi.', 'success').then(() => {
+                            window.location.href = "/Admin/Feature/Index";
+                        });
+                    },
+                    error: function (err) {
+                        Swal.fire('Hata!', 'Silme işlemi başarısız oldu.', 'error');
+                    }
+                });
+            }
+        });
+    }
+
+    function deleteCarConfirm(carID) {
+        Swal.fire({
+            title: 'Bu Arabayı silmek istediğinize emin misiniz?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Evet, sil!',
+            cancelButtonText: 'Hayır, iptal et!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: "/Admin/Car/RemoveCar/" + carID,
+                    type: 'DELETE',
+                    success: function () {
+                        Swal.fire('Silindi!', 'Araba başarıyla silindi.', 'success').then(() => {
+                            window.location.href = "/Admin/Car/Index";
+                        });
+                    },
+                    error: function (err) {
+                        Swal.fire('Hata!', 'Silme işlemi başarısız oldu.', 'error');
+                    }
+                });
+            }
+        });
     }
 </script>
+
+
 
    
 

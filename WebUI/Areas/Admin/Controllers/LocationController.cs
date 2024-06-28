@@ -71,14 +71,14 @@ namespace WebUI.Areas.Admin.Controllers
             if (responseMessage.IsSuccessStatusCode)
             {
                 var jsonData = await responseMessage.Content.ReadAsStringAsync();
-                var location = JsonConvert.DeserializeObject<UpdatePricingDtpo>(jsonData);
+                var location = JsonConvert.DeserializeObject<UpdateLocationDto>(jsonData);
                 return View(location);
             }
             return View();
         }
         [HttpPost]
         [Route("UpdateLocation/{id}")]
-        public async Task<IActionResult> UpdateLocation(UpdatePricingDtpo updateLocationDto)
+        public async Task<IActionResult> UpdateLocation(UpdateLocationDto updateLocationDto)
         {
             var client = _httpClientFactory.CreateClient();
             var jsonData = JsonConvert.SerializeObject(updateLocationDto);

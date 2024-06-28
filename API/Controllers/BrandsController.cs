@@ -3,7 +3,7 @@ using DtoLayer.BrandDtos;
 using EntitityLayer.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using YourNamespace.Models;
+using Microsoft.Extensions.Logging;
 
 namespace API.Controllers
 {
@@ -12,61 +12,122 @@ namespace API.Controllers
     public class BrandsController : ControllerBase
     {
         private readonly IBrandService _brandService;
+        private readonly ILogger<BrandsController> _logger;
 
-        public BrandsController(IBrandService brandService)
+        public BrandsController(IBrandService brandService, ILogger<BrandsController> logger)
         {
             _brandService = brandService;
+            _logger = logger;
         }
 
         [HttpGet]
         public IActionResult BrandList()
         {
-            var brands = _brandService.TGetListAll();
-            return Ok(brands);
+            try
+            {
+                var brands = _brandService.TGetListAll();
+                if (brands == null || !brands.Any())
+                {
+                    return NotFound("Marka bilgisi bulunamadı");
+                }
+                return Ok(brands);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Marka listesi getirilirken bir hata oluştu.");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Sunucu hatası");
+            }
         }
 
         [HttpGet("{id}")]
         public IActionResult GetBrand(int id)
         {
-            var brand = _brandService.TGetbyID(id);
-            if (brand == null)
-                return NotFound("Marka bulunmadı");
-            return Ok(brand);
+            try
+            {
+                var brand = _brandService.TGetbyID(id);
+                if (brand == null)
+                {
+                    return NotFound("Marka bulunmadı");
+                }
+                return Ok(brand);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"ID {id} olan marka getirilirken bir hata oluştu.");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Sunucu hatası");
+            }
         }
 
         [HttpDelete("{id}")]
         public IActionResult DeleteBrand(int id)
         {
-            var brand = _brandService.TGetbyID(id);
-            if (brand == null)
-                return NotFound("Marka bulunmadı");
+            try
+            {
+                var brand = _brandService.TGetbyID(id);
+                if (brand == null)
+                {
+                    return NotFound("Marka bulunmadı");
+                }
 
-            _brandService.TDelete(brand);
-            return Ok("Marka Silme İşlemi Başarı ile Gerçekleştirildi");
+                _brandService.TDelete(brand);
+                return Ok("Marka silme işlemi başarı ile gerçekleştirildi");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"ID {id} olan marka silinirken bir hata oluştu.");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Sunucu hatası");
+            }
         }
 
         [HttpPost]
         public IActionResult CreateBrand(CreateBrandDto createBrandDto)
         {
-            Brand brand = new Brand
+            if (createBrandDto == null || string.IsNullOrWhiteSpace(createBrandDto.name))
             {
-                Name = createBrandDto.name
-            };
-            _brandService.TAdd(brand);
-            return Ok("Marka Oluşturma İşlemi Başarı ile Gerçekleştirildi");
+                return BadRequest("Geçersiz giriş verileri");
+            }
+
+            try
+            {
+                var brand = new Brand
+                {
+                    Name = createBrandDto.name
+                };
+                _brandService.TAdd(brand);
+                return StatusCode(StatusCodes.Status201Created, "Marka oluşturma işlemi başarı ile gerçekleştirildi");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Marka oluşturulurken bir hata oluştu.");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Sunucu hatası");
+            }
         }
 
         [HttpPut]
-
         public IActionResult UpdateBrand(UpdateBrandDto updateBrandDto)
         {
-            var brand = _brandService.TGetbyID(updateBrandDto.brandID);
-            if (brand == null)
-                return NotFound("Marka bulunmadı");
+            if (updateBrandDto == null || string.IsNullOrWhiteSpace(updateBrandDto.name))
+            {
+                return BadRequest("Geçersiz giriş verileri");
+            }
 
-            brand.Name = updateBrandDto.name;
-            _brandService.TUpdate(brand);
-            return Ok("Marka Güncelleme İşlemi Başarı ile Gerçekleştirildi");
+            try
+            {
+                var brand = _brandService.TGetbyID(updateBrandDto.brandID);
+                if (brand == null)
+                {
+                    return NotFound("Marka bulunmadı");
+                }
+
+                brand.Name = updateBrandDto.name;
+                _brandService.TUpdate(brand);
+                return Ok("Marka güncelleme işlemi başarı ile gerçekleştirildi");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"ID {updateBrandDto.brandID} olan marka güncellenirken bir hata oluştu.");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Sunucu hatası");
+            }
         }
     }
 }
