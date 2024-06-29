@@ -12,5 +12,7 @@
         public int Age { get; set; }
         public int DriverLicenseYear { get; set; }
         public string Description { get; set; }
+
+        public string Status { get; set; }
     }
 }

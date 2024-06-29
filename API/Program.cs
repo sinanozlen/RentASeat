@@ -28,6 +28,10 @@ builder.Services.AddScoped<ICarDal, EfCarDal>();
 builder.Services.AddScoped<ICarDescriptionService, CarDescriptionManager>();
 builder.Services.AddScoped<ICarDescriptionDal, EfCarDescriptionDal>();
 
+//Reservation icin
+builder.Services.AddScoped<IReservationService, ReservationManager>();
+builder.Services.AddScoped<IReservationDal, EfReservationDal>();
+
 //About
 builder.Services.AddScoped<IAboutService, AboutManager>();
 builder.Services.AddScoped<IAboutDal, EfAboutDal>();
