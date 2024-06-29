@@ -79,6 +79,7 @@ namespace WebUI.Areas.Admin.Controllers
         public async Task<IActionResult> UpdateCar(int id)
         {
             var client = _httpClientFactory.CreateClient();
+
             var responseMessage1 = await client.GetAsync("https://localhost:7250/api/Brands");
             var jsonData1 = await responseMessage1.Content.ReadAsStringAsync();
             var values1 = JsonConvert.DeserializeObject<List<ResultBrandDto>>(jsonData1);
@@ -99,20 +100,20 @@ namespace WebUI.Areas.Admin.Controllers
             }
             return View();
         }
-        [HttpPost]
-        [Route("UpdateCar/{id}")]
-        public async Task<IActionResult> UpdateCar(UpdateCarDto updateCarDto)
-        {
-            var client = _httpClientFactory.CreateClient();
-            var jsonData = JsonConvert.SerializeObject(updateCarDto);
-            var content = new StringContent(jsonData, System.Text.Encoding.UTF8, "application/json");
-            var responseMessage = await client.PutAsync($"https://localhost:7250/api/Cars/", content);
-            if(responseMessage.IsSuccessStatusCode)
-            {
-                return RedirectToAction("Index");
-            }
-            return View();
-        }
+        //[HttpPost]
+        //[Route("UpdateCar/{id}")]
+        //public async Task<IActionResult> UpdateCar(UpdateCarDto updateCarDto)
+        //{
+        //    var client = _httpClientFactory.CreateClient();
+        //    var jsonData = JsonConvert.SerializeObject(updateCarDto);
+        //    var content = new StringContent(jsonData, System.Text.Encoding.UTF8, "application/json");
+        //    var responseMessage = await client.PutAsync($"https://localhost:7250/api/Cars/", content);
+        //    if(responseMessage.IsSuccessStatusCode)
+        //    {
+        //        return RedirectToAction("Index");
+        //    }
+        //    return View();
+        //}
 
 
 
