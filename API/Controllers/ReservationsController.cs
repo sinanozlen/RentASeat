@@ -15,11 +15,11 @@ namespace WebUI.Controllers
 
     [Route("api/[controller]")]
     [ApiController]
-    public class ReservationController : Controller
+    public class ReservationsController : Controller
     {
         private readonly IReservationService _reservationService;
 
-        public ReservationController(IReservationService reservationService)
+        public ReservationsController(IReservationService reservationService)
         {
             _reservationService = reservationService;
         }
@@ -42,15 +42,6 @@ namespace WebUI.Controllers
                 DropOffLocationID = createReservationDto.DropOffLocationID,
                 DriverLicenseYear = createReservationDto.DriverLicenseYear,
                 Status = createReservationDto.Status
-
-
-
-              
-
-
-
-
-
             };
            _reservationService.TAdd(reservation);
            

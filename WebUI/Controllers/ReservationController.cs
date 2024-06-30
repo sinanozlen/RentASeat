@@ -41,6 +41,7 @@ namespace WebUI.Controllers
         [HttpPost]
         public async Task<IActionResult> Index(CreateReservationDto createReservationDto)
         {
+            createReservationDto.Status = "Onay Bekliyor";
             var client = _httpClientFactory.CreateClient();
             var jsonData = JsonConvert.SerializeObject(createReservationDto);
             StringContent stringContent = new StringContent(jsonData, Encoding.UTF8, "application/json");
