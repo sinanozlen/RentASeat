@@ -1,4 +1,5 @@
-﻿using DtoLayer.LocationDtos;
+﻿using DtoLayer.CarDtos;
+using DtoLayer.LocationDtos;
 using DtoLayer.ReservationDtos;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -16,13 +17,19 @@ namespace WebUI.Controllers
         {
             _httpClientFactory = httpClientFactory;
         }
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int id)
         {
+            ViewBag.carid = id;
             ViewBag.v1 = "Araç Kiralama";
             ViewBag.v2 = "Araç Rezervasyon Formu";
 
             var client = _httpClientFactory.CreateClient();
+
+
+
             var response = await client.GetAsync("https://localhost:7250/api/Locations");
+
+
             if (response.IsSuccessStatusCode)
             {
                 var json = await response.Content.ReadAsStringAsync();
@@ -36,11 +43,29 @@ namespace WebUI.Controllers
                                                    }).ToList();
                 ViewBag.v = valuesitem;
             }
+            var response1 = await client.GetAsync("https://localhost:7250/api/Cars/GetCarsWithBrand");
+
+
+            if (response1.IsSuccessStatusCode)
+            {
+                var json = await response1.Content.ReadAsStringAsync();
+                var values = JsonConvert.DeserializeObject<List<ResultCarWithBrandDto>>(json);
+                List<SelectListItem> valuesitem = (from x in values
+                                                   select new SelectListItem
+                                                   {
+                                                       Text = x.BrandName+" "+ x.Model,
+                                                       Value = x.CarID.ToString()
+
+                                                   }).ToList();
+                ViewBag.v2 = valuesitem;
+            }
             return View();
         }
         [HttpPost]
-        public async Task<IActionResult> Index(CreateReservationDto createReservationDto)
+        public async Task<IActionResult> Index(int id, CreateReservationDto createReservationDto)
         {
+
+            createReservationDto.CarID = id;
             createReservationDto.Status = "Onay Bekliyor";
             var client = _httpClientFactory.CreateClient();
             var jsonData = JsonConvert.SerializeObject(createReservationDto);
@@ -52,6 +77,8 @@ namespace WebUI.Controllers
             }
             return View();
         }
+
+
     }
     }
 
