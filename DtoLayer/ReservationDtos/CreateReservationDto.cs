@@ -1,4 +1,6 @@
-﻿namespace DtoLayer.ReservationDtos
+﻿using EntitityLayer.Entities;
+
+namespace DtoLayer.ReservationDtos
 {
     public class CreateReservationDto
     {
@@ -12,7 +14,6 @@
         public int Age { get; set; }
         public int DriverLicenseYear { get; set; }
         public string Description { get; set; }
-
         public string Status { get; set; }
     }
 }

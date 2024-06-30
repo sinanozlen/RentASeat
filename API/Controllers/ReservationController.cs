@@ -24,6 +24,7 @@ namespace WebUI.Controllers
             _reservationService = reservationService;
         }
 
+
         [HttpPost]
         public IActionResult CreateReservation(CreateReservationDto createReservationDto)
         {
@@ -41,9 +42,10 @@ namespace WebUI.Controllers
                 DropOffLocationID = createReservationDto.DropOffLocationID,
                 DriverLicenseYear = createReservationDto.DriverLicenseYear,
                 Status = createReservationDto.Status
-                
-                
 
+
+
+              
 
 
 
@@ -53,7 +55,7 @@ namespace WebUI.Controllers
            _reservationService.TAdd(reservation);
            
 
-            return Ok("Referans Ekleme İşlemi Başarı İle Gerçekleştirildi");
+            return Ok("Rezervasyon Ekleme İşlemi Başarı İle Gerçekleştirildi");
 
 
         }
