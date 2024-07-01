@@ -1,14 +1,17 @@
 ﻿using BusinessLayer.Abstract;
 using DtoLayer.LocationDtos;
 using EntitityLayer.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
+using YourNamespace.Models;
 
 namespace API.Controllers
 {
+    [Authorize(Roles = "Admin")]
     [Route("api/[controller]")]
     [ApiController]
     public class LocationsController : ControllerBase

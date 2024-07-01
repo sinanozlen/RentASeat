@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace WebUI.Controllers
 {
+
     public class LoginController : Controller
     {
         private readonly IHttpClientFactory _clientFactory;
@@ -62,4 +63,5 @@ namespace WebUI.Controllers
             return RedirectToAction(nameof(Index));
         }
     }
+
 }
