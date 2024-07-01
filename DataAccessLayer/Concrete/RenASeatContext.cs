@@ -39,6 +39,8 @@ namespace DataAccessLayer.Concrete
         public DbSet<Reservation> Reservation { get; set; }
         public DbSet<SocialMedia> SocialMedias { get; set; }
         public DbSet<Review> Reviews { get; set; }
+        public DbSet<AppUser> AppUsers { get; set; }
+        public DbSet<AppRole> AppRoles { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

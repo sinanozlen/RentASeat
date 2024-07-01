@@ -3,8 +3,11 @@ using BusinessLayer.Concrete;
 using DataAccessLayer.Abstract;
 using DataAccessLayer.Concrete;
 using DataAccessLayer.EntityFramework;
+using DataAccessLayer.Tools;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using System.Reflection;
 using System.Text;
 using YourNamespace.Helpers;
 using YourNamespace.Services;
@@ -58,6 +61,9 @@ builder.Services.AddScoped<ISocialMediaDal, EfSocialMediaDal>();
 //Banner Ýçin Gerekli olan 
 builder.Services.AddScoped<IBannerService, BannerManager>();
 builder.Services.AddScoped<IBannerDal, EfBannerDal>();
+//AppUser  Ýçin Gerekli olan
+builder.Services.AddScoped<IAppUserService, AppUserManager>();
+builder.Services.AddScoped<IAppUserDal, EfAppUserDal>();
 //Testimonial Ýçin Gerekli olan 
 builder.Services.AddScoped<ITestimonialService, TestimonialManager>();
 builder.Services.AddScoped<ITestimonialDal, EfTestimonialDal>();
@@ -102,23 +108,26 @@ builder.Services.AddScoped<IPricingDal, EfPricingDal>();
 
 // Add user service
 builder.Services.AddSingleton<UserService>();
+builder.Services.AddControllers().AddFluentValidation(x =>
+{
+    x.RegisterValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+});
 
-// JWT Authentication
-var key = Encoding.ASCII.GetBytes("your-256-bit-secret-your-256-bit-secret");
-builder.Services.AddSingleton(new JwtAuthenticationManager(key));
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options =>
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(opt =>
+{
+    opt.RequireHttpsMetadata = false;
+    opt.TokenValidationParameters = new TokenValidationParameters
     {
-        options.RequireHttpsMetadata = false;
-        options.SaveToken = true;
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(key),
-            ValidateIssuer = false,
-            ValidateAudience = false,
-        };
-    });
+        ValidAudience = JwtTokenDefaults.ValidAudience,
+        ValidIssuer = JwtTokenDefaults.ValidIssuer,
+        ClockSkew = TimeSpan.Zero,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(JwtTokenDefaults.Key)),
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true
+    };
+});
+
 
 builder.Services.AddCors(options =>
 {
