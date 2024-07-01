@@ -50,7 +50,10 @@
                                         <p class="btn-custom"><a href="#">Bu Aracı Kiralayın</a></p>
                                         <div class="price-rate">
                                             <h3>
-                                                <span class="num"><small class="currency">₺</small> @item.WeeklyAmount</span>
+                                                @{
+                                                    var weeklyAmount = item.DailyAmount * 6;
+                                                }
+                                                <span class="num"><small class="currency">₺</small> @weeklyAmount</span>
                                                 <span class="per">/Haftalık Fiyat</span>
                                             </h3>
                                         </div>
@@ -60,7 +63,10 @@
                                         <p class="btn-custom"><a href="#">Bu Aracı Kiralayın</a></p>
                                         <div class="price-rate">
                                             <h3>
-                                                <span class="num"><small class="currency">₺</small> @item.MonthlyAmount</span>
+                                                @{
+                                                    var MonthlyAmount = item.DailyAmount * 25;
+                                                }
+                                                <span class="num"><small class="currency">₺</small> @MonthlyAmount</span>
                                                 <span class="per">/Aylık Fiyat</span>
                                             </h3>
                                         </div>
