@@ -5,6 +5,8 @@ using AspNet.Security.OAuth.Instagram;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Authentication.Twitter;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,17 +21,19 @@ builder.Services.AddAuthentication(options =>
     options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
 })
 .AddCookie()
-.AddGoogle(options =>
+.AddGoogle(GoogleDefaults.AuthenticationScheme, options =>
 {
-    options.ClientId = builder.Configuration["Authentication:Google:ClientId"];
-    options.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
+    IConfigurationSection googleAuthNSection =
+        builder.Configuration.GetSection("Authentication:Google");
+    options.ClientId = googleAuthNSection["ClientId"];
+    options.ClientSecret = googleAuthNSection["ClientSecret"];
 })
-.AddTwitter(options =>
+.AddTwitter(TwitterDefaults.AuthenticationScheme, options =>
 {
     options.ClientId = builder.Configuration["Authentication:Twitter:ConsumerKey"];
     options.ClientSecret = builder.Configuration["Authentication:Twitter:ConsumerSecret"];
 });
-//.AddInstagram(options =>
+//.AddInstagram(InstagramDefaults.AuthenticationScheme, options =>
 //{
 //    options.ClientId = builder.Configuration["Authentication:Instagram:ClientId"];
 //    options.ClientSecret = builder.Configuration["Authentication:Instagram:ClientSecret"];
@@ -41,7 +45,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowAll",
         builder =>
         {
-            builder.WithOrigins() // Ýzin vermek istediðiniz kökenleri buraya ekleyin
+            builder.WithOrigins("https://example.com", "https://another-example.com")
                    .AllowAnyMethod()
                    .AllowAnyHeader()
                    .AllowCredentials(); // Gerekirse credentials (kimlik bilgileri) desteðini etkinleþtirin
@@ -80,4 +84,3 @@ app.UseEndpoints(endpoints =>
 });
 
 app.Run();
-
