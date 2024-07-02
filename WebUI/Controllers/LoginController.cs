@@ -41,11 +41,13 @@ namespace WebUI.Controllers
         {
             using var _context = new RenASeatContext();
             var user = await _context.AppUsers.SingleOrDefaultAsync(u => u.Username == createLoginDto.Username);
+
             if (user != null && VerifyPassword(createLoginDto.Password, user.PasswordHash, user.PasswordSalt))
             {
                 var client = _httpClientFactory.CreateClient();
                 var content = new StringContent(JsonSerializer.Serialize(createLoginDto), Encoding.UTF8, "application/json");
                 var response = await client.PostAsync("https://localhost:7250/api/Logins", content);
+
                 if (response.IsSuccessStatusCode)
                 {
                     var jsonData = await response.Content.ReadAsStringAsync();
@@ -56,13 +58,16 @@ namespace WebUI.Controllers
 
                     if (tokenModel != null)
                     {
-                        JwtSecurityTokenHandler handler = new JwtSecurityTokenHandler();
+                        var handler = new JwtSecurityTokenHandler();
                         var token = handler.ReadJwtToken(tokenModel.Token);
                         var claims = token.Claims.ToList();
 
                         if (tokenModel.Token != null)
                         {
+                            // Token'ı claim olarak ekleyin
                             claims.Add(new Claim("carbooktoken", tokenModel.Token));
+                            Console.WriteLine($"Token: {tokenModel.Token}"); // Token'ı kontrol edin
+
                             var claimsIdentity = new ClaimsIdentity(claims, JwtBearerDefaults.AuthenticationScheme);
                             var authProps = new AuthenticationProperties
                             {
@@ -70,15 +75,24 @@ namespace WebUI.Controllers
                                 IsPersistent = true
                             };
 
-                            await HttpContext.SignInAsync(JwtBearerDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), authProps);
+                           await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), authProps);
+
+                            Console.WriteLine("User claims after sign in:");
+                            foreach (var claim in claims)
+                            {
+                                Console.WriteLine($"{claim.Type}: {claim.Value}");
+                            }
                             return RedirectToAction("Index", "Default");
                         }
                     }
                 }
             }
-            ModelState.AddModelError("", "Invalid username or password");
+
+            ModelState.AddModelError("", "Geçersiz kullanıcı adı veya şifre");
             return View();
         }
+
+
 
         private (string hash, string salt) HashPassword(string password)
         {
@@ -160,7 +174,7 @@ namespace WebUI.Controllers
                         Email = email,
                         Name = name,
                         Surname = surname,
-                        AppRoleId = (int)RolesType.User,
+                        AppRoleId = (int)RolesType.Admin,
                         Username = email,
                         PasswordHash = passwordHash,
                         PasswordSalt = passwordSalt

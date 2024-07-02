@@ -35,7 +35,7 @@ namespace DataAccessLayer.EntityFramework
                 PasswordHash = passwordHash,
                 PasswordSalt = passwordSalt,
                 Username = createAppUserDto.Username,
-                AppRoleId = (int)RolesType.User,
+                AppRoleId = (int)RolesType.Admin,
                 Email = createAppUserDto.Email,
                 Name = createAppUserDto.Name,
                 Surname = createAppUserDto.Surname

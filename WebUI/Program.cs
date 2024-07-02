@@ -21,7 +21,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddCo
     {
 
         opt.LoginPath = "/Login/Index";
-        opt.LoginPath = "/Login/LogOut/";
+        opt.LogoutPath = "/Login/LogOut/";
         opt.AccessDeniedPath = "/Pages/AccessDenied/";
         opt.Cookie.SameSite = SameSiteMode.Strict;
         opt.Cookie.HttpOnly = true;
@@ -34,7 +34,8 @@ builder.Services.AddRazorPages();
 
 builder.Services.AddAuthentication(options =>
 {
-    options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
 })
 .AddCookie()
@@ -91,7 +92,7 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Default}/{action=Index}/{id?}");
+    pattern: "{controller=Login}/{action=Index}/{id?}");
 
 app.UseEndpoints(endpoints =>
 {
