@@ -17,6 +17,7 @@ using System.Threading.Tasks;
 
 namespace WebUI.Controllers
 {
+
     public class LoginController : Controller
     {
         private readonly IHttpClientFactory _httpClientFactory;
@@ -193,4 +194,5 @@ namespace WebUI.Controllers
             }
         }
     }
+
 }

@@ -1,10 +1,12 @@
 ﻿using DtoLayer.LocationDtos;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Text;
 
 namespace WebUI.Areas.Admin.Controllers
 {
+    [Authorize(Roles = "Admin")]
     [Area("Admin")]
     [Route("Admin/Location")]
     public class LocationController : Controller
@@ -90,6 +92,6 @@ namespace WebUI.Areas.Admin.Controllers
             }
             return View(updateLocationDto);
         }
-        
+
     }
 }
