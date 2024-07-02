@@ -1,4 +1,5 @@
 ﻿using BusinessLayer.Abstract;
+using DataAccessLayer.Enums;
 using DtoLayer.LocationDtos;
 using EntitityLayer.Entities;
 using Microsoft.AspNetCore.Authorization;
@@ -11,7 +12,9 @@ using YourNamespace.Models;
 
 namespace API.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles="Admin")]
+
+
     [Route("api/[controller]")]
     [ApiController]
     public class LocationsController : ControllerBase

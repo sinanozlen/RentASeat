@@ -14,13 +14,16 @@ using System.Security.Claims;
 using System.Text.Json;
 using System.Text;
 using System.Threading.Tasks;
+using WebUI.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using System.Security.Cryptography;
 
 namespace WebUI.Controllers
 {
-
     public class LoginController : Controller
     {
         private readonly IHttpClientFactory _httpClientFactory;
+        private readonly RenASeatContext _context;
 
         public LoginController(IHttpClientFactory httpClientFactory)
         {
@@ -36,40 +39,64 @@ namespace WebUI.Controllers
         [HttpPost]
         public async Task<IActionResult> Index(CreateLoginDto createLoginDto)
         {
-            var client = _httpClientFactory.CreateClient();
-            var content = new StringContent(JsonSerializer.Serialize(createLoginDto), Encoding.UTF8, "application/json");
-            var response = await client.PostAsync("https://localhost:7060/api/Login", content);
-            if (response.IsSuccessStatusCode)
+            using var _context = new RenASeatContext();
+            var user = await _context.AppUsers.SingleOrDefaultAsync(u => u.Username == createLoginDto.Username);
+            if (user != null && VerifyPassword(createLoginDto.Password, user.PasswordHash, user.PasswordSalt))
             {
-                var jsonData = await response.Content.ReadAsStringAsync();
-                var tokenModel = JsonSerializer.Deserialize<JwtResponseModel>(jsonData, new JsonSerializerOptions
+                var client = _httpClientFactory.CreateClient();
+                var content = new StringContent(JsonSerializer.Serialize(createLoginDto), Encoding.UTF8, "application/json");
+                var response = await client.PostAsync("https://localhost:7250/api/Logins", content);
+                if (response.IsSuccessStatusCode)
                 {
-                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase
-                });
-
-                if (tokenModel != null)
-                {
-                    JwtSecurityTokenHandler handler = new JwtSecurityTokenHandler();
-                    var token = handler.ReadJwtToken(tokenModel.Token);
-                    var claims = token.Claims.ToList();
-
-                    if (tokenModel.Token != null)
+                    var jsonData = await response.Content.ReadAsStringAsync();
+                    var tokenModel = JsonSerializer.Deserialize<JwtResponseModel>(jsonData, new JsonSerializerOptions
                     {
-                        claims.Add(new Claim("carbooktoken", tokenModel.Token));
-                        var claimsIdentity = new ClaimsIdentity(claims, JwtBearerDefaults.AuthenticationScheme);
-                        var authProps = new AuthenticationProperties
-                        {
-                            ExpiresUtc = tokenModel.ExpireDate,
-                            IsPersistent = true
-                        };
+                        PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+                    });
 
-                        await HttpContext.SignInAsync(JwtBearerDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), authProps);
-                        return RedirectToAction("Index", "Default");
+                    if (tokenModel != null)
+                    {
+                        JwtSecurityTokenHandler handler = new JwtSecurityTokenHandler();
+                        var token = handler.ReadJwtToken(tokenModel.Token);
+                        var claims = token.Claims.ToList();
+
+                        if (tokenModel.Token != null)
+                        {
+                            claims.Add(new Claim("carbooktoken", tokenModel.Token));
+                            var claimsIdentity = new ClaimsIdentity(claims, JwtBearerDefaults.AuthenticationScheme);
+                            var authProps = new AuthenticationProperties
+                            {
+                                ExpiresUtc = tokenModel.ExpireDate,
+                                IsPersistent = true
+                            };
+
+                            await HttpContext.SignInAsync(JwtBearerDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), authProps);
+                            return RedirectToAction("Index", "Default");
+                        }
                     }
                 }
             }
-
+            ModelState.AddModelError("", "Invalid username or password");
             return View();
+        }
+
+        private (string hash, string salt) HashPassword(string password)
+        {
+            using (var hmac = new HMACSHA512())
+            {
+                var salt = Convert.ToBase64String(hmac.Key);
+                var hash = Convert.ToBase64String(hmac.ComputeHash(Encoding.UTF8.GetBytes(password)));
+                return (hash, salt);
+            }
+        }
+
+        private bool VerifyPassword(string enteredPassword, string storedHash, string storedSalt)
+        {
+            using (var hmac = new HMACSHA512(Convert.FromBase64String(storedSalt)))
+            {
+                var computedHash = Convert.ToBase64String(hmac.ComputeHash(Encoding.UTF8.GetBytes(enteredPassword)));
+                return computedHash == storedHash;
+            }
         }
 
         public async Task<IActionResult> LoginWithGoogle()
@@ -95,6 +122,7 @@ namespace WebUI.Controllers
 
         public async Task<IActionResult> ExternalLoginCallback(string returnUrl = "/")
         {
+            using var _context = new RenASeatContext();
             var result = await HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
 
             if (result?.Principal == null)
@@ -119,13 +147,12 @@ namespace WebUI.Controllers
                 return BadRequest();
             }
 
-            var _context = new RenASeatContext();
-
             if (loginProvider == "Google")
             {
                 var user = await _context.AppUsers.SingleOrDefaultAsync(u => u.OAuthProvider == loginProvider && u.OAuthId == providerKey);
                 if (user == null)
                 {
+                    var (passwordHash, passwordSalt) = HashPassword(providerKey);
                     user = new AppUser
                     {
                         OAuthProvider = loginProvider,
@@ -135,7 +162,8 @@ namespace WebUI.Controllers
                         Surname = surname,
                         AppRoleId = (int)RolesType.User,
                         Username = email,
-                        PasswordHash = HashPassword(providerKey)
+                        PasswordHash = passwordHash,
+                        PasswordSalt = passwordSalt
                     };
 
                     _context.AppUsers.Add(user);
@@ -157,6 +185,8 @@ namespace WebUI.Controllers
                     var nameParts = displayName?.Split(' ');
                     name = nameParts?.FirstOrDefault() ?? twitterScreenName; // Kullanıcı adını varsayılan isim olarak kullanabilirsiniz
                     surname = nameParts?.Skip(1).FirstOrDefault() ?? string.Empty; // Soyadı boş olarak ayarlayabilirsiniz
+
+                    var (passwordHash, passwordSalt) = HashPassword(providerKey);
                     user = new AppUser
                     {
                         OAuthProvider = loginProvider,
@@ -166,7 +196,8 @@ namespace WebUI.Controllers
                         Surname = surname,
                         AppRoleId = (int)RolesType.User,
                         Username = username,
-                        PasswordHash = HashPassword(providerKey)
+                        PasswordHash = passwordHash,
+                        PasswordSalt = passwordSalt
                     };
 
                     _context.AppUsers.Add(user);
@@ -175,24 +206,33 @@ namespace WebUI.Controllers
                 return LocalRedirect(returnUrl);
             }
 
-            // Diğer durumlar için hata yönetimi veya yönlendirme yapabilirsiniz
+            if (loginProvider == "Instagram")
+            {
+                var user = await _context.AppUsers.SingleOrDefaultAsync(u => u.OAuthProvider == loginProvider && u.OAuthId == providerKey);
+                if (user == null)
+                {
+                    var username = result.Principal.Identity.Name ?? "InstagramUser"; // Principal'den kullanıcı adını al, yoksa varsayılan olarak "InstagramUser" kullan
+                    var (passwordHash, passwordSalt) = HashPassword(providerKey);
+                    user = new AppUser
+                    {
+                        OAuthProvider = loginProvider,
+                        OAuthId = providerKey,
+                        Email = username,
+                        Name = name,
+                        Surname = surname,
+                        AppRoleId = (int)RolesType.User,
+                        Username = username,
+                        PasswordHash = passwordHash,
+                        PasswordSalt = passwordSalt
+                    };
+
+                    _context.AppUsers.Add(user);
+                    await _context.SaveChangesAsync();
+                }
+                return LocalRedirect(returnUrl);
+            }
+
             return BadRequest();
         }
-
-
-        public async Task<IActionResult> Logout()
-        {
-            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            return RedirectToAction(nameof(Index));
-        }
-        private string HashPassword(string providerKey)
-        {
-            using (var hmac = new System.Security.Cryptography.HMACSHA512())
-            {
-                var hash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(providerKey));
-                return Convert.ToBase64String(hash);
-            }
-        }
     }
-
 }

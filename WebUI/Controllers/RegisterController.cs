@@ -4,7 +4,6 @@ using DtoLayer.RegisterDtos;
 using EntitityLayer.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -33,24 +32,24 @@ namespace WebUI.Controllers
                 if (model.Password != model.ConfirmPassword)
                 {
                     ModelState.AddModelError("ConfirmPassword", "Şifreler eşleşmiyor.");
-                    return View("CreateRegister", model);
+                    return View(model);
                 }
 
-                // Hash the password
-                var passwordHash = HashPassword(model.Password);
+                // Hash the password and generate salt
+                var (passwordHash, passwordSalt) = HashPassword(model.Password);
 
                 // Create AppUser object
                 var newUser = new AppUser
                 {
                     Username = model.Username,
                     PasswordHash = passwordHash,
+                    PasswordSalt = passwordSalt,
                     Name = model.Name,
                     Surname = model.Surname,
                     Email = model.Email,
                     AppRoleId = (int)RolesType.User,
                     OAuthId = "0",
                     OAuthProvider = "Sistemden Kayıt"
-
                 };
 
                 _context.AppUsers.Add(newUser);
@@ -59,15 +58,16 @@ namespace WebUI.Controllers
                 return RedirectToAction("Index", "Login");
             }
 
-            return View("CreateRegister", model);
+            return View(model);
         }
 
-        private string HashPassword(string password)
+        private (string hash, string salt) HashPassword(string password)
         {
-            using (var sha256 = SHA256.Create())
+            using (var hmac = new HMACSHA512())
             {
-                var hashedBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
-                return BitConverter.ToString(hashedBytes).Replace("-", "").ToLower();
+                var salt = Convert.ToBase64String(hmac.Key);
+                var hash = Convert.ToBase64String(hmac.ComputeHash(Encoding.UTF8.GetBytes(password)));
+                return (hash, salt);
             }
         }
     }

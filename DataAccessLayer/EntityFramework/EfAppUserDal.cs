@@ -13,6 +13,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using System.Security.Cryptography;
 
 namespace DataAccessLayer.EntityFramework
 {
@@ -26,9 +27,13 @@ namespace DataAccessLayer.EntityFramework
         {
             using var context = new RenASeatContext();
 
+            // Hash the password and generate salt
+            var (passwordHash, passwordSalt) = HashPassword(createAppUserDto.Password);
+
             var newUser = new AppUser
             {
-                Password = createAppUserDto.Password,
+                PasswordHash = passwordHash,
+                PasswordSalt = passwordSalt,
                 Username = createAppUserDto.Username,
                 AppRoleId = (int)RolesType.User,
                 Email = createAppUserDto.Email,
@@ -41,19 +46,15 @@ namespace DataAccessLayer.EntityFramework
             return createAppUserDto;
         }
 
-
         public async Task<GetCheckAppUserDto> GetCheckAppUserAsync(GetCheckAppUserQuery request)
         {
             using var _renASeatContext = new RenASeatContext();
             var values = new GetCheckAppUserDto();
 
-            var userList = await _renASeatContext.AppUsers
-                .Where(x => x.Username == request.Username && x.Password == request.Password)
-                .ToListAsync();
+            var user = await _renASeatContext.AppUsers
+                .FirstOrDefaultAsync(x => x.Username == request.Username);
 
-            var user = userList.FirstOrDefault();
-
-            if (user == null)
+            if (user == null || !VerifyPassword(request.Password, user.PasswordHash, user.PasswordSalt))
             {
                 values.IsExist = false;
             }
@@ -74,5 +75,23 @@ namespace DataAccessLayer.EntityFramework
             return values;
         }
 
+        private (string hash, string salt) HashPassword(string password)
+        {
+            using (var hmac = new HMACSHA512())
+            {
+                var salt = Convert.ToBase64String(hmac.Key);
+                var hash = Convert.ToBase64String(hmac.ComputeHash(Encoding.UTF8.GetBytes(password)));
+                return (hash, salt);
+            }
+        }
+
+        private bool VerifyPassword(string enteredPassword, string storedHash, string storedSalt)
+        {
+            using (var hmac = new HMACSHA512(Convert.FromBase64String(storedSalt)))
+            {
+                var computedHash = Convert.ToBase64String(hmac.ComputeHash(Encoding.UTF8.GetBytes(enteredPassword)));
+                return computedHash == storedHash;
+            }
+        }
     }
 }
