@@ -42,7 +42,9 @@ builder.Services.AddScoped<IAboutDal, EfAboutDal>();
 //Reviews
 builder.Services.AddScoped<IReviewService, ReviewManager>();
 builder.Services.AddScoped<IReviewDal, EfReviewDal>();
-
+//Statistic Ýçin Gerekli olan
+builder.Services.AddScoped<IStatisticService, StatisticManager>();
+builder.Services.AddScoped<IStatisticDal, EfStatisticDal>();
 //Pricing
 builder.Services.AddScoped<IPricingService, PricingManager>();
 builder.Services.AddScoped<IPricingDal, EfPricingDal>();
