@@ -1,4 +1,4 @@
-﻿@model CreateRegisterDto
+﻿@model DtoLayer.RegisterDtos.CreateRegisterDto
 
 @{
     Layout = null;
@@ -23,6 +23,11 @@
     <link href="~/Admin/vertical/assets/css/icons.min.css" rel="stylesheet" type="text/css" />
     <link href="~/Admin/vertical/assets/css/theme.min.css" rel="stylesheet" type="text/css" />
 
+    <!-- jQuery Validation -->
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/additional-methods.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
 </head>
 
 <body>
@@ -35,14 +40,14 @@
                         <div class="w-100 d-block bg-white shadow-lg rounded my-5">
                             <div class="row">
                                 <div class="col-lg-5 d-none d-lg-block bg-register rounded-left text-center">
+                                    <!-- Left side content -->
                                 </div>
-
 
                                 <div class="col-lg-7">
                                     <div class="p-5">
                                         <div class="text-center mb-5">
                                             <a href="/Default/Index/" class="text-dark font-size-22 font-family-secondary">
-                                                 <b>
+                                                <b>
                                                     RentASeat Yeni Kullanıcı Kayıt Sayfası
                                                 </b>
                                             </a>
@@ -50,30 +55,45 @@
                                         <h1 class="h5 mb-1">Bir hesap oluşturun!</h1>
                                         <p class="text-muted mb-4">Bir hesabınız yok mu, 1 dakika içinde hesabınızı oluşturun!</p>
                                         <form class="user" method="post">
+                                            <div asp-validation-summary="All" class="text-danger"></div>
+
                                             <div class="form-group row">
                                                 <div class="col-sm-6 mb-3 mb-sm-0">
-                                                    <input type="text" class="form-control form-control-user" id="exampleFirstName" placeholder="Adınız" asp-for="Name">
+                                                    <input type="text" class="form-control form-control-user" placeholder="Adınız" asp-for="Name">
+                                                    <span asp-validation-for="Name" class="text-danger"></span>
                                                 </div>
                                                 <div class="col-sm-6">
-                                                    <input type="text" class="form-control form-control-user" id="exampleLastName" placeholder="Soyadınız" asp-for="Surname">
+                                                    <input type="text" class="form-control form-control-user" placeholder="Soyadınız" asp-for="Surname">
+                                                    <span asp-validation-for="Surname" class="text-danger"></span>
                                                 </div>
                                             </div>
+
                                             <div class="form-group">
-                                                <input type="email" class="form-control form-control-user" id="exampleInputEmail" placeholder="Email Adresiniz" asp-for="Email">
+                                                <input type="email" class="form-control form-control-user" placeholder="Email Adresiniz" asp-for="Email">
+                                                <span asp-validation-for="Email" class="text-danger"></span>
                                             </div>
+
                                             <div class="form-group row">
                                                 <div class="col-sm-6 mb-3 mb-sm-0">
-                                                    <input type="text" class="form-control form-control-user" id="exampleInputUsername" placeholder="Kullanıcı Adınız" asp-for="Username">
+                                                    <input type="text" class="form-control form-control-user" placeholder="Kullanıcı Adınız" asp-for="Username">
+                                                    <span asp-validation-for="Username" class="text-danger"></span>
                                                 </div>
                                                 <div class="col-sm-6">
-                                                    <input type="password" class="form-control form-control-user" id="exampleRepeatPassword" placeholder="Şifreniz" asp-for="Password">
-                                                </div>
-                                                <div class="form-group">
-                                                    <input type="password" class="form-control form-control-user" id="exampleRepeatPassword" placeholder="Şifrenizi Tekrar Girin" asp-for="ConfirmPassword">
+                                                    <input type="password" class="form-control form-control-user" placeholder="Şifreniz" asp-for="Password">
+                                                    <span asp-validation-for="Password" class="text-danger"></span>
                                                 </div>
                                             </div>
-                                            <button class="btn btn-success btn-block waves-effect waves-light"> Hesabı Oluştur </button>
+
+                                            <div class="form-group">
+                                                <input type="password" class="form-control form-control-user" placeholder="Şifrenizi Tekrar Girin" asp-for="ConfirmPassword">
+                                                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                                            </div>
+
+                                            <button type="submit" class="btn btn-success btn-block waves-effect waves-light">
+                                                Hesabı Oluştur
+                                            </button>
                                         </form>
+
                                         <div class="text-center mt-4">
                                             <h5 class="text-muted font-size-16">Sosyal Medya Hesaplarımız</h5>
 
@@ -93,26 +113,35 @@
                                             </ul>
                                         </div>
 
-
-
                                         <div class="row mt-4">
                                             <div class="col-12 text-center">
-                                                <p class="text-muted mb-0">Bir hesabın var mı?  <a href="/Login/Index/" class="text-muted font-weight-medium ml-1"><b>Giriş Yap</b></a></p>
-                                            </div> <!-- end col -->
+                                                <p class="text-muted mb-0">
+                                                    Bir hesabın var mı?
+                                                    <a href="/Login/Index/" class="text-muted font-weight-medium ml-1"><b>Giriş Yap</b></a>
+                                                </p>
+                                            </div>
+                                            <!-- end col -->
                                         </div>
                                         <!-- end row -->
-                                    </div> <!-- end .padding-5 -->
-                                </div> <!-- end col -->
-                            </div> <!-- end row -->
-                        </div> <!-- end .w-100 -->
-                    </div> <!-- end .d-flex -->
-                </div> <!-- end col-->
-            </div> <!-- end row -->
+                                    </div>
+                                    <!-- end .padding-5 -->
+                                </div>
+                                <!-- end col -->
+                            </div>
+                            <!-- end row -->
+                        </div>
+                        <!-- end .w-100 -->
+                    </div>
+                    <!-- end .d-flex -->
+                </div>
+                <!-- end col-->
+            </div>
+            <!-- end row -->
         </div>
         <!-- end container -->
     </div>
     <!-- end page -->
-    <!-- jQuery  -->
+    <!-- jQuery -->
     <script src="~/Admin/vertical/assets/js/jquery.min.js"></script>
     <script src="~/Admin/vertical/assets/js/bootstrap.bundle.min.js"></script>
     <script src="~/Admin/vertical/assets/js/metismenu.min.js"></script>

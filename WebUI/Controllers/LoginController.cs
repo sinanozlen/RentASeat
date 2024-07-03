@@ -75,7 +75,7 @@ namespace WebUI.Controllers
                                 IsPersistent = true
                             };
 
-                           await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), authProps);
+                            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), authProps);
 
                             Console.WriteLine("User claims after sign in:");
                             foreach (var claim in claims)

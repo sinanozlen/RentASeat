@@ -10,6 +10,7 @@ namespace WebUI.Controllers
     public class DefaultController : Controller
     {
 
+
         private readonly IHttpClientFactory _httpClientFactory;
 
         public DefaultController(IHttpClientFactory httpClientFactory)
@@ -22,7 +23,11 @@ namespace WebUI.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            
+            if (User.Identity.IsAuthenticated)
+            {
+                ViewBag.UserName = User.Identity.Name; // veya User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
+            }
+
             // Kullanıcı claim'lerini kontrol edin
             var userClaims = User.Claims.ToList();
             Console.WriteLine("User claims in HttpGet method:");
