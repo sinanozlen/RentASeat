@@ -1,11 +1,13 @@
-﻿using DataAccessLayer.Concrete;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
+using DataAccessLayer.Concrete;
 using DataAccessLayer.Enums;
 using DtoLayer.RegisterDtos;
 using EntitityLayer.Entities;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System.Security.Cryptography;
-using System.Text;
 
 namespace WebUI.Controllers
 {
@@ -35,6 +37,19 @@ namespace WebUI.Controllers
                     return View(model);
                 }
 
+                // Check if the username or email is already registered
+                var existingUser = _context.AppUsers
+                    .FirstOrDefault(u => u.Username == model.Username || u.Email == model.Email);
+
+                if (existingUser != null)
+                {
+                    // Show SweetAlert notification for existing user
+                    TempData["SweetAlertMessage"] = "error";
+                    TempData["SweetAlertTitle"] = "Hata!";
+                    TempData["SweetAlertText"] = "Kullanıcı adı veya e-posta adresi sistemde zaten kayıtlı.";
+                    return View(model);
+                }
+
                 // Hash the password and generate salt
                 var (passwordHash, passwordSalt) = HashPassword(model.Password);
 
@@ -54,6 +69,7 @@ namespace WebUI.Controllers
 
                 _context.AppUsers.Add(newUser);
                 _context.SaveChanges();
+
 
                 return RedirectToAction("Index", "Login");
             }

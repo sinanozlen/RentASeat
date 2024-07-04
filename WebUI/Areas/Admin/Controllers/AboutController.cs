@@ -1,10 +1,13 @@
 ﻿using DtoLayer.AboutDtos;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System.Net.Http.Headers;
 using System.Text;
 
 namespace WebUI.Areas.Admin.Controllers
 {
+    [Authorize(Roles = "Admin")]
     [Area("Admin")]
     [Route("Admin/About")]
     public class AboutController : Controller
@@ -19,13 +22,33 @@ namespace WebUI.Areas.Admin.Controllers
         [Route("Index")]
         public async Task< IActionResult> Index()
         {
-            var client = _httpClientFactory.CreateClient();
-            var responseMessage = await client.GetAsync("https://localhost:7250/api/Abouts");
+            if (User.Identity.IsAuthenticated)
+            {
+                ViewBag.UserName = User.Identity.Name; // veya User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
+            }
+
+            var token = User.Claims.FirstOrDefault(x => x.Type == "carbooktoken")?.Value;
+
+            if (token != null)
+            {
+                var client = _httpClientFactory.CreateClient();
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+                var responseMessage = await client.GetAsync("https://localhost:7250/api/Abouts");
             if (responseMessage.IsSuccessStatusCode)
             {
                 var jsonData = await responseMessage.Content.ReadAsStringAsync();
                 var values = JsonConvert.DeserializeObject<List<ResultAboutDto>>(jsonData);
                 return View(values);
+            }
+                else
+                {
+                    ModelState.AddModelError("", "Hakkımızda Alanı getirme başarısız oldu");
+                }
+            }
+            else
+            {
+                ModelState.AddModelError("", "Yetkilendirme token'ı bulunamadı");
             }
 
             return View();

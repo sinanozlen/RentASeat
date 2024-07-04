@@ -1,4 +1,4 @@
-﻿ @model CreateLoginDto
+﻿@model CreateLoginDto
 
 @{
     Layout = null;
@@ -20,9 +20,9 @@
 
     <!-- App css -->
     <link href="~/Admin/vertical/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     <link href="~/Admin/vertical/assets/css/icons.min.css" rel="stylesheet" type="text/css" />
     <link href="~/Admin/vertical/assets/css/theme.min.css" rel="stylesheet" type="text/css" />
-
 </head>
 
 <body>
@@ -44,7 +44,7 @@
                                         </div>
                                         <h1 class="h5 mb-1">Tekrar Hoş Geldin!</h1>
                                         <p class="text-muted mb-4">Admin sayfasına erişim için bilgilerinizi giriniz.</p>
-                                        <form class="user" method="post">
+                                        <form asp-action="Index" asp-controller="Login" method="post">
                                             <div class="form-group">
                                                 <input type="text" class="form-control form-control-user" id="exampleInputEmail" placeholder="Kullanıcı Adınız" asp-for="Username">
                                             </div>
@@ -61,20 +61,18 @@
                                                     <a href="javascript: void(0);" class="social-list-item border-primary text-primary"><i class="mdi mdi-facebook"></i></a>
                                                 </li>
                                                 <li class="list-inline-item">
-                                                    <a href="/Login/LoginWithGoogle" class="social-list-item border-danger text-danger"><i class="mdi mdi-google"></i></a>
+                                                    <a href="/Login/GoogleLogin" class="social-list-item border-danger text-danger"><i class="mdi mdi-google"></i></a>
                                                 </li>
                                                 <li class="list-inline-item">
-                                                    <a href="/Login/LoginWithTwitter" class="social-list-item border-info text-info"><i class="mdi mdi-twitter"></i></a>
+                                                    <a href="/Login/TwitterLogin" class="social-list-item border-info text-info"><i class="mdi mdi-twitter"></i></a>
                                                 </li>
 
                                             </ul>
                                         </div>
 
-
-
                                         <div class="row mt-4">
                                             <div class="col-12 text-center">
-                                                <p class="text-muted mb-2"><a href="pages-recoverpw.html" class="text-muted font-weight-medium ml-1">Şifrenizi mi Unuttunuz?</a></p>
+                                                <p class="text-muted mb-2"><a href="/Login/ForgetPassword/" class="text-muted font-weight-medium ml-1">Şifrenizi mi Unuttunuz?</a></p>
                                                 <p class="text-muted mb-0">Bir hesabınız yok mu? <a href="/Register/CreateAppUser/" class="text-muted font-weight-medium ml-1"><b>Bir Hesap Oluştur</b></a></p>
                                             </div> <!-- end col -->
                                         </div>
@@ -90,7 +88,7 @@
         <!-- end container -->
     </div>
     <!-- end page -->
-    <!-- jQuery  -->
+    <!-- jQuery -->
     <script src="~/Admin/vertical/assets/js/jquery.min.js"></script>
     <script src="~/Admin/vertical/assets/js/bootstrap.bundle.min.js"></script>
     <script src="~/Admin/vertical/assets/js/metismenu.min.js"></script>
@@ -100,6 +98,41 @@
     <!-- App js -->
     <script src="~/Admin/vertical/assets/js/theme.js"></script>
 
-</body>
+    <!-- Toastify.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 
+    <!-- Toastify scripts -->
+    @if (TempData["LoginSuccess"] != null)
+    {
+        <script>
+            var message = decodeURIComponent("@Html.Raw(Uri.EscapeDataString(TempData["LoginSuccess"].ToString()))");
+            Toastify({
+                text: message,
+                duration: 3000,
+                gravity: "top",
+                position: "right",
+                backgroundColor: "#28a745",
+                stopOnFocus: true,
+            }).showToast();
+        </script>
+    }
+
+    @if (TempData["LoginFailed"] != null)
+    {
+        <script>
+            var message = decodeURIComponent("@Html.Raw(Uri.EscapeDataString(TempData["LoginFailed"].ToString()))");
+            Toastify({
+                text: message,
+                duration: 3000,
+                gravity: "top",
+                position: "right",
+                backgroundColor: "#dc3545",
+                stopOnFocus: true,
+            }).showToast();
+        </script>
+    }
+
+
+
+</body>
 </html>

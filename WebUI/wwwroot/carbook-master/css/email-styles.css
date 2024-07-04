@@ -1,0 +1,109 @@
+﻿/* email-styles.css */
+/* General email styles */
+body {
+    margin: 0 auto !important;
+    padding: 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+    background: #f1f1f1;
+    font-family: 'Lato', sans-serif;
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 1.8;
+    color: rgba(0,0,0,.4);
+}
+
+/* Email container */
+.email-container {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Logo styles */
+.logo h1 {
+    margin: 0;
+}
+
+    .logo h1 a {
+        color: #30e3ca;
+        font-size: 24px;
+        font-weight: 700;
+        font-family: 'Lato', sans-serif;
+        text-decoration: none;
+    }
+
+/* Hero section styles */
+.hero {
+    padding: 3em 0 2em 0;
+}
+
+    .hero img {
+        width: 300px;
+        max-width: 100%;
+        height: auto;
+        margin: auto;
+        display: block;
+    }
+
+/* Text content styles */
+.text {
+    padding: 0 2.5em;
+    text-align: center;
+}
+
+    .text h2 {
+        color: #000;
+        font-size: 28px;
+        margin-top: 0;
+        line-height: 1.4;
+        font-weight: 400;
+    }
+
+    .text h3 {
+        font-size: 16px;
+        font-weight: 300;
+    }
+
+/* Form and button styles */
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-control {
+    display: block;
+    width: 100%;
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+
+.btn {
+    display: inline-block;
+    font-weight: 400;
+    color: #fff;
+    text-align: center;
+    vertical-align: middle;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background-color: #007bff;
+    border: 1px solid transparent;
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    border-radius: .25rem;
+    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+
+    .btn:hover {
+        color: #fff;
+        background-color: #0056b3;
+        border-color: #0056b3;
+    }

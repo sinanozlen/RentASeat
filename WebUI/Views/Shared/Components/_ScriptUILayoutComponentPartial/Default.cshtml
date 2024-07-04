@@ -45,7 +45,34 @@
         });
     });
 </script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+@if (TempData["LoginSuccess"] != null)
+{
+    <script>
+        Toastify({
+            text: "@TempData["LoginSuccess"]",
+            duration: 3000,
+            gravity: "top",
+            position: "right",
+            backgroundColor: "#28a745",
+            stopOnFocus: true,
+        }).showToast();
+    </script>
+}
 
+@if (TempData["LoginFailed"] != null)
+{
+    <script>
+        Toastify({
+            text: "@TempData["LoginFailed"]",
+            duration: 3000,
+            gravity: "top",
+            position: "right",
+            backgroundColor: "#dc3545",
+            stopOnFocus: true,
+        }).showToast();
+    </script>
+}
 
 <!-- Flatpickr CSS -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">

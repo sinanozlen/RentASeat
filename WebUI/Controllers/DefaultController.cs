@@ -23,29 +23,7 @@ namespace WebUI.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            if (User.Identity.IsAuthenticated)
-            {
-                ViewBag.UserName = User.Identity.Name; // veya User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
-            }
-
-            // Kullanıcı claim'lerini kontrol edin
-            var userClaims = User.Claims.ToList();
-            Console.WriteLine("User claims in HttpGet method:");
-            foreach (var claim in userClaims)
-            {
-                Console.WriteLine($"{claim.Type}: {claim.Value}");
-            }
-
-            // Kullanıcı claim'lerinden token'ı alın
-            var token = User.Claims.FirstOrDefault(x => x.Type == "carbooktoken")?.Value;
-            Console.WriteLine($"Retrieved Token: {token}"); // Token'ı kontrol edin
-
-            if (token != null)
-            {
-                var client = _httpClientFactory.CreateClient();
-                // Authorization başlığına token'ı ekleyin
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-
+            var client = _httpClientFactory.CreateClient();
                 var response = await client.GetAsync("https://localhost:7250/api/Locations");
 
                 if (response.IsSuccessStatusCode)
@@ -61,17 +39,8 @@ namespace WebUI.Controllers
 
                     ViewBag.v = valuesitem;
                 }
-                else
-                {
-                    ModelState.AddModelError("", "Lokasyonları getirme başarısız oldu");
-                }
-            }
-            else
-            {
-                ModelState.AddModelError("", "Yetkilendirme token'ı bulunamadı");
-            }
-
-            return View();
+                return View();
+      
         }
 
 

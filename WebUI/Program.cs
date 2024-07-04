@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
 using AspNet.Security.OAuth.Twitter;
-using AspNet.Security.OAuth.Instagram;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Hosting;
@@ -15,60 +14,28 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddHttpClient();
 
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddCookie
-    (JwtBearerDefaults.AuthenticationScheme, opt =>
-
-    {
-
-        opt.LoginPath = "/Login/Index";
-        opt.LogoutPath = "/Login/LogOut/";
-        opt.AccessDeniedPath = "/Pages/AccessDenied/";
-        opt.Cookie.SameSite = SameSiteMode.Strict;
-        opt.Cookie.HttpOnly = true;
-        opt.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
-        opt.Cookie.Name = "CarBookJwt";
-
-    });
-
-builder.Services.AddRazorPages();
-
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
 })
-.AddCookie()
-.AddGoogle(GoogleDefaults.AuthenticationScheme, options =>
-{
-    IConfigurationSection googleAuthNSection =
-        builder.Configuration.GetSection("Authentication:Google");
-    options.ClientId = googleAuthNSection["ClientId"];
-    options.ClientSecret = googleAuthNSection["ClientSecret"];
-})
-.AddTwitter(TwitterDefaults.AuthenticationScheme, options =>
-{
-    options.ClientId = builder.Configuration["Authentication:Twitter:ConsumerKey"];
-    options.ClientSecret = builder.Configuration["Authentication:Twitter:ConsumerSecret"];
-});
-//.AddInstagram(InstagramDefaults.AuthenticationScheme, options =>
-//{
-//    options.ClientId = builder.Configuration["Authentication:Instagram:ClientId"];
-//    options.ClientSecret = builder.Configuration["Authentication:Instagram:ClientSecret"];
-//});
+.AddCookie();
 
-// CORS politikasýný burada ekliyoruz
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll",
-        builder =>
+        policyBuilder =>
         {
-            builder.WithOrigins("https://example.com", "https://another-example.com")
-                   .AllowAnyMethod()
-                   .AllowAnyHeader()
-                   .AllowCredentials(); // Gerekirse credentials (kimlik bilgileri) desteðini etkinleþtirin
+            policyBuilder.WithOrigins("https://example.com", "https://another-example.com")
+                         .AllowAnyMethod()
+                         .AllowAnyHeader()
+                         .AllowCredentials();
         });
 });
+
+builder.Services.AddRazorPages();
 
 var app = builder.Build();
 
@@ -84,7 +51,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-// CORS politikasýný ekliyoruz
+// Apply the CORS policy
 app.UseCors("AllowAll");
 
 app.UseAuthentication();
@@ -92,7 +59,7 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Login}/{action=Index}/{id?}");
+    pattern: "{controller=Default}/{action=Index}/{id?}");
 
 app.UseEndpoints(endpoints =>
 {
