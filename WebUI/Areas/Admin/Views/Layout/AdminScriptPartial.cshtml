@@ -15,6 +15,39 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="~/chart.js"></script>
 <script src="~/Admin/vertical/assets/pages/chartjs-demo.js"></script>
+<!-- Toastify.js CDN -->
+<script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
+<!-- Toastify scripts -->
+@if (TempData["LoginSuccess"] != null)
+{
+    <script>
+        var message = decodeURIComponent("@Html.Raw(Uri.EscapeDataString(TempData["LoginSuccess"].ToString()))");
+        Toastify({
+            text: message,
+            duration: 3000,
+            gravity: "top",
+            position: "right",
+            backgroundColor: "#28a745",
+            stopOnFocus: true,
+        }).showToast();
+    </script>
+}
+
+@if (TempData["LoginFailed"] != null)
+{
+    <script>
+        var message = decodeURIComponent("@Html.Raw(Uri.EscapeDataString(TempData["LoginFailed"].ToString()))");
+        Toastify({
+            text: message,
+            duration: 3000,
+            gravity: "top",
+            position: "right",
+            backgroundColor: "#dc3545",
+            stopOnFocus: true,
+        }).showToast();
+    </script>
+}
 
 <script>
     function deleteBrandConfirm(brandID) {

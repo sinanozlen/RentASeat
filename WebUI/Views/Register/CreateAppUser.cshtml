@@ -28,6 +28,24 @@
     <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
     <script src="~/lib/jquery-validation/dist/additional-methods.min.js"></script>
     <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
+    <!-- SweetAlert -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+        .requirements {
+            list-style-type: none;
+            padding: 0;
+        }
+        .requirements li {
+            color: #D93025;
+            text-decoration: none;
+        }
+        .requirements li.valid {
+            color: #28a745;
+            text-decoration: line-through;
+        }
+    </style>
 </head>
 
 <body>
@@ -47,9 +65,7 @@
                                     <div class="p-5">
                                         <div class="text-center mb-5">
                                             <a href="/Default/Index/" class="text-dark font-size-22 font-family-secondary">
-                                                <b>
-                                                    RentASeat Yeni Kullanıcı Kayıt Sayfası
-                                                </b>
+                                                <b>RentASeat Yeni Kullanıcı Kayıt Sayfası</b>
                                             </a>
                                         </div>
                                         <h1 class="h5 mb-1">Bir hesap oluşturun!</h1>
@@ -79,17 +95,24 @@
                                                     <span asp-validation-for="Username" class="text-danger"></span>
                                                 </div>
                                                 <div class="col-sm-6">
-                                                    <input type="password" class="form-control form-control-user" placeholder="Şifreniz" asp-for="Password">
+                                                    <input type="password" class="form-control form-control-user" placeholder="Şifreniz" asp-for="Password" id="create_pw">
                                                     <span asp-validation-for="Password" class="text-danger"></span>
                                                 </div>
                                             </div>
 
+                                            <ul class="requirements">
+                                                <li id="length" class="invalid">En az 8 karakter</li>
+                                                <li id="uppercase" class="invalid">En az 1 büyük harf</li>
+                                                <li id="number" class="invalid">En az 1 sayı</li>
+                                                <li id="special" class="invalid">En az 1 özel karakter</li>
+                                            </ul>
+
                                             <div class="form-group">
-                                                <input type="password" class="form-control form-control-user" placeholder="Şifrenizi Tekrar Girin" asp-for="ConfirmPassword">
+                                                <input type="password" class="form-control form-control-user" placeholder="Şifrenizi Tekrar Girin" asp-for="ConfirmPassword" id="confirm_pw" disabled>
                                                 <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
                                             </div>
 
-                                            <button type="submit" class="btn btn-success btn-block waves-effect waves-light">
+                                            <button type="submit" class="btn btn-success btn-block waves-effect waves-light" id="button" disabled>
                                                 Hesabı Oluştur
                                             </button>
                                         </form>
@@ -141,6 +164,7 @@
         <!-- end container -->
     </div>
     <!-- end page -->
+
     <!-- jQuery -->
     <script src="~/Admin/vertical/assets/js/jquery.min.js"></script>
     <script src="~/Admin/vertical/assets/js/bootstrap.bundle.min.js"></script>
@@ -150,6 +174,63 @@
 
     <!-- App js -->
     <script src="~/Admin/vertical/assets/js/theme.js"></script>
+
+    <!-- SweetAlert Script -->
+    @if (TempData.ContainsKey("SweetAlertMessage"))
+    {
+        <script>
+            Swal.fire({
+                icon: '@TempData["SweetAlertMessage"]',
+                title: '@Html.Raw(TempData["SweetAlertTitle"])',
+                text: '@Html.Raw(TempData["SweetAlertText"])',
+                confirmButtonText: 'Tamam'
+            });
+        </script>
+    }
+
+    <script>
+        const createPw = document.querySelector("#create_pw"),
+            confirmPw = document.querySelector("#confirm_pw"),
+            alertIcon = document.querySelector(".error"),
+            alertText = document.querySelector(".text"),
+            submitBtn = document.querySelector("#button");
+
+        const lengthReq = document.getElementById("length"),
+            uppercaseReq = document.getElementById("uppercase"),
+            numberReq = document.getElementById("number"),
+            specialReq = document.getElementById("special");
+
+        createPw.addEventListener("input", () => {
+            let val = createPw.value.trim();
+            let lengthValid = val.length >= 8,
+                uppercaseValid = /[A-Z]/.test(val),
+                numberValid = /[0-9]/.test(val),
+                specialValid = /[!@@#\$%\^\&*\)\(+=._-]+/.test(val);
+
+            toggleValid(lengthReq, lengthValid);
+            toggleValid(uppercaseReq, uppercaseValid);
+            toggleValid(numberReq, numberValid);
+            toggleValid(specialReq, specialValid);
+
+            let allValid = lengthValid && uppercaseValid && numberValid && specialValid;
+            confirmPw.disabled = !allValid;
+        });
+
+        confirmPw.addEventListener("input", () => {
+            let match = confirmPw.value === createPw.value;
+            submitBtn.disabled = !match;
+        });
+
+        function toggleValid(element, valid) {
+            if (valid) {
+                element.classList.add("valid");
+                element.classList.remove("invalid");
+            } else {
+                element.classList.remove("valid");
+                element.classList.add("invalid");
+            }
+        }
+    </script>
 
 </body>
 

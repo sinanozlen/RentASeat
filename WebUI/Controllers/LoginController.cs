@@ -1,38 +1,41 @@
-﻿using DataAccessLayer.Concrete;
-using DataAccessLayer.Enums;
-using DtoLayer.LoginDtos;
-using EntitityLayer.Entities;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.Google;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.IdentityModel.Tokens.Jwt;
+using Microsoft.Extensions.Configuration;
+using System;
 using System.Linq;
 using System.Security.Claims;
-using System.Text.Json;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using WebUI.Models;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using System.Security.Cryptography;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using DataAccessLayer.Concrete;
+using DtoLayer.LoginDtos;
+using System.IdentityModel.Tokens.Jwt;
+using MimeKit;
+using MailKit.Security;
+using EntitityLayer.Entities;
 
 namespace WebUI.Controllers
 {
     public class LoginController : Controller
     {
         private readonly IHttpClientFactory _httpClientFactory;
-        private readonly RenASeatContext _context;
+        private readonly IConfiguration _configuration;
 
-        public LoginController(IHttpClientFactory httpClientFactory)
+        public LoginController(IHttpClientFactory httpClientFactory, IConfiguration configuration)
         {
             _httpClientFactory = httpClientFactory;
+            _configuration = configuration;
         }
 
         [HttpGet]
         public IActionResult Index()
         {
+            ViewData["IsAuthenticated"] = User.Identity.IsAuthenticated;
+            ViewData["Name"] = User.Identity.Name;
+
             return View();
         }
 
@@ -64,11 +67,10 @@ namespace WebUI.Controllers
 
                         if (tokenModel.Token != null)
                         {
-                            // Token'ı claim olarak ekleyin
+                            claims.Add(new Claim(ClaimTypes.Name, user.Name));
                             claims.Add(new Claim("carbooktoken", tokenModel.Token));
-                            Console.WriteLine($"Token: {tokenModel.Token}"); // Token'ı kontrol edin
 
-                            var claimsIdentity = new ClaimsIdentity(claims, JwtBearerDefaults.AuthenticationScheme);
+                            var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                             var authProps = new AuthenticationProperties
                             {
                                 ExpiresUtc = tokenModel.ExpireDate,
@@ -77,26 +79,28 @@ namespace WebUI.Controllers
 
                             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), authProps);
 
-                            Console.WriteLine("User claims after sign in:");
-                            foreach (var claim in claims)
-                            {
-                                Console.WriteLine($"{claim.Type}: {claim.Value}");
-                            }
+                            TempData["LoginSuccess"] = $"Hos Geldiniz, {user.Name}";
+
                             return RedirectToAction("Index", "Default");
                         }
                     }
                 }
             }
 
-            ModelState.AddModelError("", "Geçersiz kullanıcı adı veya şifre");
+            TempData["LoginFailed"] = "Kullanıcı adı veya şifrenizi kontrol ediniz";
             return View();
         }
 
-
+        [HttpPost]
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return RedirectToAction("Index", "Default");
+        }
 
         private (string hash, string salt) HashPassword(string password)
         {
-            using (var hmac = new HMACSHA512())
+            using (var hmac = new System.Security.Cryptography.HMACSHA512())
             {
                 var salt = Convert.ToBase64String(hmac.Key);
                 var hash = Convert.ToBase64String(hmac.ComputeHash(Encoding.UTF8.GetBytes(password)));
@@ -106,147 +110,134 @@ namespace WebUI.Controllers
 
         private bool VerifyPassword(string enteredPassword, string storedHash, string storedSalt)
         {
-            using (var hmac = new HMACSHA512(Convert.FromBase64String(storedSalt)))
+            using (var hmac = new System.Security.Cryptography.HMACSHA512(Convert.FromBase64String(storedSalt)))
             {
                 var computedHash = Convert.ToBase64String(hmac.ComputeHash(Encoding.UTF8.GetBytes(enteredPassword)));
                 return computedHash == storedHash;
             }
         }
 
-        public async Task<IActionResult> LoginWithGoogle()
+        [HttpGet]
+        public IActionResult ForgetPassword()
         {
-            var properties = new AuthenticationProperties { RedirectUri = Url.Action(nameof(ExternalLoginCallback)) };
-            await HttpContext.ChallengeAsync(GoogleDefaults.AuthenticationScheme, properties);
-            return new EmptyResult();
+            return View();
         }
 
-        public IActionResult LoginWithTwitter(string returnUrl = "/")
+        [HttpPost]
+        public async Task<IActionResult> ForgetPassword(string email)
         {
-            var redirectUrl = Url.Action(nameof(ExternalLoginCallback), "Login", new { ReturnUrl = returnUrl });
-            var properties = new AuthenticationProperties { RedirectUri = redirectUrl };
-            return Challenge(properties, "Twitter");
-        }
+            if (string.IsNullOrEmpty(email))
+            {
+                TempData["ForgetPasswordError"] = "Lütfen bir e-posta adresi girin.";
+                return View();
+            }
 
-        public IActionResult LoginWithInstagram(string returnUrl = "/")
-        {
-            var redirectUrl = Url.Action(nameof(ExternalLoginCallback), "Login", new { ReturnUrl = returnUrl });
-            var properties = new AuthenticationProperties { RedirectUri = redirectUrl };
-            return Challenge(properties, "Instagram");
-        }
-
-        public async Task<IActionResult> ExternalLoginCallback(string returnUrl = "/")
-        {
             using var _context = new RenASeatContext();
-            var result = await HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-
-            if (result?.Principal == null)
+            var user = await _context.AppUsers.FirstOrDefaultAsync(u => u.Email == email);
+            if (user == null)
             {
-                return RedirectToAction(nameof(Index));
+                TempData["ForgetPasswordError"] = "Bu e-posta adresine sahip bir kullanıcı bulunamadı.";
+                return View();
             }
 
-            var claims = result.Principal.Identities.FirstOrDefault()?.Claims.Select(claim => new
-            {
-                claim.Type,
-                claim.Value
-            }).ToList();
+            var token = Guid.NewGuid().ToString();
 
-            var email = claims?.FirstOrDefault(claim => claim.Type == ClaimTypes.Email)?.Value;
-            var name = claims?.FirstOrDefault(claim => claim.Type == ClaimTypes.GivenName)?.Value;
-            var surname = claims?.FirstOrDefault(claim => claim.Type == ClaimTypes.Surname)?.Value;
-            var providerKey = claims?.FirstOrDefault(claim => claim.Type == ClaimTypes.NameIdentifier)?.Value;
-            var loginProvider = result.Properties.Items[".AuthScheme"]; // OAuth sağlayıcısını belirlemek için
+            // Store token and expiration time in the database or a temporary store (not shown here)
 
-            if (providerKey == null || loginProvider == null)
-            {
-                return BadRequest();
-            }
+            // Send email with password reset link
+            await SendPasswordResetEmail(user, token);
 
-            if (loginProvider == "Google")
+            TempData["ForgetPasswordSuccess"] = "Şifre sıfırlama bağlantısı e-posta adresinize gönderildi. Bu bağlantıyı kullanarak şifre sıfırlama işleminizi gerçekleştirebilirsiniz.";
+            return RedirectToAction("ResetPasswordConfirmation");
+        }
+
+        [HttpGet]
+        public IActionResult ResetPasswordConfirmation()
+        {
+            return View();
+        }
+
+        private async Task SendPasswordResetEmail(AppUser user, string token)
+        {
+            var smtpSettings = _configuration.GetSection("SmtpSettings");
+            var server = smtpSettings["Server"];
+            var port = int.Parse(smtpSettings["Port"]);
+            var username = smtpSettings["Username"];
+            var password = smtpSettings["Password"];
+
+            var resetLink = Url.Action("ResetPassword", "Login", new { userId = user.AppUserId, token }, Request.Scheme);
+            var body = $@"
+        <html>
+        <body>
+        <p>Merhaba {user.Name},</p>
+        <p>Şifrenizi mi unuttunuz?<br/>
+        Hesabınızın şifresini sıfırlamak için bir talep aldık.</p>
+        <p>Şifrenizi sıfırlamak için aşağıdaki butona tıklayabilirsiniz:</p>
+        <a href='{resetLink}' style='padding: 10px 20px; background-color: #4CAF50; color: white; text-decoration: none;'>Şifreyi Sıfırla</a>
+        <p>Veya aşağıdaki URL'yi tarayıcınıza kopyalayın ve yapıştırın:<br/>
+        {resetLink}</p>
+        <p>Teşekkürler,<br/>
+        RentASeat</p>
+        </body>
+        </html>";
+
+            using (var message = new MimeMessage())
             {
-                var user = await _context.AppUsers.SingleOrDefaultAsync(u => u.OAuthProvider == loginProvider && u.OAuthId == providerKey);
-                if (user == null)
+                message.From.Add(new MailboxAddress("RentASeat", username));
+                message.To.Add(new MailboxAddress(user.Name, user.Email));
+                message.Subject = "Şifre Sıfırlama";
+
+                message.Body = new TextPart("html")
                 {
-                    var (passwordHash, passwordSalt) = HashPassword(providerKey);
-                    user = new AppUser
-                    {
-                        OAuthProvider = loginProvider,
-                        OAuthId = providerKey,
-                        Email = email,
-                        Name = name,
-                        Surname = surname,
-                        AppRoleId = (int)RolesType.Admin,
-                        Username = email,
-                        PasswordHash = passwordHash,
-                        PasswordSalt = passwordSalt
-                    };
+                    Text = body
+                };
 
-                    _context.AppUsers.Add(user);
-                    await _context.SaveChangesAsync();
-                }
-                return LocalRedirect(returnUrl);
-            }
-
-            if (loginProvider == "Twitter")
-            {
-                var user = await _context.AppUsers.SingleOrDefaultAsync(u => u.OAuthProvider == loginProvider && u.OAuthId == providerKey);
-                if (user == null)
+                using (var client = new MailKit.Net.Smtp.SmtpClient())
                 {
-                    var username = result.Principal.Identity.Name ?? "TwitterUser"; // Principal'den kullanıcı adını al, yoksa varsayılan olarak "TwitterUser" kullan
-                    // Twitter'dan gelen kullanıcı adı
-                    var twitterScreenName = claims?.FirstOrDefault(claim => claim.Type == "urn:twitter:screen_name")?.Value;
-                    // Twitter'dan gelen ad ve soyad ayrı olarak dönmediği için displayName'den ad ve soyadı ayırabilirsiniz
-                    var displayName = claims?.FirstOrDefault(claim => claim.Type == "urn:twitter:name")?.Value;
-                    var nameParts = displayName?.Split(' ');
-                    name = nameParts?.FirstOrDefault() ?? twitterScreenName; // Kullanıcı adını varsayılan isim olarak kullanabilirsiniz
-                    surname = nameParts?.Skip(1).FirstOrDefault() ?? string.Empty; // Soyadı boş olarak ayarlayabilirsiniz
-
-                    var (passwordHash, passwordSalt) = HashPassword(providerKey);
-                    user = new AppUser
-                    {
-                        OAuthProvider = loginProvider,
-                        OAuthId = providerKey,
-                        Email = username,
-                        Name = name,
-                        Surname = surname,
-                        AppRoleId = (int)RolesType.User,
-                        Username = username,
-                        PasswordHash = passwordHash,
-                        PasswordSalt = passwordSalt
-                    };
-
-                    _context.AppUsers.Add(user);
-                    await _context.SaveChangesAsync();
+                    await client.ConnectAsync(server, port, SecureSocketOptions.StartTls);
+                    await client.AuthenticateAsync(username, password);
+                    await client.SendAsync(message);
+                    await client.DisconnectAsync(true);
                 }
-                return LocalRedirect(returnUrl);
             }
+        }
 
-            if (loginProvider == "Instagram")
+
+        [HttpGet]
+        public IActionResult ResetPassword(int userId, string token)
+        {
+            // Validate token and userId (not shown here)
+
+            // If valid, render a view to reset password
+            return View(new ResetPasswordViewModel { UserId = userId, Token = token });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
+        {
+            // Validate token and userId (not shown here)
+
+            using var _context = new RenASeatContext();
+            var user = await _context.AppUsers.FindAsync(model.UserId);
+
+            if (user != null)
             {
-                var user = await _context.AppUsers.SingleOrDefaultAsync(u => u.OAuthProvider == loginProvider && u.OAuthId == providerKey);
-                if (user == null)
-                {
-                    var username = result.Principal.Identity.Name ?? "InstagramUser"; // Principal'den kullanıcı adını al, yoksa varsayılan olarak "InstagramUser" kullan
-                    var (passwordHash, passwordSalt) = HashPassword(providerKey);
-                    user = new AppUser
-                    {
-                        OAuthProvider = loginProvider,
-                        OAuthId = providerKey,
-                        Email = username,
-                        Name = name,
-                        Surname = surname,
-                        AppRoleId = (int)RolesType.User,
-                        Username = username,
-                        PasswordHash = passwordHash,
-                        PasswordSalt = passwordSalt
-                    };
+                var (hash, salt) = HashPassword(model.NewPassword);
+                user.PasswordHash = hash;
+                user.PasswordSalt = salt;
 
-                    _context.AppUsers.Add(user);
-                    await _context.SaveChangesAsync();
-                }
-                return LocalRedirect(returnUrl);
+                _context.Update(user);
+                await _context.SaveChangesAsync();
+
+                TempData["ResetPasswordSuccess"] = "Şifreniz başarıyla sıfırlandı.";
+
+                return RedirectToAction("Index", "Login");
             }
-
-            return BadRequest();
+            else
+            {
+                TempData["ResetPasswordError"] = "Geçersiz şifre sıfırlama isteği.";
+                return RedirectToAction("ResetPasswordConfirmation");
+            }
         }
     }
 }
