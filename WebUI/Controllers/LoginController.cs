@@ -1,12 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using System;
-using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
 using WebUI.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -67,6 +63,7 @@ namespace WebUI.Controllers
 
                         if (tokenModel.Token != null)
                         {
+                            // Kullanıcı adı talebini manuel olarak ekleyin
                             claims.Add(new Claim(ClaimTypes.Name, user.Name));
                             claims.Add(new Claim("carbooktoken", tokenModel.Token));
 
@@ -81,7 +78,14 @@ namespace WebUI.Controllers
 
                             TempData["LoginSuccess"] = $"Hos Geldiniz, {user.Name}";
 
-                            return RedirectToAction("Index", "Default");
+                            if (claims.Any(c => c.Type == ClaimTypes.Role && c.Value == "Admin"))
+                            {
+                                return RedirectToAction("Index", "Dashboard", new { area = "Admin" });
+                            }
+                            else
+                            {
+                                return RedirectToAction("Index", "Default");
+                            }
                         }
                     }
                 }
@@ -90,6 +94,10 @@ namespace WebUI.Controllers
             TempData["LoginFailed"] = "Kullanıcı adı veya şifrenizi kontrol ediniz";
             return View();
         }
+
+
+
+
 
         [HttpPost]
         public async Task<IActionResult> Logout()
@@ -124,6 +132,7 @@ namespace WebUI.Controllers
         }
 
         [HttpPost]
+        [HttpPost]
         public async Task<IActionResult> ForgetPassword(string email)
         {
             if (string.IsNullOrEmpty(email))
@@ -140,16 +149,21 @@ namespace WebUI.Controllers
                 return View();
             }
 
-            var token = Guid.NewGuid().ToString();
+            //Yeni bir reset token oluşturduk
+            var resetToken = Guid.NewGuid().ToString();
 
-            // Store token and expiration time in the database or a temporary store (not shown here)
+            // Save the reset token to the user's ResetPasswordToken field
+            user.ResetPasswordToken = resetToken;
+            _context.Update(user);
+            await _context.SaveChangesAsync();
 
-            // Send email with password reset link
-            await SendPasswordResetEmail(user, token);
+            //E -posta gönderme işlemi
+            await SendPasswordResetEmail(user, resetToken);
 
             TempData["ForgetPasswordSuccess"] = "Şifre sıfırlama bağlantısı e-posta adresinize gönderildi. Bu bağlantıyı kullanarak şifre sıfırlama işleminizi gerçekleştirebilirsiniz.";
             return RedirectToAction("ResetPasswordConfirmation");
         }
+
 
         [HttpGet]
         public IActionResult ResetPasswordConfirmation()
@@ -167,19 +181,19 @@ namespace WebUI.Controllers
 
             var resetLink = Url.Action("ResetPassword", "Login", new { userId = user.AppUserId, token }, Request.Scheme);
             var body = $@"
-        <html>
-        <body>
-        <p>Merhaba {user.Name},</p>
-        <p>Şifrenizi mi unuttunuz?<br/>
-        Hesabınızın şifresini sıfırlamak için bir talep aldık.</p>
-        <p>Şifrenizi sıfırlamak için aşağıdaki butona tıklayabilirsiniz:</p>
-        <a href='{resetLink}' style='padding: 10px 20px; background-color: #4CAF50; color: white; text-decoration: none;'>Şifreyi Sıfırla</a>
-        <p>Veya aşağıdaki URL'yi tarayıcınıza kopyalayın ve yapıştırın:<br/>
-        {resetLink}</p>
-        <p>Teşekkürler,<br/>
-        RentASeat</p>
-        </body>
-        </html>";
+    <html>
+    <body>
+    <p>Merhaba {user.Name},</p>
+    <p>Şifrenizi mi unuttunuz?<br/>
+    Hesabınızın şifresini sıfırlamak için bir talep aldık.</p>
+    <p>Şifrenizi sıfırlamak için aşağıdaki butona tıklayabilirsiniz:</p>
+    <a href='{resetLink}' style='padding: 10px 20px; background-color: #4CAF50; color: white; text-decoration: none;'>Şifreyi Sıfırla</a>
+    <p>Veya aşağıdaki URL'yi tarayıcınıza kopyalayın ve yapıştırın:<br/>
+    {resetLink}</p>
+    <p>Teşekkürler,<br/>
+    RentASeat</p>
+    </body>
+    </html>";
 
             using (var message = new MimeMessage())
             {
@@ -203,41 +217,60 @@ namespace WebUI.Controllers
         }
 
 
-        [HttpGet]
-        public IActionResult ResetPassword(int userId, string token)
-        {
-            // Validate token and userId (not shown here)
 
-            // If valid, render a view to reset password
+        [HttpGet]
+        public async Task<IActionResult> ResetPassword(int userId, string token)
+        {
+            if (userId <= 0 || string.IsNullOrEmpty(token))
+            {
+                TempData["ResetPasswordError"] = "Geçersiz şifre sıfırlama isteği.";
+                return RedirectToAction("ResetPasswordConfirmation");
+            }
+
+            using var _context = new RenASeatContext();
+            var user = await _context.AppUsers.FindAsync(userId);
+
+            if (user == null || user.ResetPasswordToken != token)
+            {
+                TempData["ResetPasswordError"] = "Geçersiz şifre sıfırlama isteği.";
+                return RedirectToAction("ResetPasswordConfirmation");
+            }
+
+            //Token doğruysa şifre sıfırlama sayfasını gösterdik
             return View(new ResetPasswordViewModel { UserId = userId, Token = token });
         }
 
         [HttpPost]
         public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
         {
-            // Validate token and userId (not shown here)
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
 
             using var _context = new RenASeatContext();
             var user = await _context.AppUsers.FindAsync(model.UserId);
 
-            if (user != null)
-            {
-                var (hash, salt) = HashPassword(model.NewPassword);
-                user.PasswordHash = hash;
-                user.PasswordSalt = salt;
-
-                _context.Update(user);
-                await _context.SaveChangesAsync();
-
-                TempData["ResetPasswordSuccess"] = "Şifreniz başarıyla sıfırlandı.";
-
-                return RedirectToAction("Index", "Login");
-            }
-            else
+            if (user == null || user.ResetPasswordToken != model.Token)
             {
                 TempData["ResetPasswordError"] = "Geçersiz şifre sıfırlama isteği.";
                 return RedirectToAction("ResetPasswordConfirmation");
             }
+
+            //Parolayı hashleyip kaydettik
+            var (hash, salt) = HashPassword(model.NewPassword);
+            user.PasswordHash = hash;
+            user.PasswordSalt = salt;
+
+            //Parola sıfırlandıktan sonra tokenı sıfırladık
+            user.ResetPasswordToken = null;
+
+            _context.Update(user);
+            await _context.SaveChangesAsync();
+
+            TempData["ResetPasswordSuccess"] = "Şifreniz başarıyla sıfırlandı.";
+
+            return RedirectToAction("Index", "Login");
         }
     }
 }
