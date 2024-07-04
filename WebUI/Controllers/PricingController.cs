@@ -18,6 +18,8 @@ namespace WebUI.Controllers
 
         public async Task<IActionResult> Index()
         {
+            ViewBag.v1 = "Paketler";
+            ViewBag.v2 = "Araç Fiyat Paketleri";
             var client = _httpClientFactory.CreateClient();
             var responseMessage = await client.GetAsync("https://localhost:7250/api/CarPricings/CarPricingListWithModel");
             if (responseMessage.IsSuccessStatusCode)

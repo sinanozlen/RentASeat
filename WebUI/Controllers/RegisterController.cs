@@ -63,8 +63,6 @@ namespace WebUI.Controllers
                     Surname = model.Surname,
                     Email = model.Email,
                     AppRoleId = (int)RolesType.User,
-                    OAuthId = "0",
-                    OAuthProvider = "Sistemden Kayıt"
                 };
 
                 _context.AppUsers.Add(newUser);

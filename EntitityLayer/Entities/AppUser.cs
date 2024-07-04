@@ -18,7 +18,6 @@ namespace EntitityLayer.Entities
         public string Email { get; set; }
         public int AppRoleId { get; set; }
         public AppRole AppRole { get; set; }
-        public string OAuthProvider { get; set; }
-        public string OAuthId { get; set; }
+        public string? ResetPasswordToken { get; set; }
     }
 }
