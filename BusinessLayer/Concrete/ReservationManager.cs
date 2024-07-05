@@ -1,5 +1,6 @@
 ﻿using BusinessLayer.Abstract;
 using DataAccessLayer.Abstract;
+using DtoLayer.ReservationDtos;
 using EntitityLayer.Entities;
 using System;
 using System.Collections.Generic;
@@ -18,10 +19,26 @@ namespace BusinessLayer.Concrete
             _reservationDal = reservationDal;
         }
 
+        public ResultReservationDto TGetReservationDetails(int reservationID)
+        {
+            var values = _reservationDal.GetReservationDetails(reservationID);
+            return values;
+        }
+
         public void TAdd(Reservation entity)
         {
            _reservationDal.Add(entity);
 
+        }
+
+        public void TChangeReservationStatusToConfirm(int id)
+        {
+            _reservationDal.ChangeReservationStatusToConfirm(id);
+        }
+
+        public void TChangeReservationStatusToDecline(int id)
+        {
+            _reservationDal.ChangeReservationStatusToDecline(id);
         }
 
         public void TDelete(Reservation entity)
@@ -38,6 +55,14 @@ namespace BusinessLayer.Concrete
         public List<Reservation> TGetListAll()
         {
             var values = _reservationDal.GetListAll();
+            return values;
+        }
+
+    
+
+        public List<ResultReservationDto> TGetReservationWithLocationAndCar()
+        {
+            var values = _reservationDal.GetReservationWithLocationAndCar();
             return values;
         }
 

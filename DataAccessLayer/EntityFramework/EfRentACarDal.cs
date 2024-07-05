@@ -17,13 +17,14 @@ namespace DataAccessLayer.EntityFramework
     {
         public EfRentACarDal(RenASeatContext renASeatContext) : base(renASeatContext)
         {
+
         }
 
         public async Task<List<FilterRentACarDto>> GetByFilterAsync(Expression<Func<RentACar, bool>> filter)
         {
             using var _context = new RenASeatContext();
 
-            var query = _context.RentACars
+            var query = _context.RentACar
                                 .Where(filter)
                                 .Include(x => x.Car)
                                     .ThenInclude(y => y.Brand)
@@ -50,9 +51,6 @@ namespace DataAccessLayer.EntityFramework
 
             return filterRentACarDtos;
         }
-
-
-
 
 
     }

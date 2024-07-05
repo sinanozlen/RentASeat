@@ -11,31 +11,19 @@
         @await Component.InvokeAsync("_CarDetailMainCarFeatureComponentPartial", new { id = ViewBag.carid })
         <h2 class="alert alert-success">Rezervasyon Formu</h2>
 
-
         <div class="form-group">
-
-            @* @Html.DropDownListFor(x => x.CarID, (List<SelectListItem>)ViewBag.v2, new { @class = "form-control" }) *@
-        </div>
-
-        
-       @*  <input type="text" asp-for="CarID" value="@ViewBag.v3" class="form-control" placeholder="Almak İstediğiniz Araç"> *@
-      
-        <div class="form-group">
-          
+            
+            <input type="text" asp-for="Name" class="form-control" placeholder="Adınız">
         </div>
         <div class="form-group">
             
-            <input type="text" asp-for="Name" class="form-control" placeholder="İsim Yazınız">
+            <input type="text" asp-for="Surname" class="form-control" placeholder="Soyadınız ">
         </div>
         <div class="form-group">
-            
-            <input type="text" asp-for="Surname" class="form-control" placeholder="Soyisim Yazınız">
+            <input type="text" asp-for="Email" class="form-control" placeholder="Mail Adresiniziz">
         </div>
         <div class="form-group">
-            <input type="text" asp-for="Email" class="form-control" placeholder="Mail Adresinizi Yazınız">
-        </div>
-        <div class="form-group">
-            <input type="text" asp-for="Phone" class="form-control" placeholder="Telefon Numaranızı Yazınız">
+            <input type="text" asp-for="Phone" class="form-control" placeholder="Telefon Numaranız">
         </div>
         <div class="form-group">
             
@@ -46,13 +34,13 @@
             @Html.DropDownListFor(x => x.PickUpLocationID, (List<SelectListItem>)ViewBag.v, new { @class = "form-control"})
         </div>
         <div class="form-group">
-            <input type="text" asp-for="Age" class="form-control" placeholder="Yaşınızı Yazınız">
+            <input type="text" asp-for="Age" class="form-control" placeholder="Yaşınız">
         </div>
         <div class="form-group">
-            <input type="text" asp-for="DriverLicenseYear" class="form-control" placeholder="Ehliyet Yılınızı Yazınız">
+            <input type="text" asp-for="DriverLicenseYear" class="form-control" placeholder="Ehliyet Yılınızınız">
         </div>
         <div class="form-group">
-            <textarea asp-for="Description" id="" cols="30" rows="7" class="form-control" placeholder="Eklemek İsteklerinizi Yazınız"></textarea>
+            <textarea asp-for="Description" id="" cols="30" rows="7" class="form-control" placeholder="Eklemek İstedikleriniz"></textarea>
         </div>
         <div class="form-group">
             <input type="submit" value="Rezervayonu Tamamla" class="btn btn-primary py-3 px-5">

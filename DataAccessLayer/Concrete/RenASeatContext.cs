@@ -35,7 +35,7 @@ namespace DataAccessLayer.Concrete
         public DbSet<Banner> Banners { get; set; }
         public DbSet<Contact> Contacts { get; set; }
         public DbSet<FooterAddress> FooterAddresses { get; set; }
-        public DbSet<RentACar> RentACars { get; set; }
+        public DbSet<RentACar> RentACar { get; set; }
         public DbSet<Reservation> Reservation { get; set; }
         public DbSet<SocialMedia> SocialMedias { get; set; }
         public DbSet<Review> Reviews { get; set; }
