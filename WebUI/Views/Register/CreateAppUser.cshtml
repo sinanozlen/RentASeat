@@ -32,6 +32,10 @@
     <!-- SweetAlert -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+    <!-- Toastify -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
     <style>
         .requirements {
             list-style-type: none;
@@ -70,7 +74,7 @@
                                         </div>
                                         <h1 class="h5 mb-1">Bir hesap oluşturun!</h1>
                                         <p class="text-muted mb-4">Bir hesabınız yok mu, 1 dakika içinde hesabınızı oluşturun!</p>
-                                        <form class="user" method="post">
+                                        <form class="user" method="post" id="registerForm">
                                             <div asp-validation-summary="All" class="text-danger"></div>
 
                                             <div class="form-group row">
@@ -202,34 +206,95 @@
 
         createPw.addEventListener("input", () => {
             let val = createPw.value.trim();
-            let lengthValid = val.length >= 8,
-                uppercaseValid = /[A-Z]/.test(val),
-                numberValid = /[0-9]/.test(val),
-                specialValid = /[!@@#\$%\^\&*\)\(+=._-]+/.test(val);
+            let lengthValid = val.length >= 8;
+            let uppercaseValid = /[A-Z]/.test(val);
+            let numberValid = /[0-9]/.test(val);
+            let specialValid = /[!@@#$%^&*(),.?":{}|<>]/.test(val);
 
-            toggleValid(lengthReq, lengthValid);
-            toggleValid(uppercaseReq, uppercaseValid);
-            toggleValid(numberReq, numberValid);
-            toggleValid(specialReq, specialValid);
+            lengthReq.classList.toggle("valid", lengthValid);
+            lengthReq.classList.toggle("invalid", !lengthValid);
 
-            let allValid = lengthValid && uppercaseValid && numberValid && specialValid;
-            confirmPw.disabled = !allValid;
+            uppercaseReq.classList.toggle("valid", uppercaseValid);
+            uppercaseReq.classList.toggle("invalid", !uppercaseValid);
+
+            numberReq.classList.toggle("valid", numberValid);
+            numberReq.classList.toggle("invalid", !numberValid);
+
+            specialReq.classList.toggle("valid", specialValid);
+            specialReq.classList.toggle("invalid", !specialValid);
+
+            if (lengthValid && uppercaseValid && numberValid && specialValid) {
+                confirmPw.disabled = false;
+                submitBtn.disabled = false;
+            } else {
+                confirmPw.disabled = true;
+                submitBtn.disabled = true;
+            }
         });
 
         confirmPw.addEventListener("input", () => {
-            let match = confirmPw.value === createPw.value;
-            submitBtn.disabled = !match;
+            if (createPw.value !== confirmPw.value) {
+                submitBtn.disabled = true;
+            } else {
+                submitBtn.disabled = false;
+            }
         });
 
-        function toggleValid(element, valid) {
-            if (valid) {
-                element.classList.add("valid");
-                element.classList.remove("invalid");
-            } else {
-                element.classList.remove("valid");
-                element.classList.add("invalid");
-            }
-        }
+        $(document).ready(function () {
+            $('#registerForm').validate({
+                errorClass: 'error is-invalid',
+                validClass: 'valid is-valid',
+                highlight: function (element, errorClass, validClass) {
+                    $(element).addClass(errorClass).removeClass(validClass);
+                },
+                unhighlight: function (element, errorClass, validClass) {
+                    $(element).removeClass(errorClass).addClass(validClass);
+                },
+                errorPlacement: function (error, element) {
+                    error.addClass('text-danger').insertAfter(element);
+                },
+                submitHandler: function (form) {
+                    $.ajax({
+                        url: '@Url.Action("Register", "Register")',
+                        type: 'POST',
+                        data: $(form).serialize(),
+                        success: function (response) {
+                            if (response.success) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Başarılı!',
+                                    text: 'Kayıt işlemi başarılı!',
+                                    confirmButtonText: 'Tamam'
+                                }).then(() => {
+                                    window.location.href = '/Login/Index/';
+                                });
+                            } else {
+                                Toastify({
+                                    text: response.message,
+                                    duration: 3000,
+                                    close: true,
+                                    gravity: 'top',
+                                    position: 'right',
+                                    backgroundColor: '#ff0000',
+                                    stopOnFocus: true
+                                }).showToast();
+                            }
+                        },
+                        error: function (response) {
+                            Toastify({
+                                text: 'Bir hata oluştu. Lütfen tekrar deneyin.',
+                                duration: 3000,
+                                close: true,
+                                gravity: 'top',
+                                position: 'right',
+                                backgroundColor: '#ff0000',
+                                stopOnFocus: true
+                            }).showToast();
+                        }
+                    });
+                }
+            });
+        });
     </script>
 
 </body>
