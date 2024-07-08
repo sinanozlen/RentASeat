@@ -26,7 +26,8 @@ namespace DataAccessLayer.EntityFramework
                 Comment = x.Comment,
                 CustomerImage = x.CustomerImage,
                 CustomerName = x.CustomerName,
-                RatingValue = x.RatingValue
+                RatingValue = x.RatingValue,
+                ReviewDate=x.ReviewDate
                 
             }).ToList();
             return values;

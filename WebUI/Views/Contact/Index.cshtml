@@ -7,34 +7,101 @@
 <section class="ftco-section contact-section">
     <div class="container">
         <div class="row d-flex mb-5 contact-info">
-
             @await Component.InvokeAsync("_FooterAddressComponentPartial")
 
             <div class="col-md-8 block-9 mb-md-5">
                 <form class="bg-light p-5 contact-form" method="post">
                     <div class="form-group">
                         <input type="text" class="form-control" placeholder="Adınız soyadınız" asp-for="Name">
+                        <span asp-validation-for="Name" class="text-danger"></span>
                     </div>
                     <div class="form-group">
                         <input type="email" class="form-control" placeholder="Email Adresiniz" asp-for="Email">
+                        <span asp-validation-for="Email" class="text-danger"></span>
                     </div>
                     <div class="form-group">
                         <input type="text" class="form-control" placeholder="Konu" asp-for="Subject">
+                        <span asp-validation-for="Subject" class="text-danger"></span>
                     </div>
                     <div class="form-group">
                         <textarea asp-for="Message" cols="30" rows="7" class="form-control" placeholder="Mesajınız"></textarea>
+                        <span asp-validation-for="Message" class="text-danger"></span>
                     </div>
                     <div class="form-group">
                         <input type="submit" value="Mesajı Gönder" class="btn btn-primary py-3 px-5">
                     </div>
                 </form>
-
             </div>
         </div>
         <div class="row justify-content-center">
             <div class="col-md-12">
-                <div id="map" class="bg-white"></div>
+                <div id="map" class="bg-white" style="height: 400px;"></div>
             </div>
         </div>
     </div>
 </section>
+
+<!-- Google Maps API ile haritayı yükle -->
+<script>
+    function initMap() {
+        // Harita konumu ve ayarları
+        var mapOptions = {
+            center: { lat: 40.99915397135182, lng: 29.029894275897995 },
+            zoom: 15,  // Yakınlaştırma düzeyi
+        };
+        // Haritayı oluştur
+        var map = new google.maps.Map(document.getElementById('map'), mapOptions);
+    }
+</script>
+
+<!-- Google Haritalar API'yi yükle -->
+<script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC4gHqsczElolVV9Rh0mh90jJsKI4_WgAE&callback=initMap">
+</script>
+
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Client-side validation -->
+<script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.19.1/jquery.validate.min.js"></script>
+<script src="https://ajax.aspnetcdn.com/ajax/jquery.validate.unobtrusive/3.2.11/jquery.validate.unobtrusive.min.js"></script>
+
+<!-- Toastr -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $('form').on('submit', function (e) {
+            var isValid = true;
+            var namePattern = /^[\p{L}\s\d\-]{3,50}$/u;
+            var emailPattern = /^[^\s@@]+@@[^\s@@]+\.[^\s@@]+$/;
+
+            if (!namePattern.test($('input[name="Name"]').val())) {
+                isValid = false;
+                toastr.error('Adınız soyadınız 3 ile 50 karakter arasında olmalıdır.');
+            }
+
+            if (!emailPattern.test($('input[name="Email"]').val())) {
+                isValid = false;
+                toastr.error('Lütfen geçerli bir email adresi giriniz.');
+            }
+
+            if ($('input[name="Subject"]').val().length < 3 || $('input[name="Subject"]').val().length > 100) {
+                isValid = false;
+                toastr.error('Konu 3 ile 100 karakter arasında olmalıdır.');
+            }
+
+            if ($('textarea[name="Message"]').val().length < 10 || $('textarea[name="Message"]').val().length > 1000) {
+                isValid = false;
+                toastr.error('Mesajınız 10 ile 1000 karakter arasında olmalıdır.');
+            }
+
+            if (!isValid) {
+                e.preventDefault(); // Form gönderimini engelle
+            } else {
+                this.submit(); // Form geçerliyse gönder
+            }
+        });
+    });
+</script>

@@ -48,6 +48,12 @@ namespace BusinessLayer.Concrete
             return values;
         }
 
+        public ResultCarWithBrandDto TGetCarsWithBrand(int id)
+        {
+            var values = _carDal.GetCarsWithBrand(id);
+            return values;
+        }
+
         public List<Car> TGetListAll()
         {
             var values = _carDal.GetListAll();
