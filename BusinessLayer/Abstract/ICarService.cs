@@ -12,5 +12,6 @@ namespace BusinessLayer.Abstract
     {
         List<ResultCarWithBrandDto> TGetCarsWithBrand();
         List<Result5CarsWithBrandsDto> TGet5CarsWithBrandsDtos();
+        ResultCarWithBrandDto TGetCarsWithBrand(int id);
     }
 }

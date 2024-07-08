@@ -5,46 +5,106 @@
 }
 
 <div class="col-md-12 block-9 mb-md-5">
- 
-
-    <form class="bg-light p-5 contact-form" method="post">
+    <form id="reservationForm" class="bg-light p-5 contact-form" method="post" asp-action="Index">
         @await Component.InvokeAsync("_CarDetailMainCarFeatureComponentPartial", new { id = ViewBag.carid })
         <h2 class="alert alert-success">Rezervasyon Formu</h2>
 
         <div class="form-group">
-            
             <input type="text" asp-for="Name" class="form-control" placeholder="Adınız">
+            <span asp-validation-for="Name" class="text-danger"></span>
         </div>
         <div class="form-group">
-            
-            <input type="text" asp-for="Surname" class="form-control" placeholder="Soyadınız ">
+            <input type="text" asp-for="Surname" class="form-control" placeholder="Soyadınız">
+            <span asp-validation-for="Surname" class="text-danger"></span>
         </div>
         <div class="form-group">
-            <input type="text" asp-for="Email" class="form-control" placeholder="Mail Adresiniziz">
+            <input type="email" asp-for="Email" class="form-control" placeholder="Mail Adresiniz">
+            <span asp-validation-for="Email" class="text-danger"></span>
         </div>
         <div class="form-group">
             <input type="text" asp-for="Phone" class="form-control" placeholder="Telefon Numaranız">
+            <span asp-validation-for="Phone" class="text-danger"></span>
         </div>
         <div class="form-group">
-            
-            @Html.DropDownListFor(x => x.DropOffLocationID, (List<SelectListItem>)ViewBag.v, new { @class = "form-control"})
+
+            @Html.DropDownListFor(x => x.DropOffLocationID, (List<SelectListItem>)ViewBag.v, new { @class = "form-control" })
         </div>
         <div class="form-group">
-            
-            @Html.DropDownListFor(x => x.PickUpLocationID, (List<SelectListItem>)ViewBag.v, new { @class = "form-control"})
+
+            @Html.DropDownListFor(x => x.PickUpLocationID, (List<SelectListItem>)ViewBag.v, new { @class = "form-control" })
         </div>
         <div class="form-group">
-            <input type="text" asp-for="Age" class="form-control" placeholder="Yaşınız">
+            @Html.DropDownListFor(x => x.Age, Enumerable.Range(18, 63).Select(x => new SelectListItem { Text = x.ToString(), Value = x.ToString() }).ToList(), "Yaşınızı Seçiniz", new { @class = "form-control" })
+            <span asp-validation-for="Age" class="text-danger"></span>
         </div>
         <div class="form-group">
-            <input type="text" asp-for="DriverLicenseYear" class="form-control" placeholder="Ehliyet Yılınızınız">
+            @Html.DropDownListFor(x => x.DriverLicenseYear, Enumerable.Range(1975, DateTime.Now.Year - 1975 + 1).Select(x => new SelectListItem { Text = x.ToString(), Value = x.ToString() }).ToList(), "Ehliyet Yılınızı Seçiniz", new { @class = "form-control" })
+            <span asp-validation-for="DriverLicenseYear" class="text-danger"></span>
         </div>
         <div class="form-group">
             <textarea asp-for="Description" id="" cols="30" rows="7" class="form-control" placeholder="Eklemek İstedikleriniz"></textarea>
+            <span asp-validation-for="Description" class="text-danger"></span>
         </div>
         <div class="form-group">
-            <input type="submit" value="Rezervayonu Tamamla" class="btn btn-primary py-3 px-5">
+            <input type="submit" value="Rezervasyonu Tamamla" class="btn btn-primary py-3 px-5">
         </div>
     </form>
-
 </div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+    $('#reservationForm').on('submit', function (e) {
+        var isValid = true;
+            var namePattern = /^[\p{L}\s\d\-]{3,30}$/u;
+            var surnamePattern = /^[\p{L}\s\d\-]{2,50}$/u;
+
+        var emailPattern = /^[^\s@@]+@@[^\s@@]+\.[^\s@@]+$/;
+        var phonePattern = /^[1-9][0-9]{9}$/;
+            var selectedAge = parseInt($('#Age').val());
+            if (isNaN(selectedAge) || selectedAge < 18 || selectedAge > 100) {
+                isValid = false;
+                toastr.error('Lütfen geçerli bir yaş seçin (18-80 arasında).');
+            }
+
+            var selectedLicenseYear = parseInt($('#DriverLicenseYear').val());
+            var currentYear = new Date().getFullYear();
+            if (isNaN(selectedLicenseYear) || selectedLicenseYear > currentYear || selectedLicenseYear < 1900) {
+                isValid = false;
+                toastr.error('Lütfen geçerli bir ehliyet yılı seçin.');
+            }
+
+        if (!namePattern.test($('#Name').val())) {
+            isValid = false;
+            toastr.error('Adınız 3 ile 30 karakter arasında olmalı ve sayı içermemelidir.');
+        }
+
+        if (!surnamePattern.test($('#Surname').val())) {
+            isValid = false;
+            toastr.error('Soyadınız 2 ile 50 karakter arasında olmalı ve sayı içermemelidir.');
+        }
+
+        if (!emailPattern.test($('#Email').val())) {
+            isValid = false;
+            toastr.error('Lütfen geçerli bir e-posta adresi girin.');
+        }
+
+        if (!phonePattern.test($('#Phone').val())) {
+            isValid = false;
+            toastr.error('Telefon numarası 10 haneli olmalı ve 0 ile başlamamalıdır.');
+        }
+
+        if (!isValid) {
+            e.preventDefault(); // Form gönderimini engelle
+        } else {
+            // Form geçerliyse gönder
+            this.submit();
+        }
+    });
+});
+</script>
+<script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.19.1/jquery.validate.min.js"></script>
+<script src="https://ajax.aspnetcdn.com/ajax/jquery.validate.unobtrusive/3.2.11/jquery.validate.unobtrusive.min.js"></script>
+
+
+}

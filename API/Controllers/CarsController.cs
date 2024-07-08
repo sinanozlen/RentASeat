@@ -161,5 +161,23 @@ namespace API.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, "Sunucu hatası");
             }
         }
+        [HttpGet("GetCarsWithBrand/{id}")]
+        public IActionResult GetCarsWithBrand(int id)
+        {
+            try
+            {
+                var car = _carService.TGetCarsWithBrand(id);
+                if (car == null)
+                {
+                    return NotFound("Araba bulunamadı");
+                }
+                return Ok(car);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"ID {id} olan araba getirilirken bir hata oluştu.");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Sunucu hatası");
+            }
+        }
     }
 }

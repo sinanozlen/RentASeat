@@ -11,6 +11,7 @@ namespace DataAccessLayer.Abstract
     public interface ICarDal:IGenericDal<Car>
     {
         List<ResultCarWithBrandDto> GetCarsWithBrand();
+        ResultCarWithBrandDto GetCarsWithBrand(int id);
 
         List<Result5CarsWithBrandsDto> Get5CarsWithBrandsDtos();
 

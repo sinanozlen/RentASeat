@@ -81,6 +81,7 @@ namespace DataAccessLayer.EntityFramework
 
                 result.Add(new ResultCarPricingListWithModelDto
                 {
+                    CarID = carPricing.CarID,
                     Brand = carPricing.Car.Brand.Name,
                     Model = carPricing.Car.Model,
                     CoverImageUrl = carPricing.Car.CoverImageUrl,

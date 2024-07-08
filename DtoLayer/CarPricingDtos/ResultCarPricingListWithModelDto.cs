@@ -13,6 +13,7 @@ namespace DtoLayer.CarPricingDtos
 		public decimal WeeklyAmount { get; set; }
 		public decimal MonthlyAmount { get; set; }
         public string CoverImageUrl { get; set; }
+		public int CarID { get; set; }
         public string Brand { get; set; }
     }
 

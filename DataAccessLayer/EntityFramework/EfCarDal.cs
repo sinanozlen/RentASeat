@@ -22,7 +22,7 @@ namespace DataAccessLayer.EntityFramework
         public List<Result5CarsWithBrandsDto> Get5CarsWithBrandsDtos()
         {
             using var context = new RenASeatContext();
-            var values = context.Cars.Include(x => x.Brand).Include(k=>k.CarPricings).OrderBy(y => y.CarID).Take(5).Select(z => new Result5CarsWithBrandsDto
+            var values = context.Cars.Include(x => x.Brand).Include(k => k.CarPricings).OrderBy(y => y.CarID).Take(5).Select(z => new Result5CarsWithBrandsDto
             {
                 CarID = z.CarID,
                 BrandID = z.BrandID,
@@ -35,9 +35,9 @@ namespace DataAccessLayer.EntityFramework
                 Model = z.Model,
                 Seat = z.Seat,
                 Transmission = z.Transmission,
-               Amount = z.CarPricings.FirstOrDefault().Amount.ToString()
+                Amount = z.CarPricings.FirstOrDefault().Amount.ToString()
             }).ToList();
-                
+
             return values;
         }
 
@@ -63,5 +63,29 @@ namespace DataAccessLayer.EntityFramework
            .ToList();
             return carsWithBrand;
         }
+
+        public ResultCarWithBrandDto GetCarsWithBrand(int id)
+        {
+            using var context = new RenASeatContext();
+            var carsWithBrand = context.Cars
+           .Include(x => x.Brand)
+           .Where(x => x.CarID == id)
+           .Select(x => new ResultCarWithBrandDto
+           {
+               BrandName = x.Brand.Name,
+               BrandID = x.BrandID,
+               BigImageUrl = x.BigImageUrl,
+               CarID = x.CarID,
+               CoverImageUrl = x.CoverImageUrl,
+               Fuel = x.Fuel,
+               Km = x.Km,
+               Luggage = x.Luggage,
+               Model = x.Model,
+               Seat = x.Seat,
+
+           }).FirstOrDefault();
+            return carsWithBrand;
+        }
     }
+
 }
