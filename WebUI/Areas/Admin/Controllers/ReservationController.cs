@@ -33,7 +33,7 @@ namespace WebUI.Areas.Admin.Controllers
                 return RedirectToAction("Index", "Forbidden");
             }
             var client = _httpClientFactory.CreateClient();
-            var responseMessage = await client.GetAsync("https://localhost:7250/api/Reservations/GetReservationWithLocationAndCar");
+            var responseMessage = await client.GetAsync("https://api.rentaseat.com.tr/api/Reservations/GetReservationWithLocationAndCar");
             if (responseMessage.IsSuccessStatusCode)
             {
                 var jsonData = await responseMessage.Content.ReadAsStringAsync();
@@ -53,7 +53,7 @@ namespace WebUI.Areas.Admin.Controllers
                 return RedirectToAction("Index", "Forbidden");
             }
             var client = _httpClientFactory.CreateClient();
-            var responseMessage = await client.GetAsync($"https://localhost:7250/api/Reservations/ChangeReservationStatusToConfirm?id={id}");
+            var responseMessage = await client.GetAsync($"https://api.rentaseat.com.tr/api/Reservations/ChangeReservationStatusToConfirm?id={id}");
             if (responseMessage.IsSuccessStatusCode)
             {
                 await SendReservationStatusEmail(id, "onaylandı");
@@ -72,7 +72,7 @@ namespace WebUI.Areas.Admin.Controllers
                 return RedirectToAction("Index", "Forbidden");
             }
             var client = _httpClientFactory.CreateClient();
-            var responseMessage = await client.GetAsync($"https://localhost:7250/api/Reservations/ChangeReservationStatusToDecline?id={id}");
+            var responseMessage = await client.GetAsync($"https://api.rentaseat.com.tr/api/Reservations/ChangeReservationStatusToDecline?id={id}");
             if (responseMessage.IsSuccessStatusCode)
             {
                 await SendReservationStatusEmail(id, "reddedildi");
@@ -164,7 +164,7 @@ RentASeat</p>
         private async Task<ResultReservationDto> GetReservationDetails(int reservationID)
         {
             var client = _httpClientFactory.CreateClient();
-            var responseMessage = await client.GetAsync($"https://localhost:7250/api/Reservations/GetReservationById?id={reservationID}");
+            var responseMessage = await client.GetAsync($"https://api.rentaseat.com.tr/api/Reservations/GetReservationById?id={reservationID}");
             if (responseMessage.IsSuccessStatusCode)
             {
                 var jsonData = await responseMessage.Content.ReadAsStringAsync();

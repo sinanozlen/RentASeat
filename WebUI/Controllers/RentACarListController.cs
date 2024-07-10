@@ -23,7 +23,7 @@ namespace WebUI.Controllers
             ViewBag.locationID = locationID;
 
             var client = _httpClientFactory.CreateClient();
-            var responseMessage = await client.GetAsync($"https://localhost:7250/api/RentACars?locationID={id}&available=true");
+            var responseMessage = await client.GetAsync($"https://api.rentaseat.com.tr/api/RentACars?locationID={id}&available=true");
             if (responseMessage.IsSuccessStatusCode)
             {
                 var jsonData = await responseMessage.Content.ReadAsStringAsync();

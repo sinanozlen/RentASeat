@@ -31,7 +31,76 @@
         });
 
         $('#btn4').click(function () {
-            swal("Sıkça Sorulan Sorular", "Sistem ile ilgili sık sorulan sorular yer alır.");
+            swal({
+                title: "Sıkça Sorulan Sorular",
+                text: "Aşağıda araç kiralama ile ilgili sıkça sorulan sorular bulunmaktadır.",
+                buttons: {
+                    soru1: {
+                        text: "Aracı nasıl rezerve edebilirim?",
+                        value: "soru1",
+                    },
+                    soru2: {
+                        text: "Rezervasyonumu nasıl iptal edebilirim?",
+                        value: "soru2",
+                    },
+                    soru3: {
+                        text: "Kiralama ücretine ne dahildir?",
+                        value: "soru3",
+                    },
+                    soru4: {
+                        text: "Kiralama sürecinde ek sürücü ekleyebilir miyim?",
+                        value: "soru4",
+                    },
+                    soru5: {
+                        text: "Aracı teslim aldığım yerden başka bir yere bırakabilir miyim?",
+                        value: "soru5",
+                    },
+                    soru6: {
+                        text: "Kiralama için hangi belgelere ihtiyacım var?",
+                        value: "soru6",
+                    },
+                    soru7: {
+                        text: "Kiralama sırasında ekstra sigorta seçenekleri nelerdir?",
+                        value: "soru7",
+                    },
+                    cancel: "Kapat",
+                },
+                closeOnClickOutside: false,
+                closeOnEsc: false,
+            }).then((value) => {
+                switch (value) {
+                    case "soru1":
+                        swal("Aracı Nasıl Rezerve Edebilirim?", "Aracınızı rezerve etmek için web sitemizdeki rezervasyon formunu doldurabilir veya çağrı merkezimizi arayabilirsiniz.");
+                        break;
+
+                    case "soru2":
+                        swal("Rezervasyonumu Nasıl İptal Edebilirim?", "Rezervasyonunuzu iptal etmek için müşteri hizmetlerimizle iletişime geçebilirsiniz. İptal politikamızı web sitemizden de inceleyebilirsiniz.");
+                        break;
+
+                    case "soru3":
+                        swal("Kiralama Ücretine Ne Dahildir?", "Kiralama ücretine genellikle araç sigortası, sınırsız kilometre, vergiler ve yol yardımı dahildir. Detaylı bilgi için müşteri temsilcilerimizle iletişime geçebilirsiniz.");
+                        break;
+
+                    case "soru4":
+                        swal("Kiralama Sürecinde Ek Sürücü Ekleyebilir Miyim?", "Evet, kiralama sırasında ek sürücü ekleyebilirsiniz. Ek sürücü eklemek için ek bir ücret uygulanabilir.");
+                        break;
+
+                    case "soru5":
+                        swal("Aracı Teslim Aldığım Yerden Başka Bir Yere Bırakabilir Miyim?", "Evet, bazı durumlarda aracı teslim aldığınız yerden farklı bir yere bırakabilirsiniz. Detaylı bilgi için müşteri hizmetlerimizle iletişime geçebilirsiniz.");
+                        break;
+
+                    case "soru6":
+                        swal("Kiralama İçin Hangi Belgelere İhtiyacım Var?", "Kiralama için genellikle geçerli bir sürücü belgesi, kimlik belgesi ve kredi kartı gereklidir. Detaylı bilgi için rezervasyon yapmadan önce şartlar ve koşulları kontrol ediniz.");
+                        break;
+
+                    case "soru7":
+                        swal("Kiralama Sırasında Ekstra Sigorta Seçenekleri Nelerdir?", "Ekstra sigorta seçenekleri arasında kasko, hırsızlık sigortası ve ek sürücü sigortası gibi seçenekler bulunabilir. Detaylı bilgi için müşteri temsilcilerimizle iletişime geçebilirsiniz.");
+                        break;
+
+                    default:
+                    // Kullanıcı "Kapat" butonuna tıkladığında hiçbir işlem yapma
+                }
+            });
         });
 
         $('#btn5').click(function () {

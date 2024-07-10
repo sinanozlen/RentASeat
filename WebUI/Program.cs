@@ -1,12 +1,10 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.Google;
-using AspNet.Security.OAuth.Twitter;
+
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
-using Microsoft.AspNetCore.Authentication.Twitter;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,7 +16,7 @@ builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
+
 })
 .AddCookie();
 
@@ -68,7 +66,7 @@ app.UseEndpoints(endpoints =>
         name: "areas",
         pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
 
-    endpoints.MapFallbackToController("index", "Forbidden");
+  
 });
 
 app.Run();

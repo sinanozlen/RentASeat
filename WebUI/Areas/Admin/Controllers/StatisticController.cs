@@ -28,7 +28,7 @@ namespace WebUI.Areas.Admin.Controllers
                 return RedirectToAction("Index", "Forbidden");
             }
             var client = _httpClientFactory.CreateClient();
-            var responseMessage = await client.GetAsync("https://localhost:7250/api/Statistics/GetAllStatistics");
+            var responseMessage = await client.GetAsync("https://api.rentaseat.com.tr/api/Statistics/GetAllStatistics");
 
             if (responseMessage.IsSuccessStatusCode)
             {

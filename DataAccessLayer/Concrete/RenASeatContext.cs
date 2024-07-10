@@ -22,7 +22,7 @@ namespace DataAccessLayer.Concrete
         //}
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Server=neptune.odeaweb.com;Database=RentASeat;User Id=RentASeat;Password=330457Fg!;TrustServerCertificate=true;");
+            optionsBuilder.UseSqlServer("Server=neptune.odeaweb.com;Database=RentASeatDb;User Id=RentASeatDb;Password=330457Fg!;TrustServerCertificate=true;");
         }
 
 
