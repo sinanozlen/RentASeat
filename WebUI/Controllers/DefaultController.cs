@@ -24,7 +24,7 @@ namespace WebUI.Controllers
         public async Task<IActionResult> Index()
         {
             var client = _httpClientFactory.CreateClient();
-                var response = await client.GetAsync("https://localhost:7250/api/Locations");
+                var response = await client.GetAsync("https://api.rentaseat.com.tr/api/Locations");
 
                 if (response.IsSuccessStatusCode)
                 {

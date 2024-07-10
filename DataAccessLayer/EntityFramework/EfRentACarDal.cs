@@ -37,7 +37,7 @@ namespace DataAccessLayer.EntityFramework
                 BrandName = y.Car.Brand.Name,
                 y.Car.Model,
                 y.Car.CoverImageUrl,
-                Amount = y.Car.CarPricings.OrderByDescending(cp => cp.CarPricingID).FirstOrDefault().Amount
+                Amount = y.Car.CarPricings.OrderBy(cp => cp.CarPricingID).FirstOrDefault().Amount
             }).ToListAsync();
 
             var filterRentACarDtos = results.Select(y => new FilterRentACarDto

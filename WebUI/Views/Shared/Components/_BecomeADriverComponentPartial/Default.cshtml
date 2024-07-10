@@ -9,3 +9,29 @@
 		</div>
 	</div>
 </section>
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- SweetAlert -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    $(document).ready(function () {
+        $('a[href="/RentADriver/Index/"]').click(function (e) {
+            e.preventDefault();
+
+            Swal.fire({
+                title: 'Yakında Hizmetinizde!',
+                text: 'Sürücü kiralama hizmetimiz çok yakında başlıyor. Daha fazla bilgi için takipte kalın!',
+                icon: 'info',
+                showCancelButton: false,
+                confirmButtonColor: '#3085d6',
+                confirmButtonText: 'Tamam'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = '/Default/Index';
+                }
+            });
+        });
+    });
+</script>

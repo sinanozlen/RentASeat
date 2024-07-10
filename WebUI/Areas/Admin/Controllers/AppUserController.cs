@@ -35,7 +35,7 @@ namespace WebUI.Areas.Admin.Controllers
             {
                 var client = _httpClientFactory.CreateClient();
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-                var responseMessage = await client.GetAsync("https://localhost:7250/api/AppUsers");
+                var responseMessage = await client.GetAsync("https://api.rentaseat.com.tr/api/AppUsers");
                 if (responseMessage.IsSuccessStatusCode)
                 {
                     var responseData = await responseMessage.Content.ReadAsStringAsync();
@@ -63,7 +63,7 @@ namespace WebUI.Areas.Admin.Controllers
             {
                 var client = _httpClientFactory.CreateClient();
                 var content = new StringContent("", Encoding.UTF8, "application/json");
-                var responseMessage = await client.PostAsync($"https://localhost:7250/api/AppUsers/ChangeUserRole?userName={userName}&newRoleId={newRoleId}", content);
+                var responseMessage = await client.PostAsync($"https://api.rentaseat.com.tr/api/AppUsers/ChangeUserRole?userName={userName}&newRoleId={newRoleId}", content);
 
                 if (responseMessage.IsSuccessStatusCode)
                 {

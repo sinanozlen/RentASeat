@@ -27,7 +27,7 @@ namespace WebUI.Areas.Admin.Controllers
                 return RedirectToAction("Index", "Forbidden");
             }
             var client = _httpClientFactory.CreateClient();
-            var responseMessage = await client.GetAsync("https://localhost:7250/api/SocialMedias");
+            var responseMessage = await client.GetAsync("https://api.rentaseat.com.tr/api/SocialMedias");
             if (responseMessage.IsSuccessStatusCode)
             {
                 var jsonData = await responseMessage.Content.ReadAsStringAsync();
@@ -61,7 +61,7 @@ namespace WebUI.Areas.Admin.Controllers
             var client = _httpClientFactory.CreateClient();
             var jsonData = JsonConvert.SerializeObject(createSocialMediaDto);
             StringContent stringContent = new StringContent(jsonData, Encoding.UTF8, "application/json");
-            var responseMessage = await client.PostAsync("https://localhost:7250/api/SocialMedias", stringContent);
+            var responseMessage = await client.PostAsync("https://api.rentaseat.com.tr/api/SocialMedias", stringContent);
             if (responseMessage.IsSuccessStatusCode)
             {
                 return RedirectToAction("Index", "AdminSocialMedia", new { area = "Admin" });
@@ -78,7 +78,7 @@ namespace WebUI.Areas.Admin.Controllers
                 return RedirectToAction("Index", "Forbidden");
             }
             var client = _httpClientFactory.CreateClient();
-            var responseMessage = await client.DeleteAsync("https://localhost:7250/api/SocialMedias?id=" + id);
+            var responseMessage = await client.DeleteAsync("https://api.rentaseat.com.tr/api/SocialMedias?id=" + id);
             if (responseMessage.IsSuccessStatusCode)
             {
                 return RedirectToAction("Index", "AdminSocialMedia", new { area = "Admin" });
@@ -96,7 +96,7 @@ namespace WebUI.Areas.Admin.Controllers
                 return RedirectToAction("Index", "Forbidden");
             }
             var client = _httpClientFactory.CreateClient();
-            var resposenMessage = await client.GetAsync($"https://localhost:7250/api/SocialMedias/{id}");
+            var resposenMessage = await client.GetAsync($"https://api.rentaseat.com.tr/api/SocialMedias/{id}");
             if (resposenMessage.IsSuccessStatusCode)
             {
                 var jsonData = await resposenMessage.Content.ReadAsStringAsync();
@@ -118,7 +118,7 @@ namespace WebUI.Areas.Admin.Controllers
             var client = _httpClientFactory.CreateClient();
             var jsonData = JsonConvert.SerializeObject(updateSocialMediaDto);
             StringContent stringContent = new StringContent(jsonData, Encoding.UTF8, "application/json");
-            var responseMessage = await client.PutAsync("https://localhost:7250/api/SocialMedias/", stringContent);
+            var responseMessage = await client.PutAsync("https://api.rentaseat.com.tr/api/SocialMedias/", stringContent);
             if (responseMessage.IsSuccessStatusCode)
             {
                 return RedirectToAction("Index", "AdminSocialMedia", new { area = "Admin" });

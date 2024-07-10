@@ -19,7 +19,7 @@ namespace UdemyCarBook.WebUI.ViewComponents.DashboardComponents
             Random random = new Random();
             var client = _httpClientFactory.CreateClient();
 
-            var responseMessage = await client.GetAsync("https://localhost:7250/api/Statistics/GetAllStatistics");
+            var responseMessage = await client.GetAsync("https://api.rentaseat.com.tr/api/Statistics/GetAllStatistics");
             if (responseMessage.IsSuccessStatusCode)
             {
                 var jsonData = await responseMessage.Content.ReadAsStringAsync();
