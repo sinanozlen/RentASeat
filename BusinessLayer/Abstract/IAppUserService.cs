@@ -12,5 +12,7 @@ namespace BusinessLayer.Abstract
     {
         Task<GetCheckAppUserDto> TGetCheckAppUserAsync(GetCheckAppUserQuery request);
         Task<CreateAppUserDto> TCreateAppUser(CreateAppUserDto createAppUserDto);
+        Task<bool> TUpdateAppUserRole(string userName, int newRoleId);
+        List<AppUserByRoleNameDto> TGetAllAppUsersWithRoles();
     }
 }

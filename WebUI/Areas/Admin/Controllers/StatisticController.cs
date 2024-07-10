@@ -1,4 +1,5 @@
 ﻿using DtoLayer.StatisticsDtos;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Net.Http;
@@ -17,9 +18,15 @@ namespace WebUI.Areas.Admin.Controllers
             _httpClientFactory = httpClientFactory;
         }
 
+        [AllowAnonymous]
+        [Authorize(Roles = "Admin")]
         [Route("Index")]
         public async Task<IActionResult> Index()
         {
+            if (!User.Identity.IsAuthenticated || !User.IsInRole("Admin"))
+            {
+                return RedirectToAction("Index", "Forbidden");
+            }
             var client = _httpClientFactory.CreateClient();
             var responseMessage = await client.GetAsync("https://localhost:7250/api/Statistics/GetAllStatistics");
 

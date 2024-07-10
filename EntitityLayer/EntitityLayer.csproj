@@ -25,6 +25,7 @@
     <PackageReference Include="Microsoft.Owin.Security.Google" Version="4.2.2" />
     <PackageReference Include="NETCore.MailKit" Version="2.1.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="NWebsec.AspNetCore.Middleware" Version="3.0.0" />
   </ItemGroup>
 
 </Project>

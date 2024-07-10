@@ -5,15 +5,26 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace DataAccessLayer.Concrete
 {
     public class RenASeatContext:DbContext
     {
+        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        //{
+        //    optionsBuilder.UseSqlServer("Server=carbookdb.cpmew0w400zv.eu-north-1.rds.amazonaws.com,1433;Database=RentASeat;User Id=admin;Password=330457Fg;TrustServerCertificate=true;");
+        //}
+
+        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        //{
+        //    optionsBuilder.UseSqlServer("Data Source=.;Initial Catalog=RentASeat;Integrated Security=True;Encrypt=False");
+        //}
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Server=carbookdb.cpmew0w400zv.eu-north-1.rds.amazonaws.com,1433;Database=RentASeat;User Id=admin;Password=330457Fg;TrustServerCertificate=true;");
+            optionsBuilder.UseSqlServer("Server=neptune.odeaweb.com;Database=RentASeat;User Id=RentASeat;Password=330457Fg!;TrustServerCertificate=true;");
         }
+
 
         internal object Include(Func<object, object> value)
         {

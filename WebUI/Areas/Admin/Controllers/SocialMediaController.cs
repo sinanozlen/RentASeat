@@ -1,4 +1,5 @@
 ﻿using DtoLayer.SocialMediaDtos;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Text;
@@ -16,9 +17,15 @@ namespace WebUI.Areas.Admin.Controllers
             _httpClientFactory = httpClientFactory;
         }
 
+        [AllowAnonymous]
+        [Authorize(Roles = "Admin")]
         [Route("Index")]
         public async Task<IActionResult> Index()
         {
+            if (!User.Identity.IsAuthenticated || !User.IsInRole("Admin"))
+            {
+                return RedirectToAction("Index", "Forbidden");
+            }
             var client = _httpClientFactory.CreateClient();
             var responseMessage = await client.GetAsync("https://localhost:7250/api/SocialMedias");
             if (responseMessage.IsSuccessStatusCode)
@@ -29,18 +36,28 @@ namespace WebUI.Areas.Admin.Controllers
             }
             return View();
         }
-
+        [AllowAnonymous]
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         [Route("CreateSocialMedia")]
         public IActionResult CreateSocialMedia()
         {
+            if (!User.Identity.IsAuthenticated || !User.IsInRole("Admin"))
+            {
+                return RedirectToAction("Index", "Forbidden");
+            }
             return View();
         }
-
+        [AllowAnonymous]
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [Route("CreateSocialMedia")]
         public async Task<IActionResult> CreateSocialMedia(CreateSocialMediaDto createSocialMediaDto)
         {
+            if (!User.Identity.IsAuthenticated || !User.IsInRole("Admin"))
+            {
+                return RedirectToAction("Index", "Forbidden");
+            }
             var client = _httpClientFactory.CreateClient();
             var jsonData = JsonConvert.SerializeObject(createSocialMediaDto);
             StringContent stringContent = new StringContent(jsonData, Encoding.UTF8, "application/json");
@@ -51,10 +68,15 @@ namespace WebUI.Areas.Admin.Controllers
             }
             return View();
         }
-
+        [AllowAnonymous]
+        [Authorize(Roles = "Admin")]
         [Route("RemoveSocialMedia/{id}")]
         public async Task<IActionResult> RemoveSocialMedia(int id)
         {
+            if (!User.Identity.IsAuthenticated || !User.IsInRole("Admin"))
+            {
+                return RedirectToAction("Index", "Forbidden");
+            }
             var client = _httpClientFactory.CreateClient();
             var responseMessage = await client.DeleteAsync("https://localhost:7250/api/SocialMedias?id=" + id);
             if (responseMessage.IsSuccessStatusCode)
@@ -63,11 +85,16 @@ namespace WebUI.Areas.Admin.Controllers
             }
             return View();
         }
-
+        [AllowAnonymous]
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         [Route("UpdateSocialMedia/{id}")]
         public async Task<IActionResult> UpdateSocialMedia(int id)
         {
+            if (!User.Identity.IsAuthenticated || !User.IsInRole("Admin"))
+            {
+                return RedirectToAction("Index", "Forbidden");
+            }
             var client = _httpClientFactory.CreateClient();
             var resposenMessage = await client.GetAsync($"https://localhost:7250/api/SocialMedias/{id}");
             if (resposenMessage.IsSuccessStatusCode)
@@ -78,11 +105,16 @@ namespace WebUI.Areas.Admin.Controllers
             }
             return View();
         }
-
+        [AllowAnonymous]
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [Route("UpdateSocialMedia/{id}")]
         public async Task<IActionResult> UpdateSocialMedia(UpdateSocialMediaDto updateSocialMediaDto)
         {
+            if (!User.Identity.IsAuthenticated || !User.IsInRole("Admin"))
+            {
+                return RedirectToAction("Index", "Forbidden");
+            }
             var client = _httpClientFactory.CreateClient();
             var jsonData = JsonConvert.SerializeObject(updateSocialMediaDto);
             StringContent stringContent = new StringContent(jsonData, Encoding.UTF8, "application/json");

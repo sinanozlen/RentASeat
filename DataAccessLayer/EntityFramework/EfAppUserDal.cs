@@ -46,6 +46,24 @@ namespace DataAccessLayer.EntityFramework
             return createAppUserDto;
         }
 
+        public List<AppUserByRoleNameDto> GetAllAppUsersWithRoles()
+        {
+            using var context = new RenASeatContext();
+            var usersWithRoles = context.AppUsers
+           .Select(u => new AppUserByRoleNameDto
+           {
+               Username = u.Username,
+               Name = u.Name,
+               Surname = u.Surname,
+               Email = u.Email,
+               AppRoleId = u.AppRoleId,
+               RoleName = u.AppRole.AppRoleName
+           })
+           .ToList();
+
+            return usersWithRoles;
+        }
+
         public async Task<GetCheckAppUserDto> GetCheckAppUserAsync(GetCheckAppUserQuery request)
         {
             using var _renASeatContext = new RenASeatContext();
@@ -73,6 +91,32 @@ namespace DataAccessLayer.EntityFramework
             }
 
             return values;
+        }
+
+        public async Task<bool> UpdateAppUserRole(string username, int newRoleId)
+        {
+            using var context = new RenASeatContext();
+            var user = await context.AppUsers.FirstOrDefaultAsync(u => u.Username == username);
+
+            if (user != null)
+            {
+                user.AppRoleId = newRoleId;
+                try
+                {
+                    await context.SaveChangesAsync(); // Asenkron olarak kaydet
+                    return true; // Güncelleme başarılı
+                }
+                catch (Exception ex)
+                {
+                    // Hata kaydı (log) oluşturun (ex)
+                    // Hata işleme - örneğin, kullanıcıya hata mesajı gösterin
+                    return false; // Güncelleme başarısız
+                }
+            }
+            else
+            {
+                return false; // Kullanıcı bulunamadı
+            }
         }
 
         private (string hash, string salt) HashPassword(string password)

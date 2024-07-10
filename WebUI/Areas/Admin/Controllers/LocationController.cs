@@ -7,7 +7,6 @@ using System.Text;
 
 namespace WebUI.Areas.Admin.Controllers
 {
-    [Authorize(Roles = "Admin")]
     [Area("Admin")]
     [Route("Admin/Location")]
     public class LocationController : Controller
@@ -19,9 +18,15 @@ namespace WebUI.Areas.Admin.Controllers
             _httpClientFactory = httpClientFactory;
         }
 
+        [AllowAnonymous]
+        [Authorize(Roles = "Admin")]
         [Route("Index")]
         public async Task<IActionResult> Index()
         {
+            if (!User.Identity.IsAuthenticated || !User.IsInRole("Admin"))
+            {
+                return RedirectToAction("Index", "Forbidden");
+            }
             var token = User.Claims.FirstOrDefault(x => x.Type == "carbooktoken")?.Value;
             if (token != null)
             {
@@ -40,16 +45,28 @@ namespace WebUI.Areas.Admin.Controllers
             }
             return View();
         }
+        [AllowAnonymous]
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         [Route("CreateLocation")]
         public IActionResult CreateLocation()
         {
+            if (!User.Identity.IsAuthenticated || !User.IsInRole("Admin"))
+            {
+                return RedirectToAction("Index", "Forbidden");
+            }
             return View();
         }
+        [AllowAnonymous]
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [Route("CreateLocation")]
         public async Task<IActionResult> CreateLocation(CreateLocationDto createLocationDto)
         {
+            if (!User.Identity.IsAuthenticated || !User.IsInRole("Admin"))
+            {
+                return RedirectToAction("Index", "Forbidden");
+            }
             var client = _httpClientFactory.CreateClient();
             var jsonData = JsonConvert.SerializeObject(createLocationDto);
             var content = new StringContent(jsonData, Encoding.UTF8, "application/json");
@@ -60,10 +77,16 @@ namespace WebUI.Areas.Admin.Controllers
             }
             return View(createLocationDto);
         }
+        [AllowAnonymous]
+        [Authorize(Roles = "Admin")]
         [HttpDelete]
         [Route("RemoveLocation/{id}")]
         public async Task<IActionResult> RemoveLocation(int id)
         {
+            if (!User.Identity.IsAuthenticated || !User.IsInRole("Admin"))
+            {
+                return RedirectToAction("Index", "Forbidden");
+            }
             var client = _httpClientFactory.CreateClient();
             var responseMessage = await client.DeleteAsync($"https://localhost:7250/api/Locations/{id}");
             if (responseMessage.IsSuccessStatusCode)
@@ -72,10 +95,16 @@ namespace WebUI.Areas.Admin.Controllers
             }
             return View();
         }
+        [AllowAnonymous]
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         [Route("UpdateLocation/{id}")]
         public async Task<IActionResult> UpdateLocation(int id)
         {
+            if (!User.Identity.IsAuthenticated || !User.IsInRole("Admin"))
+            {
+                return RedirectToAction("Index", "Forbidden");
+            }
             var client = _httpClientFactory.CreateClient();
             var responseMessage = await client.GetAsync($"https://localhost:7250/api/Locations/{id}");
             if (responseMessage.IsSuccessStatusCode)
@@ -86,10 +115,16 @@ namespace WebUI.Areas.Admin.Controllers
             }
             return View();
         }
+        [AllowAnonymous]
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [Route("UpdateLocation/{id}")]
         public async Task<IActionResult> UpdateLocation(UpdateLocationDto updateLocationDto)
         {
+            if (!User.Identity.IsAuthenticated || !User.IsInRole("Admin"))
+            {
+                return RedirectToAction("Index", "Forbidden");
+            }
             var client = _httpClientFactory.CreateClient();
             var jsonData = JsonConvert.SerializeObject(updateLocationDto);
             var content = new StringContent(jsonData, Encoding.UTF8, "application/json");

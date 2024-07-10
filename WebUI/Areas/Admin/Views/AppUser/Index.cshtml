@@ -1,0 +1,128 @@
+﻿@model List<AppUserByRoleNameDto>
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Admin/Views/Layout/Index.cshtml";
+}
+
+<div class="page-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">Kullanıcı Bilgileri</h4>
+                        <div class="table-responsive">
+                            <table class="table mb-0">
+                                <thead>
+                                    <tr>
+                                        <th>Kullanıcı Adı</th>
+                                        <th>İsim</th>
+                                        <th>Soyisim</th>
+                                        <th>Email</th>
+                                        <th>Rol</th>
+                                        <th>Rol Değiştir</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var user in Model)
+                                    {
+                                        <tr>
+                                            <td>@user.Username</td>
+                                            <td>@user.Name</td>
+                                            <td>@user.Surname</td>
+                                            <td>@user.Email</td>
+                                            <td>@user.RoleName</td>
+                                            <td>
+                                                <div class="input-group">
+                                                    <select class="form-select user-role-select" data-username="@user.Username" onchange="toggleUpdateButton(this)">
+                                                        <option value="0" disabled>Lütfen atamak istediğiniz rolü seçiniz</option>
+                                                        @{
+                                                            var isAdmin = user.RoleName == "Admin";
+                                                            var isUser = user.RoleName == "User";
+                                                            var isManager = user.RoleName == "Manager";
+                                                            var isGuest = user.RoleName == "Guest";
+                                                        }
+                                                        <option value="1" selected="@(isAdmin ? "selected" : "")">Admin</option>
+                                                        <option value="2" selected="@(isUser ? "selected" : "")">User</option>
+                                                        <option value="3" selected="@(isManager ? "selected" : "")">Manager</option>
+                                                        <option value="4" selected="@(isGuest ? "selected" : "")">Guest</option>
+                                                    </select>
+                                                    <button class="btn btn-primary change-role-btn" type="button" onclick="changeUserRole('@user.Username')" disabled>Güncelle</button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    // Sayfa yüklendiğinde çalışacak fonksiyon
+    window.onload = function () {
+        // Tüm kullanıcı satırlarını döngüye al
+        $('.user-role-select').each(function () {
+            // Her bir select elementinin değerini "0" (ilk seçenek) olarak ayarlayın
+            $(this).val("0");
+        });
+    };
+
+    function toggleUpdateButton(selectElement) {
+        var button = $(selectElement).closest('tr').find('.change-role-btn');
+        if (selectElement.value != "0") {
+            button.prop('disabled', false);
+        } else {
+            button.prop('disabled', true);
+        }
+    }
+
+    function changeUserRole(username) {
+        var selectedRoleId = $('.user-role-select[data-username="' + username + '"]').val();
+        $.ajax({
+            url: '/Admin/AppUser/ChangeUserRole',
+            type: 'POST',
+            data: {
+                userName: username,
+                newRoleId: selectedRoleId
+            },
+            success: function (result, textStatus, xhr) {
+                if (xhr.status === 200) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Başarılı!',
+                        text: 'Kullanıcı rolü başarıyla güncellendi!',
+                        showConfirmButton: false,
+                        timer: 1500
+                    }).then(function () {
+                        // Seçilen seçeneği sıfırlayın ve butonu devre dışı bırakın
+                        $('.user-role-select[data-username="' + username + '"]').val("0");
+                        $('.user-role-select[data-username="' + username + '"]').closest('tr').find('.change-role-btn').prop('disabled', true);
+                        // Sayfayı yenileyin
+                        location.reload();
+                    });
+                } else {
+                    console.error("Beklenmeyen durum kodu:", xhr.status, textStatus);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Hata!',
+                        text: 'Bir hata oluştu, lütfen tekrar deneyin.'
+                    });
+                }
+            },
+            error: function (err) {
+                console.error("AJAX isteği hatası:", err);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Hata!',
+                    text: 'Bir hata oluştu, lütfen tekrar deneyin.'
+                });
+            }
+        });
+    }
+</script>

@@ -35,6 +35,7 @@ builder.Services.AddCors(options =>
         });
 });
 
+
 builder.Services.AddRazorPages();
 
 var app = builder.Build();
@@ -66,6 +67,8 @@ app.UseEndpoints(endpoints =>
     endpoints.MapControllerRoute(
         name: "areas",
         pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+
+    endpoints.MapFallbackToController("index", "Forbidden");
 });
 
 app.Run();
