@@ -35,6 +35,12 @@ namespace BusinessLayer.Concrete
             _appUserDal.Delete(entity);
         }
 
+        public List<AppUserByRoleNameDto> TGetAllAppUsersWithRoles()
+        {
+          var values= _appUserDal.GetAllAppUsersWithRoles();
+            return values;
+        }
+
         public AppUser TGetbyID(int ID)
         {
             var values= _appUserDal.GetbyID(ID);
@@ -56,6 +62,14 @@ namespace BusinessLayer.Concrete
         public void TUpdate(AppUser entity)
         {
            _appUserDal.Update(entity);
+        }
+
+    
+
+        Task<bool> IAppUserService.TUpdateAppUserRole(string userName, int newRoleId)
+        {
+            var values= _appUserDal.UpdateAppUserRole(userName, newRoleId);
+            return values;
         }
     }
 }

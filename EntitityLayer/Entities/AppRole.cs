@@ -11,5 +11,6 @@ namespace EntitityLayer.Entities
         public int AppRoleId { get; set; }
         public string AppRoleName { get; set; }
         public List<AppUser> AppUsers { get; set; }
+
     }
 }

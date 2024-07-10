@@ -7,6 +7,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using MailKit.Security;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebUI.Areas.Admin.Controllers
 {
@@ -22,10 +23,15 @@ namespace WebUI.Areas.Admin.Controllers
             _httpClientFactory = httpClientFactory;
             _configuration = configuration;
         }
-
+        [AllowAnonymous]
+        [Authorize(Roles = "Admin")]
         [Route("Index")]
         public async Task<IActionResult> Index()
         {
+            if (!User.Identity.IsAuthenticated || !User.IsInRole("Admin"))
+            {
+                return RedirectToAction("Index", "Forbidden");
+            }
             var client = _httpClientFactory.CreateClient();
             var responseMessage = await client.GetAsync("https://localhost:7250/api/Reservations/GetReservationWithLocationAndCar");
             if (responseMessage.IsSuccessStatusCode)
@@ -36,11 +42,16 @@ namespace WebUI.Areas.Admin.Controllers
             }
             return View();
         }
-
+        [AllowAnonymous]
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         [Route("ConfirmReservation/{id}")]
         public async Task<IActionResult> ConfirmReservation(int id)
         {
+            if (!User.Identity.IsAuthenticated || !User.IsInRole("Admin"))
+            {
+                return RedirectToAction("Index", "Forbidden");
+            }
             var client = _httpClientFactory.CreateClient();
             var responseMessage = await client.GetAsync($"https://localhost:7250/api/Reservations/ChangeReservationStatusToConfirm?id={id}");
             if (responseMessage.IsSuccessStatusCode)
@@ -50,11 +61,16 @@ namespace WebUI.Areas.Admin.Controllers
             }
             return BadRequest();
         }
-
+        [AllowAnonymous]
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         [Route("RejectReservation/{id}")]
         public async Task<IActionResult> RejectReservation(int id)
         {
+            if (!User.Identity.IsAuthenticated || !User.IsInRole("Admin"))
+            {
+                return RedirectToAction("Index", "Forbidden");
+            }
             var client = _httpClientFactory.CreateClient();
             var responseMessage = await client.GetAsync($"https://localhost:7250/api/Reservations/ChangeReservationStatusToDecline?id={id}");
             if (responseMessage.IsSuccessStatusCode)

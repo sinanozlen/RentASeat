@@ -13,5 +13,7 @@ namespace DataAccessLayer.Abstract
     {
         Task<GetCheckAppUserDto> GetCheckAppUserAsync(GetCheckAppUserQuery request);
         Task<CreateAppUserDto>CreateAppUser(CreateAppUserDto createAppUserDto);
+        Task<bool> UpdateAppUserRole(string userName, int newRoleId);
+        List<AppUserByRoleNameDto> GetAllAppUsersWithRoles();
     }
 }

@@ -2,12 +2,15 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace WebUI.Areas.Admin.Controllers
 {
-    [Authorize(Roles = "Admin")]
     [Area("Admin")]
     [Route("Admin/About")]
     public class AboutController : Controller
@@ -18,14 +21,17 @@ namespace WebUI.Areas.Admin.Controllers
         {
             _httpClientFactory = httpClientFactory;
         }
-
+        [AllowAnonymous]
+        [Authorize(Roles = "Admin")] // Sadece Admin rolündeki kullanıcılar erişebilir
         [Route("Index")]
         public async Task< IActionResult> Index()
         {
-            if (User.Identity.IsAuthenticated)
+            if (!User.Identity.IsAuthenticated || !User.IsInRole("Admin"))
             {
-                ViewBag.UserName = User.Identity.Name; // veya User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
+                return RedirectToAction("Index", "Forbidden"); // Forbidden Controller farklı area'da ise area belirtilmeli
             }
+
+            ViewBag.UserName = User.Identity.Name;
 
             var token = User.Claims.FirstOrDefault(x => x.Type == "carbooktoken")?.Value;
 
@@ -35,12 +41,12 @@ namespace WebUI.Areas.Admin.Controllers
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
                 var responseMessage = await client.GetAsync("https://localhost:7250/api/Abouts");
-            if (responseMessage.IsSuccessStatusCode)
-            {
-                var jsonData = await responseMessage.Content.ReadAsStringAsync();
-                var values = JsonConvert.DeserializeObject<List<ResultAboutDto>>(jsonData);
-                return View(values);
-            }
+                if (responseMessage.IsSuccessStatusCode)
+                {
+                    var jsonData = await responseMessage.Content.ReadAsStringAsync();
+                    var values = JsonConvert.DeserializeObject<List<ResultAboutDto>>(jsonData);
+                    return View(values);
+                }
                 else
                 {
                     ModelState.AddModelError("", "Hakkımızda Alanı getirme başarısız oldu");
@@ -53,16 +59,40 @@ namespace WebUI.Areas.Admin.Controllers
 
             return View();
         }
+        [AllowAnonymous]
+        [Authorize(Roles = "Admin")] // Sadece Admin rolündeki kullanıcılar erişebilir
         [HttpGet]
         [Route("CreateAbout")]
         public IActionResult CreateAbout()
         {
+            if (!User.Identity.IsAuthenticated || !User.IsInRole("Admin"))
+            {
+                // Kullanıcı kimlik doğrulaması yapılmamış veya Admin rolüne sahip değilse
+                // Forbidden sayfasına yönlendirme veya başka bir işlem yapılabilir
+                return RedirectToAction("Index", "Forbidden");
+            }
+            else
+            {
+                // Admin işlemleri buraya gelecek
+            }
+
+            {
+                return RedirectToAction("Index", "Forbidden"); // Forbidden Controller farklı area'da ise area belirtilmeli
+            }
+
             return View();
         }
+
+        [AllowAnonymous]
+        [Authorize(Roles = "Admin")] // Sadece Admin rolündeki kullanıcılar erişebilir
         [HttpPost]
         [Route("CreateAbout")]
         public async Task<IActionResult> CreateAbout(CreateAboutDto createAboutDto)
         {
+           if (!User.Identity.IsAuthenticated || !User.IsInRole("Admin"))
+            {
+                return RedirectToAction("Index", "Forbidden"); // Forbidden Controller farklı area'da ise area belirtilmeli
+            }
             var client = _httpClientFactory.CreateClient();
             var jsonData = JsonConvert.SerializeObject(createAboutDto);
             StringContent stringContent = new StringContent(jsonData, Encoding.UTF8, "application/json");
@@ -73,10 +103,17 @@ namespace WebUI.Areas.Admin.Controllers
             }
             return View();
         }
+
+        [AllowAnonymous]
+        [Authorize(Roles = "Admin")] // Sadece Admin rolündeki kullanıcılar erişebilir
         [HttpDelete]
         [Route("RemoveAbout/{id}")]
         public async Task<IActionResult> RemoveAbout(int id)
         {
+           if (!User.Identity.IsAuthenticated || !User.IsInRole("Admin"))
+            {
+                return RedirectToAction("Index", "Forbidden"); // Forbidden Controller farklı area'da ise area belirtilmeli
+            }
             var client = _httpClientFactory.CreateClient();
             var responseMessage = await client.DeleteAsync($"https://localhost:7250/api/Abouts/{id}");
             if (responseMessage.IsSuccessStatusCode)
@@ -85,10 +122,16 @@ namespace WebUI.Areas.Admin.Controllers
             }
             return View();
         }
+        [AllowAnonymous]
+        [Authorize(Roles = "Admin")] // Sadece Admin rolündeki kullanıcılar erişebilir
         [HttpGet]
         [Route("UpdateAbout/{id}")]
         public async Task<IActionResult> UpdateAbout(int id)
         {
+           if (!User.Identity.IsAuthenticated || !User.IsInRole("Admin"))
+            {
+                return RedirectToAction("Index", "Forbidden"); // Forbidden Controller farklı area'da ise area belirtilmeli
+            }
             var client = _httpClientFactory.CreateClient();
             var responseMessage = await client.GetAsync($"https://localhost:7250/api/Abouts/{id}");
             if (responseMessage.IsSuccessStatusCode)
@@ -99,10 +142,16 @@ namespace WebUI.Areas.Admin.Controllers
             }
             return View();
         }
+        [AllowAnonymous]
+        [Authorize(Roles = "Admin")] // Sadece Admin rolündeki kullanıcılar erişebilir
         [HttpPost]
         [Route("UpdateAbout/{id}")]
         public async Task<IActionResult> UpdateAbout(UpdateAboutDto updateAboutDto)
         {
+           if (!User.Identity.IsAuthenticated || !User.IsInRole("Admin"))
+            {
+                return RedirectToAction("Index", "Forbidden"); // Forbidden Controller farklı area'da ise area belirtilmeli
+            }
             var client = _httpClientFactory.CreateClient();
             var jsonData = JsonConvert.SerializeObject(updateAboutDto);
             StringContent stringContent = new StringContent(jsonData, Encoding.UTF8, "application/json");
@@ -113,6 +162,5 @@ namespace WebUI.Areas.Admin.Controllers
             }
             return View();
         }
-
     }
 }
