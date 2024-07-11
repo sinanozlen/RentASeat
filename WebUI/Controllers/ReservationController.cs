@@ -25,7 +25,7 @@ namespace WebUI.Controllers
             ViewBag.v2 = "Araç Rezervasyon Formu";
 
             var client = _httpClientFactory.CreateClient();
-            var response = await client.GetAsync("https://api.rentaseat.com.tr/api/Locations");
+            var response = await client.GetAsync("https://localhost:7250/api/Locations");
 
             if (response.IsSuccessStatusCode)
             {
@@ -44,25 +44,23 @@ namespace WebUI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Index(int id ,CreateReservationDto createReservationDto)
+        public async Task<IActionResult> Index(int id, CreateReservationDto createReservationDto)
         {
-            
             createReservationDto.CarID = id;
             createReservationDto.Status = "Onay Bekliyor";
+
             var clientPost = _httpClientFactory.CreateClient();
             var jsonData = JsonConvert.SerializeObject(createReservationDto);
             StringContent stringContent = new StringContent(jsonData, Encoding.UTF8, "application/json");
-            var responseMessage = await clientPost.PostAsync("https://api.rentaseat.com.tr/api/Reservations", stringContent);
+            var responseMessage = await clientPost.PostAsync("https://localhost:7250/api/Reservations", stringContent);
 
             if (responseMessage.IsSuccessStatusCode)
             {
-                return Ok(); // Başarılı
+                return Json(new { success = true });
             }
 
-            var responseContent = await responseMessage.Content.ReadAsStringAsync();
-            return StatusCode((int)responseMessage.StatusCode, responseContent); // Başarısız
+            return View();
         }
-
 
     }
 }
