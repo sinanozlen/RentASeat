@@ -156,7 +156,7 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.UseCors("AllowAll");
+app.UseCors("AllowAllOrigins");
 
 app.MapControllers();
 

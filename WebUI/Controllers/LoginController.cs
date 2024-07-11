@@ -45,7 +45,7 @@ namespace WebUI.Controllers
             {
                 var client = _httpClientFactory.CreateClient();
                 var content = new StringContent(JsonSerializer.Serialize(createLoginDto), Encoding.UTF8, "application/json");
-                var response = await client.PostAsync("https://api.rentaseat.com.tr/api/Logins", content);
+                var response = await client.PostAsync("https://localhost:7250/api/Logins", content);
 
                 if (response.IsSuccessStatusCode)
                 {

@@ -23,15 +23,27 @@ namespace DataAccessLayer.EntityFramework
         public ResultCarDescriptionByCarIdDto GetCarDescriptionWithCarID(int carID)
         {
             using var _renASeatContext = new RenASeatContext();
-            var values=_renASeatContext.CarDescriptions.FirstOrDefault(x => x.CarID == carID);
+            var values = _renASeatContext.CarDescriptions.FirstOrDefault(x => x.CarID == carID);
+
+            if (values == null)
+            {
+                // Eğer kayıt bulunamazsa, boş bir DTO döndürüyoruz veya istediğiniz şekilde yanıt verebilirsiniz.
+                return new ResultCarDescriptionByCarIdDto
+                {
+                    CarID = carID,
+                    Details = "Açıklama bulunamadı",
+                    CarDescriptionID = 0
+                };
+            }
+
             ResultCarDescriptionByCarIdDto result = new ResultCarDescriptionByCarIdDto
             {
                 CarID = values.CarID,
                 Details = values.Details,
-                CarDescriptionID=values.CarDescriptionID
+                CarDescriptionID = values.CarDescriptionID
             };
             return result;
-
         }
+
     }
 }

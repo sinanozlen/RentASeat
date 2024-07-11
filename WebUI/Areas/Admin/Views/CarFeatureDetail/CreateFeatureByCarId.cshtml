@@ -1,6 +1,7 @@
 ﻿@model List<ResultFeatureDto>
+
 @{
-    ViewData["Title"] = "CreateFeatureByCarId";
+    ViewData["Title"] = "Create Feature By CarId";
     Layout = "~/Areas/Admin/Views/Layout/Index.cshtml";
 }
 
@@ -14,15 +15,14 @@
                         <p class="card-subtitle mb-4">
                             Araca ait özellik tanımlaması yapılacak sayfadır.
                         </p>
-                        <form method="post">
+                        <form method="post" asp-controller="CarFeatureDetail" asp-action="CreateFeatureByCarId" asp-area="Admin" asp-route-id="@ViewBag.CarId">
                             <div class="row">
                                 @for (int i = 0; i < Model.Count; i++)
                                 {
                                     <div class="col-md-4">
                                         <div class="form-check">
-                                            <input type="hidden" asp-for="@Model[i].FeatureID" />
-                                            <input type="hidden" asp-for="@Model[i].Name" />
-                                            <input type="checkbox" class="form-check-input" />
+                                            <input type="hidden" name="createCarFeatureDtos[@i].FeatureID" value="@Model[i].FeatureID" />
+                                            <input type="checkbox" class="form-check-input" name="createCarFeatureDtos[@i].Available" value="true" />
                                             <label class="form-check-label">@Model[i].Name</label>
                                         </div>
                                     </div>
@@ -37,6 +37,3 @@
         </div>
     </div>
 </div>
-
-
-

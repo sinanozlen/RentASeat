@@ -15,7 +15,7 @@ namespace WebUI.ViewComponents.ViewComponents.CarDetailViewComponents
 		{
 			ViewBag.carid = id;
 			var client = _httpClientFactory.CreateClient();
-			var resposenMessage = await client.GetAsync($"https://api.rentaseat.com.tr/api/Cars/GetCarsWithBrand/{id}");
+			var resposenMessage = await client.GetAsync($"https://localhost:7250/api/Cars/GetCarsWithBrand/{id}");
 			if (resposenMessage.IsSuccessStatusCode)
 			{
 				var jsonData = await resposenMessage.Content.ReadAsStringAsync();
