@@ -26,11 +26,9 @@
             <span asp-validation-for="Phone" class="text-danger"></span>
         </div>
         <div class="form-group">
-            <label for="DropOffLocationID" class="dropdown-label">Nereden alacaksınız?</label>
             @Html.DropDownListFor(x => x.DropOffLocationID, (List<SelectListItem>)ViewBag.v, new { @class = "form-control" })
         </div>
         <div class="form-group">
-            <label for="PickUpLocationID" class="dropdown-label">Nereye bırakacaksınız?</label>
             @Html.DropDownListFor(x => x.PickUpLocationID, (List<SelectListItem>)ViewBag.v, new { @class = "form-control" })
         </div>
         <div class="form-group">
@@ -52,117 +50,85 @@
 </div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.19.1/jquery.validate.min.js"></script>
 <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate.unobtrusive/3.2.11/jquery.validate.unobtrusive.min.js"></script>
+
 <script>
-$(document).ready(function () {
-    $('#Phone').on('input', function (e) {
-        var input = e.target;
-        var key = input.value.replace(/\D/g, '');
+    $(document).ready(function () {
+        $('#reservationForm').on('submit', function (e) {
+            e.preventDefault();
 
-        if (key.length === 0) {
-            input.value = '';
-            return;
-        }
+            var isValid = true;
+            var namePattern = /^[\p{L}\s\d\-]{3,30}$/u;
+            var surnamePattern = /^[\p{L}\s\d\-]{2,50}$/u;
+            var emailPattern = /^[^\s@@]+@@[^\s@@]+\.[^\s@@]+$/;
+            var phonePattern = /^[1-9][0-9]{9}$/;
 
-        var formattedNumber = '(' + key.substring(0, 3) + ') ';
+            var selectedAge = parseInt($('#Age').val());
+            if (isNaN(selectedAge) || selectedAge < 18 || selectedAge > 100) {
+                isValid = false;
+                toastr.error('Lütfen geçerli bir yaş seçin (18-80 arasında).');
+            }
 
-        if (key.length > 3) {
-            formattedNumber += key.substring(3, 6) + ' ';
-        }
-        if (key.length > 6) {
-            formattedNumber += key.substring(6, 8) + ' ';
-        }
-        if (key.length > 8) {
-            formattedNumber += key.substring(8, 10);
-        }
+            var selectedLicenseYear = parseInt($('#DriverLicenseYear').val());
+            var currentYear = new Date().getFullYear();
+            if (isNaN(selectedLicenseYear) || selectedLicenseYear > currentYear || selectedLicenseYear < 1900) {
+                isValid = false;
+                toastr.error('Lütfen geçerli bir ehliyet yılı seçin.');
+            }
 
-        input.value = formattedNumber;
-    });
+            if (!namePattern.test($('#Name').val())) {
+                isValid = false;
+                toastr.error('Adınız 3 ile 30 karakter arasında olmalı ve sayı içermemelidir.');
+            }
 
-    $('#reservationForm').on('submit', function (e) {
-        e.preventDefault();
+            if (!surnamePattern.test($('#Surname').val())) {
+                isValid = false;
+                toastr.error('Soyadınız 2 ile 50 karakter arasında olmalı ve sayı içermemelidir.');
+            }
 
-        var isValid = true;
-        var namePattern = /^[\p{L}\s\d\-]{3,30}$/u;
-        var surnamePattern = /^[\p{L}\s\d\-]{2,50}$/u;
-        var emailPattern = /^[^\s@@]+@@[^\s@@]+\.[^\s@@]+$/;
-        var phonePattern = /^[1-9][0-9]{9}$/;
-        var selectedAge = parseInt($('#Age').val());
-        var currentYear = new Date().getFullYear();
-        var selectedLicenseYear = parseInt($('#DriverLicenseYear').val());
+            if (!emailPattern.test($('#Email').val())) {
+                isValid = false;
+                toastr.error('Lütfen geçerli bir e-posta adresi girin.');
+            }
 
-        if (isNaN(selectedAge) || selectedAge < 18 || selectedAge > 80) {
-            isValid = false;
-            toastr.error('Lütfen geçerli bir yaş seçin (18-80 arasında).');
-        }
+            if (!phonePattern.test($('#Phone').val())) {
+                isValid = false;
+                toastr.error('Telefon numarası 10 haneli olmalı ve 0 ile başlamamalıdır.');
+            }
 
-        if (isNaN(selectedLicenseYear) || selectedLicenseYear > currentYear || selectedLicenseYear < 1900) {
-            isValid = false;
-            toastr.error('Lütfen geçerli bir ehliyet yılı seçin.');
-        }
+            if (!isValid) {
+                return;
+            }
 
-        if (!namePattern.test($('#Name').val())) {
-            isValid = false;
-            toastr.error('Adınız 3 ile 30 karakter arasında olmalı ve sayı içermemelidir.');
-        }
-
-        if (!surnamePattern.test($('#Surname').val())) {
-            isValid = false;
-            toastr.error('Soyadınız 2 ile 50 karakter arasında olmalı ve sayı içermemelidir.');
-        }
-
-        if (!emailPattern.test($('#Email').val())) {
-            isValid = false;
-            toastr.error('Lütfen geçerli bir e-posta adresi girin.');
-        }
-
-        if (!phonePattern.test($('#Phone').val().replace(/\D/g, ''))) {
-            isValid = false;
-            toastr.error('Telefon numarası 10 haneli olmalı ve 0 ile başlamamalıdır.');
-        }
-
-        if (isValid) {
-            var formData = new FormData(this);
-
-                $.ajax({
-                    url: '@Url.Action("Index", "Reservation")',
-                    type: 'POST',
-                    data: formData,
-                    contentType: false,
-                    processData: false,
-                    success: function (response) {
-                        if (response && response.indexOf("Başarılı") !== -1) {
-                            swal({
-                                title: "Başarılı!",
-                                text: "Rezervasyonunuz başarıyla oluşturuldu.",
-                                icon: "success",
-                                button: "Tamam",
-                            }).then(() => {
-                                window.location.href = "/";
-                            });
-                        } else {
-                            swal({
-                                title: "Hata!",
-                                text: "Rezervasyonunuz oluşturulamadı. Lütfen tekrar deneyin.",
-                                icon: "error",
-                                button: "Tamam",
-                            });
-                        }
-                    },
-                    error: function () {
-                        swal({
-                            title: "Hata!",
-                            text: "Rezervasyonunuz oluşturulamadı. Lütfen tekrar deneyin.",
-                            icon: "error",
-                            button: "Tamam",
+            var form = $(this);
+            $.ajax({
+                type: form.attr('method'),
+                url: form.attr('action'),
+                data: form.serialize(),
+                success: function (response) {
+                    if (response.success) {
+                        Swal.fire({
+                            title: 'Rezervasyon tamamlandı!',
+                            text: 'Ana sayfaya yönlendiriliyorsunuz...',
+                            icon: 'success',
+                            timer: 3000,
+                            timerProgressBar: true,
+                            didClose: () => {
+                                console.log('Swal fire function executed.');
+                                window.location.href = '/Default/Index';
+                            }
                         });
-
-
+                    } else {
+                        toastr.error('Bir hata oluştu, lütfen tekrar deneyin.');
                     }
-                });
-        }
+                },
+                error: function () {
+                    toastr.error('Bir hata oluştu, lütfen tekrar deneyin.');
+                }
+            });
+        });
     });
-});
 </script>
