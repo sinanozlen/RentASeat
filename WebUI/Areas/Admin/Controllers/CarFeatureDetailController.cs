@@ -1,8 +1,8 @@
 ﻿using DtoLayer.CarFeatureDtos;
 using DtoLayer.FeatureDtos;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System.Text;
 
 namespace WebUI.Areas.Admin.Controllers
 {
@@ -10,24 +10,19 @@ namespace WebUI.Areas.Admin.Controllers
     [Route("Admin/CarFeatureDetail")]
     public class CarFeatureDetailController : Controller
     {
-        IHttpClientFactory _httpClientFactory;
+        private readonly IHttpClientFactory _httpClientFactory;
 
         public CarFeatureDetailController(IHttpClientFactory httpClientFactory)
         {
             _httpClientFactory = httpClientFactory;
         }
-        [AllowAnonymous]
-        [Authorize(Roles = "Admin")]
+
         [Route("Index/{id}")]
         [HttpGet]
         public async Task<IActionResult> Index(int id)
         {
-            if (!User.Identity.IsAuthenticated || !User.IsInRole("Admin"))
-            {
-                return RedirectToAction("Index", "Forbidden");
-            }
             var client = _httpClientFactory.CreateClient();
-            var responseMessage = await client.GetAsync("https://api.rentaseat.com.tr/api/CarFeatures?carId=" + id);
+            var responseMessage = await client.GetAsync("https://localhost:7250/api/CarFeatures?carId=" + id);
             if (responseMessage.IsSuccessStatusCode)
             {
                 var jsonData = await responseMessage.Content.ReadAsStringAsync();
@@ -36,52 +31,61 @@ namespace WebUI.Areas.Admin.Controllers
             }
             return View();
         }
-        [AllowAnonymous]
-        [Authorize(Roles = "Admin")]
+
         [HttpPost]
         [Route("Index/{id}")]
-        public async Task<IActionResult> Index(List<ResultCarFeatureByCarIdDto> resultCarFeatureByCarIdDto)
+        public async Task<IActionResult> Index(int id, List<ResultCarFeatureByCarIdDto> resultCarFeatureByCarIdDto)
         {
-            if (!User.Identity.IsAuthenticated || !User.IsInRole("Admin"))
-            {
-                return RedirectToAction("Index", "Forbidden");
-            }
+            var client = _httpClientFactory.CreateClient();
 
             foreach (var item in resultCarFeatureByCarIdDto)
             {
                 if (item.Available)
                 {
-                    var client = _httpClientFactory.CreateClient();
-                    await client.GetAsync("https://api.rentaseat.com.tr/api/CarFeatures/CarFeatureChangeAvailableToTrue?id=" + item.CarFeatureID);
-
+                    await client.GetAsync("https://localhost:7250/api/CarFeatures/CarFeatureChangeAvailableToTrue?id=" + item.CarFeatureID);
                 }
                 else
                 {
-                    var client = _httpClientFactory.CreateClient();
-                    await client.GetAsync("https://api.rentaseat.com.tr/api/CarFeatures/CarFeatureChangeAvailableToFalse?id=" + item.CarFeatureID);
+                    await client.GetAsync("https://localhost:7250/api/CarFeatures/CarFeatureChangeAvailableToFalse?id=" + item.CarFeatureID);
                 }
             }
             return RedirectToAction("Index", "Car");
         }
-        [AllowAnonymous]
-        [Authorize(Roles = "Admin")]
-        [Route("CreateFeatureByCarId")]
+
+        [Route("CreateFeatureByCarId/{id}")]
         [HttpGet]
-        public async Task<IActionResult> CreateFeatureByCarId()
+        public async Task<IActionResult> CreateFeatureByCarId(int id)
         {
-            if (!User.Identity.IsAuthenticated || !User.IsInRole("Admin"))
-            {
-                return RedirectToAction("Index", "Forbidden");
-            }
             var client = _httpClientFactory.CreateClient();
-            var responseMessage = await client.GetAsync("https://api.rentaseat.com.tr/api/Features");
+            var responseMessage = await client.GetAsync("https://localhost:7250/api/Features");
             if (responseMessage.IsSuccessStatusCode)
             {
                 var jsonData = await responseMessage.Content.ReadAsStringAsync();
                 var values = JsonConvert.DeserializeObject<List<ResultFeatureDto>>(jsonData);
+                ViewBag.CarId = id;
                 return View(values);
             }
             return View();
+        }
+
+        [Route("CreateFeatureByCarId/{id}")]
+        [HttpPost]
+        public async Task<IActionResult> CreateFeatureByCarId(int id, List<CreateCarFeatureDto> createCarFeatureDtos)
+        {
+            var client = _httpClientFactory.CreateClient();
+
+            foreach (var feature in createCarFeatureDtos)
+            {
+                feature.CarID = id;
+                feature.Available = true;  // Tüm özellikler işaretlenmiş olarak gönderilecektir
+
+                var jsonContent = JsonConvert.SerializeObject(feature);
+                var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+
+                await client.PostAsync("https://localhost:7250/api/CarFeatures", content);
+            }
+
+            return RedirectToAction("Index", "Car");
         }
     }
 }

@@ -1,78 +1,95 @@
 ﻿@model List<ResultReviewByCarIdDto>
-
 @{
-    // Toplam değerlendirme sayısını al
-    var totalReviews = Model.Count;
+    var totalReviews = Model?.Count ?? 0;
+    int[] starCounts = null;
+    double[] percentages = new double[5]; // percentages'i dışarıda tanımla
 
-    // Her yıldız derecesine göre değerlendirme sayısını hesapla
-    var starCounts = new int[5];
-    foreach (var review in Model)
+    if (Model != null && Model.Any())
     {
-        starCounts[review.RatingValue - 1]++;
-    }
+        starCounts = new int[5];
 
-    // Yüzdeleri hesapla
-    var percentages = new double[5];
-    for (int i = 0; i < starCounts.Length; i++)
-    {
-        percentages[i] = totalReviews > 0 ? (double)starCounts[i] / totalReviews * 100 : 0;
-    }
-}
-
-<div class="tab-pane fade" id="pills-review" role="tabpanel" aria-labelledby="pills-review-tab">
-    <div class="row">
-        <div class="col-md-7">
-            <h3 class="head">@totalReviews Değerlendirme</h3>
-            @foreach (var item in Model)
+        foreach (var review in Model)
+        {
+            if (review.RatingValue >= 1 && review.RatingValue <= 5)
             {
-                <div class="review d-flex">
-                    <div class="user-img" style="background-image: url(@item.CustomerImage)"></div>
-                    <div class="desc">
-                        <h4>
-                            <span class="text-left">@item.CustomerName</span>
-                            <span class="text-right">@item.ReviewDate</span>
-                        </h4>
-                        <p class="star">
-                            <span>
-                                @for (var i = 0; i < item.RatingValue; i++)
-                                {
-                                    <i class="ion-ios-star"></i>
-                                }
-                                @for (var i = item.RatingValue; i < 5; i++)
-                                {
-                                    <i class="ion-ios-star-outline"></i>
-                                }
-                            </span>
-                            <span class="text-right"><a href="#" class="reply"><i class="icon-reply"></i></a></span>
-                        </p>
-                        <p>@item.Comment</p>
-                    </div>
-                </div>
+                starCounts[review.RatingValue - 1]++;
             }
-        </div>
-        <div class="col-md-5">
-            <div class="rating-wrap">
-                <h3 class="head">Değerlendirme Sonuçları</h3>
-                <div class="wrap">
-                    @for (var i = starCounts.Length - 1; i >= 0; i--)
+        }
+
+        // percentages'i hesapla
+        for (int i = 0; i < starCounts.Length; i++)
+        {
+            percentages[i] = totalReviews > 0 ? (double)starCounts[i] / totalReviews * 100 : 0;
+        }
+    }
+
+    <div class="tab-pane fade" id="pills-review" role="tabpanel" aria-labelledby="pills-review-tab">
+        <div class="row">
+            <div class="col-md-7">
+                <h3 class="head">@totalReviews Değerlendirme</h3>
+                @if (Model != null && Model.Any())
+                {
+                    @foreach (var item in Model)
                     {
-                        <p class="star">
-                            <span>
-                                @for (var j = 0; j <= i; j++)
-                                {
-                                    <i class="ion-ios-star"></i>
-                                }
-                                @for (var j = i + 1; j < 5; j++)
-                                {
-                                    <i class="ion-ios-star-outline"></i>
-                                }
-                                @(string.Format("({0:0.##}%)", percentages[i]))
-                            </span>
-                            <span>@starCounts[i] Reviews</span>
-                        </p>
+                        <div class="review d-flex">
+                            <div class="user-img" style="background-image: url(@item.CustomerImage)"></div>
+                            <div class="desc">
+                                <h4>
+                                    <span class="text-left">@item.CustomerName</span>
+                                    <span class="text-right">@item.ReviewDate</span>
+                                </h4>
+                                <p class="star">
+                                    <span>
+                                        @for (var i = 0; i < item.RatingValue; i++)
+                                        {
+                                            <i class="ion-ios-star"></i>
+                                        }
+                                        @for (var i = item.RatingValue; i < 5; i++)
+                                        {
+                                            <i class="ion-ios-star-outline"></i>
+                                        }
+                                    </span>
+                                    <span class="text-right"><a href="#" class="reply"><i class="icon-reply"></i></a></span>
+                                </p>
+                                <p>@item.Comment</p>
+                            </div>
+                        </div>
                     }
+                }
+                else
+                {
+                    <div class="alert alert-info" role="alert">
+                        Henüz hiç değerlendirme bulunmamaktadır.
+                    </div>
+                }
+            </div>
+            <div class="col-md-5">
+                <div class="rating-wrap">
+                    <h3 class="head">Değerlendirme Sonuçları</h3>
+                    <div class="wrap">
+                        @if (starCounts != null) // starCounts null kontrolü ekle
+                        {
+                            @for (var i = starCounts.Length - 1; i >= 0; i--)
+                            {
+                                <p class="star">
+                                    <span>
+                                        @for (var j = 0; j <= i; j++)
+                                        {
+                                            <i class="ion-ios-star"></i>
+                                        }
+                                        @for (var j = i + 1; j < 5; j++)
+                                        {
+                                            <i class="ion-ios-star-outline"></i>
+                                        }
+                                        @(string.Format("({0:0.##}%)", percentages[i]))
+                                    </span>
+                                    <span>@starCounts[i] Reviews</span>
+                                </p>
+                            }
+                        }
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
+}

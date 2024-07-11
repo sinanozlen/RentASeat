@@ -19,7 +19,7 @@ namespace WebUI.Controllers
 		public async Task<IActionResult> Index()
 		{
 			var client = _httpClientFactory.CreateClient();
-			var responseMessage = await client.GetAsync("https://api.rentaseat.com.tr/api/Contacts/ContactList");
+			var responseMessage = await client.GetAsync("https://localhost:7250/api/Contacts/ContactList");
 			if (responseMessage.IsSuccessStatusCode)
 			{
 				var jsonData = await responseMessage.Content.ReadAsStringAsync();
@@ -35,7 +35,7 @@ namespace WebUI.Controllers
             createContactDto.SendDate = DateTime.Now;
             var jsonData = JsonConvert.SerializeObject(createContactDto);
             var stringContent = new StringContent(jsonData, Encoding.UTF8, "application/json");
-            var responseMessage = await client.PostAsync("https://api.rentaseat.com.tr/api/Contacts", stringContent);
+            var responseMessage = await client.PostAsync("https://localhost:7250/api/Contacts", stringContent);
 
             if (responseMessage.IsSuccessStatusCode)
             {

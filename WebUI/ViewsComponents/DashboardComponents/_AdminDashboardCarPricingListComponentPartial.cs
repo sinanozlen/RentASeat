@@ -25,7 +25,7 @@ namespace WebUI.ViewComponents.DashboardComponents
             ViewBag.v1 = "Paketler";
             ViewBag.v2 = "Araç Fiyat Paketleri";
             var client = _httpClientFactory.CreateClient();
-            var responseMessage = await client.GetAsync("https://api.rentaseat.com.tr/api/CarPricings/CarPricingListWithModel");
+            var responseMessage = await client.GetAsync("https://localhost:7250/api/CarPricings/CarPricingListWithModel");
             if (responseMessage.IsSuccessStatusCode)
             {
                 var jsonData = await responseMessage.Content.ReadAsStringAsync();

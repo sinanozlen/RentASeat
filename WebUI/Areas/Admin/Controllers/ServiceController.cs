@@ -28,7 +28,7 @@ namespace WebUI.Areas.Admin.Controllers
                 return RedirectToAction("Index", "Forbidden");
             }
             var client = _httpClientFactory.CreateClient();
-            var responseMessage = await client.GetAsync("https://api.rentaseat.com.tr/api/Services");
+            var responseMessage = await client.GetAsync("https://localhost:7250/api/Services");
             if (responseMessage.IsSuccessStatusCode)
             {
                 var jsonData = await responseMessage.Content.ReadAsStringAsync();
@@ -59,7 +59,7 @@ namespace WebUI.Areas.Admin.Controllers
             var client = _httpClientFactory.CreateClient();
             var jsonData = JsonConvert.SerializeObject(createServiceDto);
             var content = new StringContent(jsonData, Encoding.UTF8, "application/json");
-            var responseMessage = await client.PostAsync("https://api.rentaseat.com.tr/api/Services", content);
+            var responseMessage = await client.PostAsync("https://localhost:7250/api/Services", content);
             if (responseMessage.IsSuccessStatusCode)
             {
                 return RedirectToAction("Index");
@@ -77,7 +77,7 @@ namespace WebUI.Areas.Admin.Controllers
                 return RedirectToAction("Index", "Forbidden");
             }
             var client = _httpClientFactory.CreateClient();
-            var responseMessage = await client.DeleteAsync($"https://api.rentaseat.com.tr/api/Services/{id}");
+            var responseMessage = await client.DeleteAsync($"https://localhost:7250/api/Services/{id}");
             if (responseMessage.IsSuccessStatusCode)
             {
                 return RedirectToAction("Index");
@@ -95,7 +95,7 @@ namespace WebUI.Areas.Admin.Controllers
                 return RedirectToAction("Index", "Forbidden");
             }
             var client = _httpClientFactory.CreateClient();
-            var responseMessage = await client.GetAsync($"https://api.rentaseat.com.tr/api/Services/{id}");
+            var responseMessage = await client.GetAsync($"https://localhost:7250/api/Services/{id}");
             if (responseMessage.IsSuccessStatusCode)
             {
                 var jsonData = await responseMessage.Content.ReadAsStringAsync();
@@ -117,7 +117,7 @@ namespace WebUI.Areas.Admin.Controllers
             var client = _httpClientFactory.CreateClient();
             var jsonData = JsonConvert.SerializeObject(updateServiceDto);
             var content = new StringContent(jsonData, Encoding.UTF8, "application/json");
-            var responseMessage = await client.PutAsync($"https://api.rentaseat.com.tr/api/Services/", content);
+            var responseMessage = await client.PutAsync($"https://localhost:7250/api/Services/", content);
             if (responseMessage.IsSuccessStatusCode)
             {
                 return RedirectToAction("Index");

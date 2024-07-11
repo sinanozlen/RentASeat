@@ -20,17 +20,40 @@ namespace DataAccessLayer.EntityFramework
         public List<ResultReviewByCarIdDto> GetReviewsByCarId(int carId)
         {
             using var context = new RenASeatContext();
-            var values=context.Reviews.Where(x=> x.CarID == carId).Select(x => new ResultReviewByCarIdDto
+
+            var reviews = context.Reviews
+                .Where(x => x.CarID == carId)
+                .Select(x => new ResultReviewByCarIdDto
+                {
+                    CarID = x.CarID,
+                    CustomerName = x.CustomerName,
+                    CustomerImage = x.CustomerImage,
+                    Comment = x.Comment,
+                    RatingValue = x.RatingValue,
+                    ReviewDate = x.ReviewDate
+                })
+                .ToList();
+
+            if (reviews == null || reviews.Count == 0)
             {
-                CarID = x.CarID,
-                Comment = x.Comment,
-                CustomerImage = x.CustomerImage,
-                CustomerName = x.CustomerName,
-                RatingValue = x.RatingValue,
-                ReviewDate=x.ReviewDate
-                
-            }).ToList();
-            return values;
+                // Yorum bulunamadı durumunda "Yorum bulunamadı" mesajını döndür
+                return new List<ResultReviewByCarIdDto>
+        {
+            new ResultReviewByCarIdDto
+            {
+                CarID = carId,
+                CustomerName = "Yorum bulunamadı",
+                CustomerImage = null, // veya isteğe bağlı olarak bir varsayılan resim
+                Comment = "",
+                RatingValue = 0,
+                ReviewDate = DateTime.MinValue
+            }
+        };
+            }
+
+            return reviews;
         }
+
+
     }
 }

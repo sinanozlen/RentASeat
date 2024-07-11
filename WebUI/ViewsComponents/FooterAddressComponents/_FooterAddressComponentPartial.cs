@@ -16,7 +16,7 @@ namespace WebUI.ViewsComponents.FooterAddressComponents
         public async Task<IViewComponentResult> InvokeAsync()
         {
             var client = _httpClientFactory.CreateClient();
-            var responseMessage = await client.GetAsync("https://api.rentaseat.com.tr/api/FooterAddresses");
+            var responseMessage = await client.GetAsync("https://localhost:7250/api/FooterAddresses");
             if (responseMessage.IsSuccessStatusCode)
             {
                 var jsonData = await responseMessage.Content.ReadAsStringAsync();
