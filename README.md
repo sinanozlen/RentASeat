@@ -39,6 +39,7 @@
     <li><a href="#proje-hakkında">Proje Hakkında</a></li>
     <li><a href="#bu-teknolojiler-ile-geliştirildi">Bu Teknolojiler İle Geliştirildi</a></li>
     <li><a href="#başlarken">Başlarken</a></li>
+    <li><a href="#kurulum">Kurulum</a></li>
     <li><a href="#görseller">Görseller</a></li>
     <li><a href="#demo-videosu">Demo Videosu</a></li>
     <li><a href="#canlı-demo-bağlantısı">Canlı Demo Bağlantısı</a></li>
@@ -116,6 +117,7 @@ Projenizin nasıl kurulacağı ve çalıştırılacağına dair adım adım tali
 ### Prerequisites
 
 RentASeat Araç kiralama projesinin kurulumu ve çalıştırılması için aşağıdaki adımları takip edin:
+<a id="kurulum"></a>
 
 ### Kurulum
 
